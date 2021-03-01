@@ -27,8 +27,8 @@ Open Source Software Development and Community Governance (开源软件开发与
 
 **第一次课（3月1日）：开源简史与课程导览**
 
-- [[The Code](https://www.bilibili.com/video/BV1us411z7X4/?spm_id_from=333.788.videocard.16)]
-- [[RevolutionOS](https://www.bilibili.com/video/BV1as411f7nM) ]
+- [[ The Code ](https://www.bilibili.com/video/BV1us411z7X4/?spm_id_from=333.788.videocard.16)]
+- [[ RevolutionOS ](https://www.bilibili.com/video/BV1as411f7nM)]
 - [[「开源」60年](https://www.bilibili.com/video/BV1zV411d7La) ]
 - [The Cat-Baz ch01-02.pdf](https://github.com/X-lab2017/OSSDevGov2021/files/6056785/The.Cat-Baz.ch01-02.pdf)
 
