@@ -31,6 +31,8 @@ Open Source Software Development and Community Governance (开源软件开发与
 - [[ RevolutionOS ](https://www.bilibili.com/video/BV1as411f7nM)]
 - [[「开源」60年](https://www.bilibili.com/video/BV1zV411d7La) ]
 - [The Cat-Baz ch01-02.pdf](https://github.com/X-lab2017/OSSDevGov2021/files/6056785/The.Cat-Baz.ch01-02.pdf)
+- [01《开源软件开发与社区治理》第1讲.pdf](https://github.com/X-lab2017/OSSDevGov2021/files/6067433/01.1.pdf)
+
 
 ## 5、考核方式
 
