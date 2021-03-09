@@ -33,6 +33,11 @@ Open Source Software Development and Community Governance (开源软件开发与
 - [The Cat-Baz ch01-02.pdf](https://github.com/X-lab2017/OSSDevGov2021/files/6056785/The.Cat-Baz.ch01-02.pdf)
 - [01《开源软件开发与社区治理》第1讲.pdf](https://github.com/X-lab2017/OSSDevGov2021/files/6067433/01.1.pdf)
 
+**第二次课（3月8日）：软件工程视角**
+
+- [02《开源软件开发与社区治理》第2讲.pdf](https://github.com/X-lab2017/OSSDevGov2021/files/6105859/02.2.pdf)
+- [开源实训Lab-01：软件开发基础.pdf](https://github.com/X-lab2017/OSSDevGov2021/files/6105860/Lab-01.pdf)
+
 
 ## 5、考核方式
 
