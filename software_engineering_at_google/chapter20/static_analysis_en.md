@@ -43,7 +43,7 @@ There are many domain experts at Google whose knowledge could improve code produ
 For example, experts who know the context for a particular kind of configuration file can write an analyzer that checks properties of those files. In addition to domain experts, analyses are contributed by developers who discover a bug and would like to prevent the same kind of bug from reappearing anywhere else in the codebase. We focus on building a static analysis ecosystem that is easy to plug into instead of inte‐ grating a small set of existing tools. We have focused on developing simple APIs that can be used by engineers throughout Google—not just analysis or language experts— to create analyses; for example, Refaster<sup id="a6">[[6]](#f6)</sup> enables writing an analyzer by specifying pre- and post-code snippets demonstrating what transformations are expected by that analyzer.
 
 ## Tricorder: Google’s Static Analysis Platform
-Tricorder, our static analysis platform, is a core part of static analysis at Google.<sup id="a7">[[7]](#f7)</sup> Tri‐ corder came out of several failed attempts to integrate static analysis with the devel‐ oper workflow at Google;<sup id="a8">[[8]](#f8)</sup> the key difference between Tricorder and previous attempts was our relentless focus on having Tricorder deliver only valuable results to its users. Tricorder is integrated with the main code review tool at Google, Critique. Tricorder warnings show up on Critique’s diff viewer as gray comment boxes, as demonstrated in [Figure 20-1](figure20-1.png).
+Tricorder, our static analysis platform, is a core part of static analysis at Google.<sup id="a7">[[7]](#f7)</sup> Tri‐ corder came out of several failed attempts to integrate static analysis with the devel‐ oper workflow at Google;<sup id="a8">[[8]](#f8)</sup> the key difference between Tricorder and previous attempts was our relentless focus on having Tricorder deliver only valuable results to its users. Tricorder is integrated with the main code review tool at Google, Critique. Tricorder warnings show up on Critique’s diff viewer as gray comment boxes, as demonstrated in [Figure 20-1](https://i.loli.net/2021/04/13/xfsrGWhi5HlumwB.jpg).
 ![figure20-1.jpg](https://i.loli.net/2021/04/13/xfsrGWhi5HlumwB.jpg)
 *Figure 20-1. Critique’s diff viewing, showing a static analysis warning from Tricorder in gray*
 
@@ -89,7 +89,7 @@ And sometimes the fix is pretty simple—such as updating the text of the messag
 
 ### Suggested Fixes
 
-Tricorder checks also, when possible, provide fixes, as shown in [Figure 20-2](figure20-2.png).
+Tricorder checks also, when possible, provide fixes, as shown in [Figure 20-2]([figure20-2.png](https://i.loli.net/2021/04/13/bNEeaMWyr7T4PtQ.png)).
 
 ![figure20-2.png](https://i.loli.net/2021/04/13/bNEeaMWyr7T4PtQ.png)
 *Figure 20-2. View of an example static analysis fix in Critique*
