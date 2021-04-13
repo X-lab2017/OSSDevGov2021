@@ -1,12 +1,10 @@
 <h3 style="text-align:right">PART II</h3>
-<hr />
 <h2 style="text-align:right">Culture</h2>
 
 <br />
 <br />
 
 <h3 style="text-align:right">CHAPTER 2</h3>
-<hr />
 <h2 style="text-align:right">How to Work Well on Teams</h2>
 
 *<p style="text-align:right">Written by Brian Fitzpatrick <br />Edited by Riona MacNamara</p>*
