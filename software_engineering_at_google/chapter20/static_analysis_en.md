@@ -137,11 +137,11 @@ Static analysis can be a great tool to improve a codebase, find bugs early, and 
 
 ## References
 
-<span id="f1">1. [^](#a1)</span> See http://errorprone.info/bugpatterns.
-<span id="f2">2. [^](#a2)</span> Caitlin Sadowski et al. Tricorder: Building a Program Analysis Ecosystem, International Conference on Soft‐ ware Engineering (ICSE), May 2015.
-<span id="f3">3. [^](#a3)</span> A good academic reference for static analysis theory is: Flemming Nielson et al. Principles of Program Analysis (Gernamy: Springer, 2004).
-<span id="f4">4. [^](#a4)</span> Note that there are some specific analyses for which reviewers might be willing to tolerate a much higher false-positive rate: one example is security analyses that identify critical problems.
-<span id="f5">5. [^](#a5)</span> See later in this chapter for more information on additional integration points when editing and browsing code.
-<span id="f6">6. [^](#a6)</span> Louis Wasserman, “Scalable, Example-Based Refactorings with Refaster.” Workshop on Refactoring Tools, 2013.
-<span id="f7">7. [^](#a7)</span> Caitlin Sadowski, Jeffrey van Gogh, Ciera Jaspan, Emma Söderberg, and Collin Winter, Tricorder: Building a Program Analysis Ecosystem, International Conference on Software Engineering (ICSE), May 2015.
-<span id="f8">8. [^](#a8)</span> Caitlin Sadowski, Edward Aftandilian, Alex Eagle, Liam Miller-Cushon, and Ciera Jaspan, “Lessons from Building Static Analysis Tools at Google”, Communications of the ACM, 61 No. 4 (April 2018): 58–66, https://cacm.acm.org/magazines/2018/4/226371-lessons-from-building-static-analysis-tools-at-google/fulltext.
+1. <span id="f1">[^](#a1)</span> See http://errorprone.info/bugpatterns.
+2. <span id="f2">[^](#a2)</span> Caitlin Sadowski et al. Tricorder: Building a Program Analysis Ecosystem, International Conference on Soft‐ ware Engineering (ICSE), May 2015.
+3. <span id="f3">[^](#a3)</span> A good academic reference for static analysis theory is: Flemming Nielson et al. Principles of Program Analysis (Gernamy: Springer, 2004).
+4. <span id="f4">[^](#a4)</span> Note that there are some specific analyses for which reviewers might be willing to tolerate a much higher false-positive rate: one example is security analyses that identify critical problems.
+5. <span id="f5">[^](#a5)</span> See later in this chapter for more information on additional integration points when editing and browsing code.
+6. <span id="f6">[^](#a6)</span> Louis Wasserman, “Scalable, Example-Based Refactorings with Refaster.” Workshop on Refactoring Tools, 2013.
+7. <span id="f7">[^](#a7)</span> Caitlin Sadowski, Jeffrey van Gogh, Ciera Jaspan, Emma Söderberg, and Collin Winter, Tricorder: Building a Program Analysis Ecosystem, International Conference on Software Engineering (ICSE), May 2015.
+8. <span id="f8">[^](#a8)</span> Caitlin Sadowski, Edward Aftandilian, Alex Eagle, Liam Miller-Cushon, and Ciera Jaspan, “Lessons from Building Static Analysis Tools at Google”, Communications of the ACM, 61 No. 4 (April 2018): 58–66, https://cacm.acm.org/magazines/2018/4/226371-lessons-from-building-static-analysis-tools-at-google/fulltext.
