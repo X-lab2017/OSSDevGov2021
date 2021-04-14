@@ -75,33 +75,33 @@
 
 持续集成特别是通过持续*构建*和持续*交付*来自动化构建和发布过程。整个过程都将进行连续测试，我们将在下一部分中进行介绍。和发布过程。整个过程都将进行连续测试，我们将在下一部分中进行介绍。
 
-### Continuous Build
+### 持续构建
 
-The *Continuous Build* (CB) integrates the latest code changes at head4 and runs an automated build and test. Because the CB runs tests as well as building code, “break‐ ing the build” or “failing the build” includes breaking tests as well as breaking compilation.
+*持续构建*（CB）可以立即集成最新的代码更改<sup>4</sup>，并运行自动化的构建和测试。由于CB既要运行测试又要构建代码，因此“破坏构建”或“失败构建”包括破坏测试和破坏编译。
 
-After a change is submitted, the CB should run all relevant tests. If a change passes all tests, the CB marks it passing or “green,” as it is often displayed in user interfaces (UIs). This process effectively introduces two different versions of head in the reposi‐ tory: *true head*, or the latest change that was committed, and *green head,* or the latest change the CB has verified. Engineers are able to sync to either version in their local development. It’s common to sync against green head to work with a stable environ‐ ment, verified by the CB, while coding a change but have a process that requires changes to be synced to true head before submission.
+提交代码更新后，持续构建应该运行所有相关测试。如果更改通过所有测试，则持续构建会将其标记为通过或“绿色”，因为它通常显示在用户界面（UI）中。此过程有效地在存储库中引入了两种不同的head版本：true head（已提交的最新更改）和green head（或持续构建已验证的最新更改）。工程师可以在其本地开发中同步到任一版本。通常需要与green head同步，以在稳定的环境下工作，并由持续构建进行验证，同时对更改进行编码，但其流程要求更改在提交前必须同步到true head的头上。
 
-### Continuous Delivery
+### 持续交付
 
-The first step in Continuous Delivery (CD; discussed more fully in Chapter 24) is *release automation*, which continuously assembles the latest code and configuration from head into release candidates. At Google, most teams cut these at green, as opposed to true, head.
+持续交付（CD；第24章将更全面地讨论）的第一步是*发布自动化*，它将最新的代码和配置从head开始不断组合到候选发布中。在Google，大多数团队都以green head而不是true head来筛选它们。
 
-> *Release candidate* (RC): A cohesive, deployable unit created by an automated process,5 assembled of code, configuration, and other dependencies that have passed the contin‐ uous build.
+> 候选发布（RC）：由一个自动过程创建的，可凝聚的，可部署的单元<sup>5</sup>，由经过连续构建的代码，配置和其他依赖项组成。
 
-Note that we include configuration in release candidates—this is extremely impor‐ tant, even though it can slightly vary between environments as the candidate is pro‐ moted. We’re not necessarily advocating you compile configuration into your binaries —actually, we would recommend dynamic configuration, such as experiments or fea‐ ture flags, for many scenarios.6
+请注意，我们在候选版本中包括了配置——这是非常重要的，尽管随着候选版本的推出它在环境之间可能会略有不同。我们不一定要提倡将配置编译到您的二进制文件中——实际上，我们建议在许多情况下使用动态配置，例如实验或特征标记。<sup>6</sup>
 
-Rather, we are saying that any static configuration you *do* have should be promoted as part of the release candidate so that it can undergo testing along with its correspond‐ ing code. Remember, a large percentage of production bugs are caused by “silly” con‐ figuration problems, so it’s just as important to test your configuration as it is your code (and to test it along *with* the same code that will use it). Version skew is often caught in this release-candidate-promotion process. This assumes, of course, that your static configuration is in version control—at Google, static configuration is in version control along with the code, and hence goes through the same code review process.
+相反，我们说的是，您应该将任何*设置*的静态配置提升为候选发布版本，以便它可以与相应的代码一起进行测试。请记住，大量的生产错误是由“愚蠢”的配置问题引起的，因此测试您的配置和代码一样重要（并与将使用它的相同代码*一起*进行测试）。版本倾斜通常发生在发行候选升级过程中。当然，这假定您的静态配置在版本控制中——在Google中，静态配置与代码一起在版本控制中，因此要经过相同的代码检查过程。
 
-We then define CD as follows:
+然后，我们将持续交付定义如下：
 
-> *Continuous Delivery* (CD): a continuous assembling of release candidates, followed by the promotion and testing of those candidates throughout a series of environments— sometimes reaching production and sometimes not.
+> 持续交付 (CD): a continuous assembling of release candidates, followed by the promotion and testing of those candidates throughout a series of environments— sometimes reaching production and sometimes not.
 
 The promotion and deployment process often depends on the team. We’ll show how our case study navigated this process.
 
-For teams at Google that want continuous feedback from new changes in production (e.g., Continuous Deployment), it’s usually infeasible to continuously push entire binaries, which are often quite large, on green. For that reason, doing a *selective* Con‐ tinuous Deployment, through experiments or feature flags, is a common strategy.7
+For teams at Google that want continuous feedback from new changes in production (e.g., Continuous Deployment), it’s usually infeasible to continuously push entire binaries, which are often quite large, on green. For that reason, doing a *selective* Continuous Deployment, through experiments or feature flags, is a common strategy.<sup>7</sup>
 
 As an RC progresses through environments, its artifacts (e.g., binaries, containers) ideally should not be recompiled or rebuilt. Using containers such as Docker helps enforce consistency of an RC between environments, from local development onward. Similarly, using orchestration tools like Kubernetes (or in our case, usually Borg), helps enforce consistency between deployments. By enforcing consistency of our release and deployment between environments, we achieve higher-fidelity earlier testing and fewer surprises in production.
 
-## Continuous Testing
+### Continuous Testing
 
 Let’s look at how CB and CD fit in as we apply Continuous Testing (CT) to a code change throughout its lifetime, as shown Figure 23-2.
 

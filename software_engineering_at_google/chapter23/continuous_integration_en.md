@@ -22,7 +22,7 @@ From a testing perspective, CI is a paradigm to inform the following:
 
 For example, which tests do we run on presubmit, which do we save for post-submit, and which do we save even later until our staging deploy? Accordingly, how do we represent our SUT at each of these points? As you might imagine, requirements for a presubmit SUT can differ significantly from those of a staging environment under test. For example, it can be dangerous for an application built from code pending review on presubmit to talk to real production backends (think security and quota vulnerabilities), whereas this is often acceptable for a staging environment.
 
-And *why* should we try to optimize this often-delicate balance of testing “the right things” at “the right times” with CI? Plenty of prior work has already established the benefits of CI to the engineering organization and the overall business alike.2 These outcomes are driven by a powerful guarantee: verifiable—and timely—proof that the application is good to progress to the next stage. We don’t need to just hope that all contributors are very careful, responsible, and thorough; we can instead guarantee the working state of our application at various points from build throughout release, thereby improving confidence and quality in our products and productivity of our teams.
+And *why* should we try to optimize this often-delicate balance of testing “the right things” at “the right times” with CI? Plenty of prior work has already established the benefits of CI to the engineering organization and the overall business alike.<sup>2</sup> These outcomes are driven by a powerful guarantee: verifiable—and timely—proof that the application is good to progress to the next stage. We don’t need to just hope that all contributors are very careful, responsible, and thorough; we can instead guarantee the working state of our application at various points from build throughout release, thereby improving confidence and quality in our products and productivity of our teams.
 
 In the rest of this chapter, we’ll introduce some key CI concepts, best practices and challenges, before looking at how we manage CI at Google with an introduction to our continuous build tool, TAP, and an in-depth study of one application’s CI transformation.
 
@@ -44,7 +44,7 @@ In general, as issues progress to the “right” in our diagram, they become co
 - They require more work for the code change author to recollect and investigate the change.
 - They negatively affect others, whether engineers in their work or ultimately the end user.
 
-To minimize the cost of bugs, CI encourages us to use *fast feedback loops.*3 Each time we integrate a code (or other) change into a testing scenario and observe the results, we get a new *feedback loop*. Feedback can take many forms; following are some com‐ mon ones (in order of fastest to slowest):
+To minimize the cost of bugs, CI encourages us to use *fast feedback loops.*<sup>3</sup> Each time we integrate a code (or other) change into a testing scenario and observe the results, we get a new *feedback loop*. Feedback can take many forms; following are some com‐ mon ones (in order of fastest to slowest):
 
 - The edit-compile-debug loop of local development
 - Automated test results to a code change author on presubmit
@@ -69,25 +69,25 @@ Finally, any feedback from CI tests should not just be accessible but actionable
 
 ## Automation
 
-It’s well known that automating development-related tasks saves engineering resources in the long run. Intuitively, because we automate processes by defining them as code, peer review when changes are checked in will reduce the probability of error. Of course, automated processes, like any other software, will have bugs; but when imple‐ mented effectively, they are still faster, easier, and more reliable than if they were attempted manually by engineers.
+It’s well known that automating development-related tasks saves engineering resources in the long run. Intuitively, because we automate processes by defining them as code, peer review when changes are checked in will reduce the probability of error. Of course, automated processes, like any other software, will have bugs; but when implemented effectively, they are still faster, easier, and more reliable than if they were attempted manually by engineers.
 
 CI, specifically, automates the *build* and *release* processes, with a Continuous Build and Continuous Delivery. Continuous testing is applied throughout, which we’ll look at in the next section.
 
 ### Continuous Build
 
-The *Continuous Build* (CB) integrates the latest code changes at head4 and runs an automated build and test. Because the CB runs tests as well as building code, “break‐ ing the build” or “failing the build” includes breaking tests as well as breaking compilation.
+The *Continuous Build* (CB) integrates the latest code changes at head<sup>4</sup> and runs an automated build and test. Because the CB runs tests as well as building code, “breaking the build” or “failing the build” includes breaking tests as well as breaking compilation.
 
-After a change is submitted, the CB should run all relevant tests. If a change passes all tests, the CB marks it passing or “green,” as it is often displayed in user interfaces (UIs). This process effectively introduces two different versions of head in the reposi‐ tory: *true head*, or the latest change that was committed, and *green head,* or the latest change the CB has verified. Engineers are able to sync to either version in their local development. It’s common to sync against green head to work with a stable environ‐ ment, verified by the CB, while coding a change but have a process that requires changes to be synced to true head before submission.
+After a change is submitted, the CB should run all relevant tests. If a change passes all tests, the CB marks it passing or “green,” as it is often displayed in user interfaces (UIs). This process effectively introduces two different versions of head in the repository: *true head*, or the latest change that was committed, and *green head,* or the latest change the CB has verified. Engineers are able to sync to either version in their local development. It’s common to sync against green head to work with a stable environment, verified by the CB, while coding a change but have a process that requires changes to be synced to true head before submission.
 
 ### Continuous Delivery
 
 The first step in Continuous Delivery (CD; discussed more fully in Chapter 24) is *release automation*, which continuously assembles the latest code and configuration from head into release candidates. At Google, most teams cut these at green, as opposed to true, head.
 
-> *Release candidate* (RC): A cohesive, deployable unit created by an automated process,5 assembled of code, configuration, and other dependencies that have passed the contin‐ uous build.
+> *Release candidate* (RC): A cohesive, deployable unit created by an automated process,<sup>5</sup> assembled of code, configuration, and other dependencies that have passed the continuous build.
 
-Note that we include configuration in release candidates—this is extremely impor‐ tant, even though it can slightly vary between environments as the candidate is pro‐ moted. We’re not necessarily advocating you compile configuration into your binaries —actually, we would recommend dynamic configuration, such as experiments or fea‐ ture flags, for many scenarios.6
+Note that we include configuration in release candidates—this is extremely important, even though it can slightly vary between environments as the candidate is pro‐ moted. We’re not necessarily advocating you compile configuration into your binaries —actually, we would recommend dynamic configuration, such as experiments or feature flags, for many scenarios.<sup>6</sup>
 
-Rather, we are saying that any static configuration you *do* have should be promoted as part of the release candidate so that it can undergo testing along with its correspond‐ ing code. Remember, a large percentage of production bugs are caused by “silly” con‐ figuration problems, so it’s just as important to test your configuration as it is your code (and to test it along *with* the same code that will use it). Version skew is often caught in this release-candidate-promotion process. This assumes, of course, that your static configuration is in version control—at Google, static configuration is in version control along with the code, and hence goes through the same code review process.
+Rather, we are saying that any static configuration you *do* have should be promoted as part of the release candidate so that it can undergo testing along with its corresponding code. Remember, a large percentage of production bugs are caused by “silly” configuration problems, so it’s just as important to test your configuration as it is your code (and to test it along *with* the same code that will use it). Version skew is often caught in this release-candidate-promotion process. This assumes, of course, that your static configuration is in version control—at Google, static configuration is in version control along with the code, and hence goes through the same code review process.
 
 We then define CD as follows:
 
@@ -95,7 +95,7 @@ We then define CD as follows:
 
 The promotion and deployment process often depends on the team. We’ll show how our case study navigated this process.
 
-For teams at Google that want continuous feedback from new changes in production (e.g., Continuous Deployment), it’s usually infeasible to continuously push entire binaries, which are often quite large, on green. For that reason, doing a *selective* Con‐ tinuous Deployment, through experiments or feature flags, is a common strategy.7
+For teams at Google that want continuous feedback from new changes in production (e.g., Continuous Deployment), it’s usually infeasible to continuously push entire binaries, which are often quite large, on green. For that reason, doing a *selective* Continuous Deployment, through experiments or feature flags, is a common strategy.<sup>7</sup>
 
 As an RC progresses through environments, its artifacts (e.g., binaries, containers) ideally should not be recompiled or rebuilt. Using containers such as Docker helps enforce consistency of an RC between environments, from local development onward. Similarly, using orchestration tools like Kubernetes (or in our case, usually Borg), helps enforce consistency between deployments. By enforcing consistency of our release and deployment between environments, we achieve higher-fidelity earlier testing and fewer surprises in production.
 
