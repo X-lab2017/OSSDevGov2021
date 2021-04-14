@@ -1,30 +1,30 @@
-# CHAPTER 23 Continuous Integration
+# 第23章 持续集成
 
-Written by Rachel Tannenbaum Edited by Lisa Carey
+由Rachel Tannenbaum撰写，Lisa Carey编辑
 
-*Continuous Integration*, or CI, is generally defined as “a software development prac‐ tice where members of a team integrate their work frequently [...] Each integration is verified by an automated build (including test) to detect integration errors as quickly as possible.”1 Simply put, the fundamental goal of CI is to automatically catch prob‐ lematic changes as early as possible.
+*连续集成*（CI）通常被定义为”团队成员需要频繁集成他们工作的软件开发工作[...]每次集成都通过自动构建（包括测试）进行验证，以检测集成错误。“<sup>1</sup>简而言之，持续集成的基本目标是尽早自动发现有问题的代码更新。
 
-In practice, what does “integrating work frequently” mean for the modern, dis‐ tributed application? Today’s systems have many moving pieces beyond just the latest versioned code in the repository. In fact, with the recent trend toward microservices, the changes that break an application are less likely to live inside the project’s imme‐ diate codebase and more likely to be in loosely coupled microservices on the other side of a network call. Whereas a traditional continuous build tests changes in your binary, an extension of this might test changes to upstream microservices. The dependency is just shifted from your function call stack to an HTTP request or Remote Procedure Calls (RPC).
+“持续集成”对于现代的分布式应用有什么意义？当今的系统除了仓库中的最新版本代码外，还有许多其他不错的部分。实际上，随着微服务的最新趋势，破坏程序的代码更新不太可能存在于项目的当前仓库中，而更有可能出现在网络调用另一端的松耦合微服务中。传统的连续构建会测试二进制文件中的更新，在这上的扩展可能会测试上游微服务的更改。依赖关系只是从函数调用堆栈转移到HTTP请求或远程过程调用（RPC）。
 
-Even further from code dependencies, an application might periodically ingest data or update machine learning models. It might execute on evolving operating systems, runtimes, cloud hosting services, and devices. It might be a feature that sits on top of a growing platform or be the platform that must accommodate a growing feature base. All of these things should be considered dependencies, and we should aim to “continuously integrate” their changes, too. Further complicating things, these chang‐ ing components are often owned by developers outside our team, organization, or company and deployed on their own schedules.
+即使远离代码依赖关系，程序也可能会定期提取数据或更新机器学习模型。它可能在不断发展的操作系统，内存管理，云托管服务和设备上执行。它可能是一个位于不断发展的平台之上的功能，也可能是必须适应不断增长的功能的基础平台。所有这些东西都应被视为依赖项，我们也应致力于“持续集成”它们的更新。更复杂的是，这些不断变化的模块通常由我们团队，组织或公司之外的开发人员拥有，并按自己的进度进行部署。
 
-So, perhaps a better definition for CI in today’s world, particularly when developing at scale, is the following:
+因此，对于当今的持续集成，尤其是在大规模开发时，可能有一个更好的定义：
 
-> *Continuous Integration (2)*: the continuous assembling and testing of our entire com‐ plex and rapidly evolving ecosystem.
+> *持续集成（2）*：对我们整个复杂而迅速发展的系统环境的不断合并和测试。
 
-It is natural to conceptualize CI in terms of testing because the two are tightly cou‐ pled, and we’ll do so throughout this chapter. In previous chapters, we’ve discussed a comprehensive range of testing, from unit to integration, to larger-scoped systems.
+从测试的角度对持续集成进行概念化是很自然的，因为两者紧密相关，我们将在本章中继续进行。在前面的章节中，我们讨论了从单元到集成，再到更大范围的系统的全面测试。
 
-From a testing perspective, CI is a paradigm to inform the following:
+从测试方面来说，持续集成是一个介绍以下部分的范例：
 
-• *Which* tests to run *when* in the development/release workflow, as code (and other) changes are continuously integrated into it
+• 在开发/发布开发过程中，随着代码（和其他部分）的更新的不断集成，要运行哪些测试
 
-• *How* to compose the system under test (SUT) at each point, balancing concerns like fidelity and setup cost
+• 如何在每个测试点上组成被测系统（SUT），平衡准确性和启动成本等
 
-For example, which tests do we run on presubmit, which do we save for post-submit, and which do we save even later until our staging deploy? Accordingly, how do we represent our SUT at each of these points? As you might imagine, requirements for a presubmit SUT can differ significantly from those of a staging environment under test. For example, it can be dangerous for an application built from code pending review on presubmit to talk to real production backends (think security and quota vulnerabilities), whereas this is often acceptable for a staging environment.
+例如，我们在提交前运行哪些测试，在提交后保存哪些测试，甚至在以后进行暂存部署之前保存哪些测试？因此，我们如何在这些测试点上划分我们的SUT？就像你想象的那样，预提交SUT的要求可能与测试中的过渡环境的要求有很大不同。例如，在代码审核前提交前的程序与真实的生产后端进行交互（可能存在安全性和配额漏洞问题）可能很危险，但对于过渡环境而言，这通常是可以接受的。
 
-And *why* should we try to optimize this often-delicate balance of testing “the right things” at “the right times” with CI? Plenty of prior work has already established the benefits of CI to the engineering organization and the overall business alike.2 These outcomes are driven by a powerful guarantee: verifiable—and timely—proof that the application is good to progress to the next stage. We don’t need to just hope that all contributors are very careful, responsible, and thorough; we can instead guarantee the working state of our application at various points from build throughout release, thereby improving confidence and quality in our products and productivity of our teams.
+为何我们还要尝试通过持续集成在“合适的时间”测试“合适的事物”达成这一通常微妙的平衡呢？大量的先前工作已经建立了持续集成对开发团队和整个业务的好处。<sup>2</sup>这些结果是由有力的证据所驱动的：即时的可验证的程序可以很好地发展到下一个阶段。我们不需要只是希望所有贡献者都非常谨慎，负责和透彻；相反，我们可以保证从构建到发行的各个阶段，我们的应用程序都处于工作状态，从而提高了我们对产品的信心和质量以及团队的生产力。
 
-In the rest of this chapter, we’ll introduce some key CI concepts, best practices and challenges, before looking at how we manage CI at Google with an introduction to our continuous build tool, TAP, and an in-depth study of one application’s CI transformation.
+在本章的其余部分中，我们将介绍一些关键的CI概念，最佳实践和挑战，然后介绍我们在Google上如何管理持续集成，并且将通过一个程序在持续集成转换上的深入研究来介绍我们的持续构建工具TAP。
 
 ## CI Concepts
 

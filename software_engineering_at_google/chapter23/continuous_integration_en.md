@@ -2,17 +2,17 @@
 
 Written by Rachel Tannenbaum Edited by Lisa Carey
 
-*Continuous Integration*, or CI, is generally defined as “a software development prac‐ tice where members of a team integrate their work frequently [...] Each integration is verified by an automated build (including test) to detect integration errors as quickly as possible.”1 Simply put, the fundamental goal of CI is to automatically catch prob‐ lematic changes as early as possible.
+*Continuous Integration*, or CI, is generally defined as “a software development prac‐ tice where members of a team integrate their work frequently [...] Each integration is verified by an automated build (including test) to detect integration errors as quickly as possible.”<sup>1</sup> Simply put, the fundamental goal of CI is to automatically catch problematic changes as early as possible.
 
-In practice, what does “integrating work frequently” mean for the modern, dis‐ tributed application? Today’s systems have many moving pieces beyond just the latest versioned code in the repository. In fact, with the recent trend toward microservices, the changes that break an application are less likely to live inside the project’s imme‐ diate codebase and more likely to be in loosely coupled microservices on the other side of a network call. Whereas a traditional continuous build tests changes in your binary, an extension of this might test changes to upstream microservices. The dependency is just shifted from your function call stack to an HTTP request or Remote Procedure Calls (RPC).
+In practice, what does “integrating work frequently” mean for the modern, distributed application? Today’s systems have many moving pieces beyond just the latest versioned code in the repository. In fact, with the recent trend toward microservices, the changes that break an application are less likely to live inside the project’s immediate codebase and more likely to be in loosely coupled microservices on the other side of a network call. Whereas a traditional continuous build tests changes in your binary, an extension of this might test changes to upstream microservices. The dependency is just shifted from your function call stack to an HTTP request or Remote Procedure Calls (RPC).
 
-Even further from code dependencies, an application might periodically ingest data or update machine learning models. It might execute on evolving operating systems, runtimes, cloud hosting services, and devices. It might be a feature that sits on top of a growing platform or be the platform that must accommodate a growing feature base. All of these things should be considered dependencies, and we should aim to “continuously integrate” their changes, too. Further complicating things, these chang‐ ing components are often owned by developers outside our team, organization, or company and deployed on their own schedules.
+Even further from code dependencies, an application might periodically ingest data or update machine learning models. It might execute on evolving operating systems, runtimes, cloud hosting services, and devices. It might be a feature that sits on top of a growing platform or be the platform that must accommodate a growing feature base. All of these things should be considered dependencies, and we should aim to “continuously integrate” their changes, too. Further complicating things, these changing components are often owned by developers outside our team, organization, or company and deployed on their own schedules.
 
 So, perhaps a better definition for CI in today’s world, particularly when developing at scale, is the following:
 
-> *Continuous Integration (2)*: the continuous assembling and testing of our entire com‐ plex and rapidly evolving ecosystem.
+> *Continuous Integration (2)*: the continuous assembling and testing of our entire complex and rapidly evolving ecosystem.
 
-It is natural to conceptualize CI in terms of testing because the two are tightly cou‐ pled, and we’ll do so throughout this chapter. In previous chapters, we’ve discussed a comprehensive range of testing, from unit to integration, to larger-scoped systems.
+It is natural to conceptualize CI in terms of testing because the two are tightly coupled, and we’ll do so throughout this chapter. In previous chapters, we’ve discussed a comprehensive range of testing, from unit to integration, to larger-scoped systems.
 
 From a testing perspective, CI is a paradigm to inform the following:
 
