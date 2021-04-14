@@ -67,11 +67,13 @@
 
 最后，来自持续集成测试的任何反馈不仅应该可以访问，而且应该可行-易于使用来查找和解决问题。在本章稍后的案例研究中，我们将看一个改善一个用户不友好反馈的示例。通过提高测试输出的可读性，您可以很容易理解反馈。
 
-## Automation
+## 自动化
 
-It’s well known that automating development-related tasks saves engineering resour‐ ces in the long run. Intuitively, because we automate processes by defining them as code, peer review when changes are checked in will reduce the probability of error. Of course, automated processes, like any other software, will have bugs; but when imple‐ mented effectively, they are still faster, easier, and more reliable than if they were attempted manually by engineers.
+众所周知，从长远来看，自动化与开发相关的任务可以节省工程资源。直观地讲，由于我们通过将流程定义为代码来实现流程自动化，因此当签入更改时进行同行评审将减少出错的可能性。当然，像其他软件一样，自动化过程也会出现错误。但是，如果有效实施，与工程师手动尝试相比，它们仍然更快，更轻松，更可靠。
 
-CI, specifically, automates the *build* and *release* processes, with a Continuous Build and Continuous Delivery. Continuous testing is applied throughout, which we’ll look at in the next section.
+众所周知，从长远来看，自动化与开发相关的任务可以节省工程资源。直观地讲，由于我们通过将流程定义为代码来实现流程自动化，因此其他开发者对代码更新的检查将减少出错的可能性。当然，像其他软件一样，自动化过程也会出现错误。但是，如果有效实施，与工程师手动尝试相比，它们仍然更快，更轻松，更可靠。
+
+持续集成特别是通过持续*构建*和持续*交付*来自动化构建和发布过程。整个过程都将进行连续测试，我们将在下一部分中进行介绍。和发布过程。整个过程都将进行连续测试，我们将在下一部分中进行介绍。
 
 ### Continuous Build
 
