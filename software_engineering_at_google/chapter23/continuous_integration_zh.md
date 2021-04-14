@@ -26,36 +26,36 @@
 
 在本章的其余部分中，我们将介绍一些关键的CI概念，最佳实践和挑战，然后介绍我们在Google上如何管理持续集成，并且将通过一个程序在持续集成转换上的深入研究来介绍我们的持续构建工具TAP。
 
-## CI Concepts
+## 持续集成概念
 
-First, let’s begin by looking at some core concepts of CI.
+首先，让我们开始研究持续集成的一些核心概念。
 
-## Fast Feedback Loops
+## 快速反馈循环
 
-As discussed in Chapter 11, the cost of a bug grows almost exponentially the later it is caught. Figure 23-1 shows all the places a problematic code change might be caught in its lifetime.
+正如第11章所讨论的，一个错误越晚被发现它所花费的成本会成倍的增加。图23-1展示了所有有问题的代码在时间线中可能被发现的时间节点。
 
 ![image-20210413195010773](/Users/xuhuan/Library/Application Support/typora-user-images/image-20210413195010773.png)
 
-*Figure 23-1. Life of a code change*
+* 图23-1. 代码更新的时间线
 
-In general, as issues progress to the “right” in our diagram, they become costlier for the following reasons:
+通常来说，随着问题发展到图表的右边，它们被发现的所消耗的成本更多，主要因为以下原因：
 
-- They must be triaged by an engineer who is likely unfamiliar with the problem‐ atic code change.
-- They require more work for the code change author to recollect and investigate the change.
-- They negatively affect others, whether engineers in their work or ultimately the end user.
+- 它们肯定是由不熟悉代码更改的工程师对它们进行分类。
+- 它们需要代码更新的坐着消耗更多的工作了来收集和调查代码更新。
+- 它们会对他人产生负面影响，无论是工作中的工程师还是最终用户。
 
-To minimize the cost of bugs, CI encourages us to use *fast feedback loops.*3 Each time we integrate a code (or other) change into a testing scenario and observe the results, we get a new *feedback loop*. Feedback can take many forms; following are some com‐ mon ones (in order of fastest to slowest):
+为了最大程度地减少错误的成本，持续集成鼓励我们使用*快速反馈循环。*<sup> 3</sup>每当我们将代码（或其他部分）更新集成到测试环境中并观察结果时，我们都会得到一个新的*反馈循环*。反馈可以采取多种形式，以下是一些常见的（从最快到最慢的顺序排列）：
 
-- The edit-compile-debug loop of local development
-- Automated test results to a code change author on presubmit
-- An integration error between changes to two projects, detected after both are submitted and tested together (i.e., on post-submit)
-- An incompatibility between our project and an upstream microservice depend‐ ency, detected by a QA tester in our staging environment, when the upstream service deploys its latest changes
-- Bug reports by internal users who are opted in to a feature before external users
-- Bug or outage reports by external users or the press
+- 本地开发的编写-编译-调试循环
+- 代码更新作者在提交前的自动化测试结果
+- 在两个项目的更新一起提交并测试后检测到的两个项目的更新之间的集成错误（在提交后）
+- 当上游服务部署其最新更改时，我们的项目与上游微服务依赖项之间的不兼容性（由过渡环境中的QA测试人员检测到）
+- 内测用户发现的错误报告，他们比起外部用户更先尝试新功能
+- 由外部用户或媒体发现的错误或中断报告
 
-*Canarying*—or deploying to a small percentage of production first—can help mini‐ mize issues that do make it to production, with a subset-of-production initial feed‐ back loop preceding all-of-production. However, canarying can cause problems, too, particularly around compatibility between deployments when multiple versions are deployed at once. This is sometimes known as *version skew*, a state of a distributed system in which it contains multiple incompatible versions of code, data, and/or con‐ figuration. Like many issues we look at in this book, version skew is another example of a challenging problem that can arise when trying to develop and manage software over time.
+*金丝雀*—或者先部署一小部分代码到生产环境—可以通过在全部代码部署到生产环境之前进行生产子集的初始反馈循环，来最大程度地减少生产环境中遇到的问题。但是，金丝雀也会引起问题，尤其是在一次部署多个版本时，部署之间的兼容性问题。这有时被称为*版本倾斜*, 这是分布式系统的一种状态，其中它包含代码，数据和配置的多个不兼容版本。就像我们在本书中讨论的许多问题一样，版本倾斜是一个挑战性的例子，当尝试随着时间的推移开发和管理软件时，可能会出现挑战性的问题。
 
-*Experiments* and *feature* *flags* are extremely powerful feedback loops. They reduce deployment risk by isolating changes within modular components that can be dynamically toggled in production. Relying heavily on feature-flag-guarding is a common paradigm for Continuous Delivery, which we explore further in Chapter 24.
+*实验* 和 *特征标记* 是极其强大的反馈循环。它们通过隔离可在生产环境中动态切换的模块化组件中的更改来降低部署风险。高度依赖功能标记保护是持续交付的常见范例，我们将在第24章中进一步探讨。
 
 ### Access and actionable feedback
 

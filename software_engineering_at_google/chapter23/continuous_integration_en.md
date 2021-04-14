@@ -49,11 +49,11 @@ To minimize the cost of bugs, CI encourages us to use *fast feedback loops.*3 Ea
 - The edit-compile-debug loop of local development
 - Automated test results to a code change author on presubmit
 - An integration error between changes to two projects, detected after both are submitted and tested together (i.e., on post-submit)
-- An incompatibility between our project and an upstream microservice depend‐ ency, detected by a QA tester in our staging environment, when the upstream service deploys its latest changes
+- An incompatibility between our project and an upstream microservice dependency, detected by a QA tester in our staging environment, when the upstream service deploys its latest changes
 - Bug reports by internal users who are opted in to a feature before external users
 - Bug or outage reports by external users or the press
 
-*Canarying*—or deploying to a small percentage of production first—can help mini‐ mize issues that do make it to production, with a subset-of-production initial feed‐ back loop preceding all-of-production. However, canarying can cause problems, too, particularly around compatibility between deployments when multiple versions are deployed at once. This is sometimes known as *version skew*, a state of a distributed system in which it contains multiple incompatible versions of code, data, and/or con‐ figuration. Like many issues we look at in this book, version skew is another example of a challenging problem that can arise when trying to develop and manage software over time.
+*Canarying*—or deploying to a small percentage of production first—can help minimize issues that do make it to production, with a subset-of-production initial feedback loop preceding all-of-production. However, canarying can cause problems, too, particularly around compatibility between deployments when multiple versions are deployed at once. This is sometimes known as *version skew*, a state of a distributed system in which it contains multiple incompatible versions of code, data, and/or configuration. Like many issues we look at in this book, version skew is another example of a challenging problem that can arise when trying to develop and manage software over time.
 
 *Experiments* and *feature* *flags* are extremely powerful feedback loops. They reduce deployment risk by isolating changes within modular components that can be dynamically toggled in production. Relying heavily on feature-flag-guarding is a common paradigm for Continuous Delivery, which we explore further in Chapter 24.
 
