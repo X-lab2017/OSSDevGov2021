@@ -57,15 +57,15 @@
 
 *实验* 和 *特征标记* 是极其强大的反馈循环。它们通过隔离可在生产环境中动态切换的模块化组件中的更改来降低部署风险。高度依赖功能标记保护是持续交付的常见范例，我们将在第24章中进一步探讨。
 
-### Access and actionable feedback
+### 访问和可行反馈
 
-It’s also important that feedback from CI be widely accessible. In addition to our open culture around code visibility, we feel similarly about our test reporting. We have a unified test reporting system in which anyone can easily look up a build or test run, including all logs (excluding user Personally Identifiable Information [PII]), whether for an individual engineer’s local run or on an automated development or staging build.
+持续集成反馈能够广泛可访问也很重要。除了围绕代码可见性的开源文化之外，我们对测试报告的感受也类似。我们拥有一个统一的测试报告系统，在该系统中，任何人都可以轻松地查找构建或测试运行，包括所有日志（不包括用户个人身份信息），无论是针对单个工程师的本地运行还是在自动化开发或分阶段构建中。
 
-Along with logs, our test reporting system provides a detailed history of when build or test targets began to fail, including audits of where the build was cut at each run, where it was run, and by whom. We also have a system for flake classification, which uses statistics to classify flakes at a Google-wide level, so engineers don’t need to fig‐ ure this out for themselves to determine whether their change broke another project’s test (if the test is flaky: probably not).
+除日志外，我们的测试报告系统还提供了有关构建或测试目标何时开始失败的详细历史记录，包括审核每次运行时切片的位置，运行的位置以及由谁进行的审核。我们还提供了切片分类系统，该系统使用统计信息在Google范围内对切片进行分类，因此工程师无需自己弄清楚这一点来确定他们的变更是否破坏了另一个项目的测试（如果测试是片状：可能不是）。
 
-Visibility into test history empowers engineers to share and collaborate on feedback, an essential requirement for disparate teams to diagnose and learn from integration failures between their systems. Similarly, bugs (e.g., tickets or issues) at Google are open with full comment history for all to see and learn from (with the exception, again, of customer PII).
+测试历史记录的可视性使工程师能够共享反馈并在反馈上进行协作，这是不同团队从系统之间的集成故障中诊断和学习的基本要求。同样，Google的错误（例如票证或问题）也会打开，其中包含完整的评论历史记录，供所有人查看和学习（客户除外）。
 
-Finally, any feedback from CI tests should not just be accessible but actionable—easy to use to find and fix problems. We’ll look at an example of improving user-unfriendly feedback in our case study later in this chapter. By improving test output readability, you automate the understanding of feedback.
+最后，来自持续集成测试的任何反馈不仅应该可以访问，而且应该可行-易于使用来查找和解决问题。在本章稍后的案例研究中，我们将看一个改善一个用户不友好反馈的示例。通过提高测试输出的可读性，您可以很容易理解反馈。
 
 ## Automation
 
