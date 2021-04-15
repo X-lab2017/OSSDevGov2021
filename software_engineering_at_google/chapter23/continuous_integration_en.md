@@ -139,3 +139,22 @@ After a code change has passed the CB (this might take multiple cycles if there 
 
 As CD builds RCs, it will run larger tests against the entire candidate. We test a release candidate by promoting it through a series of test environments and testing it at each deployment. This can include a combination of sandboxed, temporary environments and shared test environments, like dev or staging.
 
+
+
+<hr>
+
+1 *https://www.martinfowler.com/articles/continuousIntegration.html*
+
+2 Forsgren, Nicole, et al. (2018). Accelerate: The Science of Lean Software and DevOps: Building and Scaling High Performing Technology Organizations. IT Revolution.
+
+3 This is also sometimes called “shifting left on testing.”
+
+4 *Head* is the latest versioned code in our monorepo. In other workflows, this is also referred to as *master*, *mainline*, or *trunk*. Correspondingly, integrating at head is also known as *trunk-based development*.
+
+5  At Google, release automation is managed by a separate system from TAP. We won’t focus on *how* release automation assembles RCs, but if you’re interested, we do refer you to *Site Reliability Engineering* (O’Reilly) in which our release automation technology (a system called Rapid) is discussed in detail.
+
+6  CD with experiments and feature flags is discussed further in Chapter 24.
+
+7  We call these “mid-air collisions” because the probability of it occurring is extremely low; however, when this does happen, the results can be quite surprising.
+
+8 Each team at Google configures a subset of its project’s tests to run on presubmit (versus post-submit). In reality, our continuous build actually optimizes some presubmit tests to be saved for post-submit, behind the scenes. We’ll further discuss this later on in this chapter.

@@ -135,8 +135,28 @@
 
 Google的大多数团队都会在提交前进行小型测试（例如单元测试）<sup>8</sup>——这些都是显而易见的，因为它们往往是最快，最可靠的。在预提交时是否以及如何运行更大范围的测试是一个更有趣的问题，并且因团队而异。对于想要运行它们的团队，密封测试是一种减少其固有不稳定性的行之有效的方法。另一个选择是允许大范围的测试在预提交时不可靠，但是在测试开始失败时主动禁用它们。
 
-### Release candidate testing
+### 发布候选测试
 
-After a code change has passed the CB (this might take multiple cycles if there were failures), it will soon encounter CD and be included in a pending release candidate.
+在代码更新通过持续构建之后（如果发生故障，这可能需要花费多个周期），它将很快进入持续发布，并被包含在等待发布的候选版本中。
 
-As CD builds RCs, it will run larger tests against the entire candidate. We test a release candidate by promoting it through a series of test environments and testing it at each deployment. This can include a combination of sandboxed, temporary environments and shared test environments, like dev or staging.
+当持续发布建立候选发布时，它将对整个候选程序进行较大的测试。我们通过在一系列测试环境中对其进行升级并在每个部署中对其进行测试来测试候选版本。这可以包括沙盒，临时环境和共享测试环境（例如开发人员或过渡环境）的组合。
+
+
+
+<hr>
+
+1 *https://www.martinfowler.com/articles/continuousIntegration.html*
+
+2 Forsgren, Nicole, et al. (2018). Accelerate: The Science of Lean Software and DevOps: Building and Scaling High Performing Technology Organizations. IT Revolution.
+
+3 有时也被称为 “向左转移测试”
+
+4 *Head* 是我们monorepo中最新的版本代码。在其他工作流程中，这也称为 *master*, *mainline*, 或 *trunk*。相应地，head合并也被称为 *基于trunk的开发*。
+
+5  在Google中，发布自动化由与TAP不同的系统管理。 我们不会专注于*发布自动化如何组装候选发布*，但是，如果您有兴趣，我们会向您推荐*站点可靠性工程*（O'Reilly），我们在其中讨论了发布自动化技术（称为Rapid的系统）的详细过程。
+
+6  带有实验和特征标记的持续发布将在第24章中进一步讨论。
+
+7  我们将其称为“空中碰撞”是因为发生这种碰撞的可能性极低。但是，当确实发生这种情况时，结果可能会非常令人惊讶。
+
+8 Google的每个团队都将其项目测试的子集配置为在提交前（而不是提交后）运行。实际上，我们的连续构建实际上优化了一些提交前的测试，这些测试可以在后台保存，以备提交后使用。我们将在本章稍后进一步讨论。
