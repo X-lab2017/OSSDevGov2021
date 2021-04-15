@@ -111,25 +111,29 @@
 
 右箭头显示了从本地开发到生产环境的单个代码更新的进度。同样，我们在持续集成中的主要目标之一是确定在此过程中“什么时候进行测试” *“什么时候进行测试”。在本章的后面，我们将介绍不同的测试阶段，并提供一些有关在提交前与提交后以及在候选发布及以后版本中要测试什么的注意事项。我们将证明，当我们向右移动时，对代码的更改将经受逐渐扩大的范围的自动化测试。
 
-### Why presubmit isn’t enough
+### 为什么预提交是不充分的？
 
-With the objective to catch problematic changes as soon as possible and the ability to run automated tests on presubmit, you might be wondering: why not just run all tests on presubmit?
+出于尽快发现有问题的更新的目的，以及能够在提交前运行自动测试的能力，你可能想知道：为什么不只在提交前运行所有测试？
 
-The main reason is that it’s too expensive. Engineer productivity is extremely valua‐ ble, and waiting a long time to run every test during code submission can be severely disruptive. Further, by removing the constraint for presubmits to be exhaustive, a lot of efficiency gains can be made if tests pass far more frequently than they fail. For example, the tests that are run can be restricted to certain scopes, or selected based on a model that predicts their likelihood of detecting a failure.
+主要原因是它太贵了。工程师的工作效率是非常宝贵的，在代码提交期间等待很长时间才能运行每个测试可能会造成严重破坏。此外，通过消除预提交的穷举性约束，如果测试通过的频率比失败的通过频率高得多，则可以大大提高效率。例如，可以将运行的测试限制在某些范围内，或者可以根据模型预测到一个失败的可能性来选择。
 
-Similarly, it’s expensive for engineers to be blocked on presubmit by failures arising from instability or flakiness that has nothing to do with their code change.
+同样，对于工程师来说，代码更新时由于不稳定或脆弱等导致失败使工程师无法预提交，这是非常昂贵的。
 
-Another reason is that during the time we run presubmit tests to confirm that a change is safe, the underlying repository might have changed in a manner that is incompatible with the changes being tested. That is, it is possible for two changes that touch completely different files to cause a test to fail. We call this a mid-air collision, and though generally rare, it happens most days at our scale. CI systems for smaller repositories or projects can avoid this problem by serializing submits so that there is no difference between what is about to enter and what just did.
+另一个原因是，在我们运行提交前的测试以确认更新是安全的期间，基础仓库的更新方式可能与所测试的更新不兼容。也就是说，可能有两个更新涉及了完全不同的文件，从而导致测试失败。我们称这为空中相撞，虽然通常很少见，但在我们的规模中大多数情况下都会发生。用于较小仓库或项目的持续集成系统可以通过对提交进行序列化来避免此问题，使得我们正要测试的更新和完成测试的更新没有区别。
 
-### Presubmit versus post-submit
+### 提交前和提交后的区别
 
-So, which tests *should* be run on presubmit? Our general rule of thumb is: only fast, reliable ones. You can accept some loss of coverage on presubmit, but that means you need to catch any issues that slip by on post-submit, and accept some number of roll‐ backs. On post-submit, you can accept longer times and some instability, as long as you have proper mechanisms to deal with it.
+因此，*应该*在提交前运行哪些测试？我们的一般经验法则是：只运行快速，可靠的规则。您可以在提交前接受某些范围的损失，但这意味着您需要在提交后发现遗漏的所有问题，并接受一定数量的回滚。提交后，只要您有适当的处理机制，你需要接受更长的时间和不稳定性来解决这些问题。
 
-![image-20210413200701892](/Users/xuhuan/Library/Application Support/typora-user-images/image-20210413200701892.png)
+<img src="/Users/xuhuan/Library/Application Support/typora-user-images/image-20210415144551199.png" alt="image-20210415144551199" style="zoom:50%;float:left" />我们将在<span style="color:red">493页的“ Google的持续集成”</span>中展示TAP和我们的案例研究如何处理故障管理。
 
-We don’t want to waste valuable engineer productivity by waiting too long for slow tests or for too many tests—we typically limit presubmit tests to just those for the project where the change is happening. We also run tests concurrently, so there is a resource decision to consider as well. Finally, we don’t want to run unreliable tests on presubmit, because the cost of having many engineers affected by them, debugging the same problem that is not related to their code change, is too high.
 
-Most teams at Google run their small tests (like unit tests) on presubmit8—these are the obvious ones to run as they tend to be the fastest and most reliable. Whether and how to run larger-scoped tests on presubmit is the more interesting question, and this varies by team. For teams that do want to run them, hermetic testing is a proven approach to reducing their inherent instability. Another option is to allow large- scoped tests to be unreliable on presubmit but disable them aggressively when they start failing.
+
+
+
+我们不想因为等待太慢的速度或太多的测试而浪费宝贵的工程师生产力，我们通常将提交前的测试限制为正在发生项目更新的测试。我们还同时运行测试，因此还需要考虑资源分配。最后，我们不想在提交前进行不可靠的测试，因此让许多工程师受其影响，因为让他们调试与他们的代码更新无关的相同问题的成本过高。
+
+Google的大多数团队都会在提交前进行小型测试（例如单元测试）<sup>8</sup>——这些都是显而易见的，因为它们往往是最快，最可靠的。在预提交时是否以及如何运行更大范围的测试是一个更有趣的问题，并且因团队而异。对于想要运行它们的团队，密封测试是一种减少其固有不稳定性的行之有效的方法。另一个选择是允许大范围的测试在预提交时不可靠，但是在测试开始失败时主动禁用它们。
 
 ### Release candidate testing
 
