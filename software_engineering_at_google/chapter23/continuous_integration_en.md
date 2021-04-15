@@ -107,7 +107,7 @@ Let’s look at how CB and CD fit in as we apply Continuous Testing (CT) to a co
 
 *Figure 23-2. Life of a code change with CB and CD*
 
-The rightward arrow shows the progression of a single code change from local devel‐ opment to production. Again, one of our key objectives in CI is determining *what* to test *when* in this progression. Later in this chapter, we’ll introduce the different test‐ ing phases and provide some considerations for what to test in presubmit versus post-submit, and in the RC and beyond. We’ll show that, as we shift to the right, the code change is subjected to progressively larger-scoped automated tests.
+The rightward arrow shows the progression of a single code change from local development to production. Again, one of our key objectives in CI is determining *what* to test *when* in this progression. Later in this chapter, we’ll introduce the different tes ing phases and provide some considerations for what to test in presubmit versus post-submit, and in the RC and beyond. We’ll show that, as we shift to the right, the code change is subjected to progressively larger-scoped automated tests.
 
 ### Why presubmit isn’t enough
 

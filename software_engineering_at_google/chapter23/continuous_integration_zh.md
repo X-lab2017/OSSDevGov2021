@@ -93,23 +93,23 @@
 
 然后，我们将持续交付定义如下：
 
-> 持续交付 (CD): a continuous assembling of release candidates, followed by the promotion and testing of those candidates throughout a series of environments— sometimes reaching production and sometimes not.
+> 持续交付 (CD): 持续合并发布候选版本，然后在一系列环境中对这些候选版本进行升级和测试——有时达到生产状态要求，有时无法达到要求。
 
-The promotion and deployment process often depends on the team. We’ll show how our case study navigated this process.
+升级和部署过程通常取决于团队。我们将展示我们的案例研究如何引导这一过程。
 
-For teams at Google that want continuous feedback from new changes in production (e.g., Continuous Deployment), it’s usually infeasible to continuously push entire binaries, which are often quite large, on green. For that reason, doing a *selective* Continuous Deployment, through experiments or feature flags, is a common strategy.<sup>7</sup>
+对于希望从生产环境中的新变化（例如“持续部署”）获得持续反馈的Google团队，通常不建议将较大的整个二进制文件连续推送到green head。因此，通过实验或特征标记进行“选择性”连续部署是一种常见的策略。<sup>7</sup>
 
-As an RC progresses through environments, its artifacts (e.g., binaries, containers) ideally should not be recompiled or rebuilt. Using containers such as Docker helps enforce consistency of an RC between environments, from local development onward. Similarly, using orchestration tools like Kubernetes (or in our case, usually Borg), helps enforce consistency between deployments. By enforcing consistency of our release and deployment between environments, we achieve higher-fidelity earlier testing and fewer surprises in production.
+随着候选发布在环境中的发展，理想情况下，不应该重新编译或重建其组件（例如，二进制文件，容器）。从本地开发开始，使用诸如Docker之类的容器有助于增强环境之间候选发布的一致性。同样，使用Kubernetes之类的编排工具（在我们的情况下，通常是Borg）有助于实现部署之间的一致性。通过加强环境之间发布和部署的一致性，我们可以实现更高保真度的早期测试，并减少生产中的意外情况。
 
-### Continuous Testing
+### 持续测试
 
-Let’s look at how CB and CD fit in as we apply Continuous Testing (CT) to a code change throughout its lifetime, as shown Figure 23-2.
+让我们看一下在将连续测试（CT）应用于整个生命周期中的代码更新时，连续构建（CB）和连续发布（CD）如何配合，如图23-2所示。
 
 ![image-20210413200312251](/Users/xuhuan/Library/Application Support/typora-user-images/image-20210413200312251.png)
 
-*Figure 23-2. Life of a code change with CB and CD*
+* 图23-2. 使用持续构建和持续发布的代码周期*
 
-The rightward arrow shows the progression of a single code change from local devel‐ opment to production. Again, one of our key objectives in CI is determining *what* to test *when* in this progression. Later in this chapter, we’ll introduce the different test‐ ing phases and provide some considerations for what to test in presubmit versus post-submit, and in the RC and beyond. We’ll show that, as we shift to the right, the code change is subjected to progressively larger-scoped automated tests.
+右箭头显示了从本地开发到生产环境的单个代码更新的进度。同样，我们在持续集成中的主要目标之一是确定在此过程中“什么时候进行测试” *“什么时候进行测试”。在本章的后面，我们将介绍不同的测试阶段，并提供一些有关在提交前与提交后以及在候选发布及以后版本中要测试什么的注意事项。我们将证明，当我们向右移动时，对代码的更改将经受逐渐扩大的范围的自动化测试。
 
 ### Why presubmit isn’t enough
 
