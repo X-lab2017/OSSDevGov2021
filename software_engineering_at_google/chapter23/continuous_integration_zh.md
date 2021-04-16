@@ -1,46 +1,52 @@
+CB 持续构建
 
+CD 持续交付
+
+RC 预发布版
+
+cherry-pick 择优挑选
+
+test suite 测试集
 
 ---
 
 icy:
 
-It’s common to include some manual QA testing of the RC in shared environments, too.
+在共享环境中包含一些RC的人工QA测试也是很常见的。
 
-There are several reasons why it’s important to run a comprehensive, automated test suite against an RC, even if it is the same suite that CB just ran against the code on post-submit (assuming the CD cuts at green):
+针对RC运行一个全面自动化的测试集是很重要的，即使它和CB在提交后对代码运行的测试集相同(假设CD是通过的)。这么做有以下几点理由:
 
-*As a sanity check*
+*作一次全面检查*
 
-​	We double check that nothing strange happened when the code was cut and recompiled in the RC.
+​	我们再次检查代码在RC中被剪切和重新编译时没有发生任何奇怪的事情。
 
-*For auditability*
+*用于审核*
 
-​	If an engineer wants to check an RC’s test results, they are readily available and associated with the RC, so they don’t need to dig through CB logs to find them.
+​	如果一个工程师想要检查一个RC的测试结果，它们是现成的，并且与RC本身相关联，所以他们不需要挖掘CB的日志来找到它们。
 
-*To allow for cherry picks*
+*允许cherry-pick*
 
-​	If you apply a cherry-pick fix to an RC, your source code has now diverged from the latest cut tested by the CB.
+​	如果你对RC应用一个cherry-pick，你的源代码现在已经与CB测试的最新版本不同了。
 
-*For emergency pushes*
+*紧急推送*
 
-​	In that case, CD can cut from true head and run the minimal set of tests necessary to feel confident about an emergency push, without waiting for the full CB to pass.
+​	在这种情况下，CD不必等待完整的CB通过，就可以从真正的head中删除并运行所需的最小测试集，以此对紧急推送感到自信。
 
-### Production testing
+### 生产测试
 
-Our continuous, automated testing process goes all the way to the final deployed environment: production. We should run the same suite of tests against production(sometimes called probers) that we did against the release candidate earlier on to verify:
-1) the working state of production, according to our tests, and 2) the relevance of our tests, according to production.
+我们持续自动化的测试过程一直延伸到最终部署的环境:生产环境。我们应该对生产版本(有时称为探测程序)运行与之前对RC所做的相同的测试集，以验证：1)由测试结果得出的生产环境的工作状态 2)由生产环境表现出的我们测试的相关性
 
-Continuous testing at each step of the application’s progression, each with its own trade-offs, serves as a reminder of the value in a “defense in depth” approach to catching bugs—it isn’t just one bit of technology or policy that we rely upon for quality and stability, it’s many testing approaches combined.
+在应用程序的每一步进程执行持续测试,每种方法都有自己的利弊,提醒人们利用“纵深防御”方法的优势来捕获错误——我们保证质量和稳定性依靠的不只是这一个技术或政策,这是许多测试方法的总和。
 
-#### CI Is Alerting
+#### CI是一种告警
 
 *Titus Winters*
 
-As with responsibly running production systems, sustainably maintaining software systems also requires continual automated monitoring. Just as we use a monitoring and alerting system to understand how production systems respond to change, CI
-reveals how our software is responding to changes in its environment. Whereas production monitoring relies on passive alerts and active probers of running systems, CI 
+与负责任地运行生产系统一样，可持续地维护软件系统也需要持续的自动化监控。正如我们使用监视和警报系统来理解生产系统如何响应变化一样，CI揭示了我们的软件如何响应其环境中的变化。生产监控依赖于运行系统的被动警报和主动探测器，而CI使用单元和集成测试检测软件在部署之前的更改。
 
 ---
 
-uses unit and integration tests to detect changes to the software before it is deployed.
+
 Drawing comparisons between these two domains lets us apply knowledge from one to the other.
 
 Both CI and alerting serve the same overall purpose in the developer workflow—to identify problems as quickly as reasonably possible. CI emphasizes the early side of the developer workflow, and catches problems by surfacing test failures. Alerting
