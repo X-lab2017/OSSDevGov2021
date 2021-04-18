@@ -8,6 +8,8 @@ cherry-pick 择优挑选
 
 test suite 测试集
 
+SRE ？？？
+
 ---
 
 icy:
@@ -24,7 +26,7 @@ icy:
 
 ​	如果一个工程师想要检查一个RC的测试结果，它们是现成的，并且与RC本身相关联，所以他们不需要挖掘CB的日志来找到它们。
 
-*允许cherry-pick*
+*允许cherry-pick（择优挑选）*
 
 ​	如果你对RC应用一个cherry-pick，你的源代码现在已经与CB测试的最新版本不同了。
 
@@ -34,11 +36,11 @@ icy:
 
 ### 生产测试
 
-我们持续自动化的测试过程一直延伸到最终部署的环境:生产环境。我们应该对生产版本(有时称为探测程序)运行与之前对RC所做的相同的测试集，以验证：1)由测试结果得出的生产环境的工作状态 2)由生产环境表现出的我们测试的相关性
+我们持续自动化的测试过程一直延伸到最终部署的环境:生产环境。我们应该对生产版本(有时称为探测程序)运行与之前对RC所做的相同的测试集，以验证：1)由测试结果得出的生产环境的工作状态 2)由生产环境表现出的我们测试的相关性。。
 
 在应用程序的每一步进程执行持续测试,每种方法都有自己的利弊,提醒人们利用“纵深防御”方法的优势来捕获错误——我们保证质量和稳定性依靠的不只是这一个技术或政策,这是许多测试方法的总和。
 
-#### CI是一种告警
+#### CI是一种警报
 
 *Titus Winters*
 
@@ -46,26 +48,19 @@ icy:
 
 ---
 
+比较CI和警报这两个领域可以让我们把知识从一个领域运用到另一个领域。
 
-Drawing comparisons between these two domains lets us apply knowledge from one to the other.
+CI和警报在开发人员工作流程中的总目标是一样的——尽可能快地发现问题。CI强调开发人员早期的工作流程，并通过显示失败的测试来捕获问题。警报重点关注同一工作流的后期，并通过监控指标，在它们超过某个阈值时发起报告来捕获问题。两者都是“尽快自动发现问题”的形式。
 
-Both CI and alerting serve the same overall purpose in the developer workflow—to identify problems as quickly as reasonably possible. CI emphasizes the early side of the developer workflow, and catches problems by surfacing test failures. Alerting
-focuses on the late end of the same workflow and catches problems by monitoring metrics and reporting when they exceed some threshold. Both are forms of “identify problems automatically, as soon as possible.”
+一个管理有方的警报系统有助于令你的服务等级目标(service-level objective, SLOs)得到满足。一个好的CI系统有助于确保你的构建处于良好的状态——代码编译、然后测试通过，之后如果需要还可以部署一个新发布。这两个领域的最佳实践策略都着重于逼真度和可操作的警报:只有违反重要的基本不变量时，测试才会失败，而不是因为测试脆弱或不稳定。每隔几次CI运行就失败一次的不稳定测试，或者每隔几分钟就发出一次虚假警报并为值班者生成一个页面，都是有很大问题的。如果没法采取行动，就不应该发出警报。如果它实际上没有违反SUT的不变量，那么它就不该是失败的测试。
 
-A well-managed alerting system helps to ensure that your Service-Level Objectives(SLOs) are being met. A good CI system helps to ensure that your build is in good shape—the code compiles, tests pass, and you could deploy a new release if you needed to. Best-practice policies in both spaces focus a lot on ideas of fidelity and actionable alerting: tests should fail only when the important underlying invariant is violated, rather than because the test is brittle or flaky. A flaky test that fails every few CI runs is just as much of a problem as a spurious alert going off every few minutes and generating a page for the on-call. If it isn’t actionable, it shouldn’t be alerting. If it isn’t actually violating the invariants of the SUT, it shouldn’t be a test failure.
+CI和警报共享一个基本的概念框架。例如，在局部信号(单元测试、监视独立统计信息/基于原因的警报)和交叉依赖信号(集成和发布测试、黑盒探测)之间存在类似的关系。衡量一个综合系统是否在工作的最高逼真度指标是端到端信号，但这种逼真度是不稳定的、而且增加了资源成本，并且不容易调试根本的原因。
 
-CI and alerting share an underlying conceptual framework. For instance, there’s a similar relationship between localized signals (unit tests, monitoring of isolated statistics/cause-based alerting) and cross-dependency signals (integration and release tests,
-black-box probing). The highest fidelity indicators of whether an aggregate system is working are the end-to-end signals, but we pay for that fidelity in flakiness, increasing resource costs, and difficulty in debugging root causes.
+类似地，我们在两个领域的故障模式中看到一个基本联系。基于原因的警报出现不稳定是因为数据超出了一个随意的阈值(例如，失败请求在过去一小时内的重试次数)，而该阈值与最终用户所看到的系统健康状况之间不一定存在根本联系。当一个任意的测试需求或不变条件被违反时，不稳定的测试就会失败，但这个不变条件和被测试软件的正确性之间不一定存在基本联系。在大多数情况下，这些代码很容易编写，并且可能有助于调试更大的问题。在这两种情况下，它们都是粗略的表现了整体的健康/正确性，无法捕获整体的具体行为。如果你没有一个简单的端到端探针，但你确实使收集一些汇总统计数据变得容易，那么团队将根据任意的统计数据编写阈值警报。如果你没有高等级的方法来解释这样的故障：”编码前的图像与解码后的图像不太相同”，那么测试失败，团队将构建一个断言测试：字节流是否相同的。
 
-Similarly, we see an underlying connection in the failure modes for both domains. Brittle cause-based alerts fire based on crossing an arbitrary threshold (say, retries in the past hour), without there necessarily being a fundamental connection between
-that threshold and system health as seen by an end user. Brittle tests fail when an arbitrary test requirement or invariant is violated, without there necessarily being a fundamental connection between that invariant and the correctness of the software being tested. In most cases these are easy to write, and potentially helpful in debugging a larger issue. In both cases they are rough proxies for overall health/correctness, failing to capture the holistic behavior. If you don’t have an easy end-to-end probe, but you do make it easy to collect some aggregate statistics, teams will write threshold alerts based on arbitrary statistics. If you don’t have a high-level way to say, “Fail the test if the decoded image isn’t roughly the same as this decoded image,” teams will instead build tests that assert that the byte streams are identical.
-
-Cause-based alerts and brittle tests can still have value; they just aren’t the ideal way to identify potential problems in an alerting scenario. In the event of an actual failure, having more debug detail available can be useful. When SREs are debugging an outage,
-it can be useful to have information of the form, “An hour ago users, started experiencing more failed requests. Around the same, time the number of retries
+基于原因的警报和不稳定测试仍然是有用的，只不过它们并不是在警报场景中发现潜在问题的理想方式。在实际发生故障的情况下，提供更多的调试细节是很有用的。当SRE调试断电时，如果有“一小时前的用户，开始经历更多失败请求。大约在同一时间，重试次数开始增加。让我们开始调查吧。”这样的表单信息，就会很有用。类似地，不稳定的测试仍然可以提供额外的调试信息:“图像渲染管道开始吐出垃圾。其中一个单元测试表明，我们从JPEG压缩器得到了不同的字节。让我们从这里开始调查吧。”
 
 ---
-
-started ticking up. Let’s start investigating there.” Similarly, brittle tests can still provide extra debugging information: “The image rendering pipeline started spitting out garbage. One of the unit tests suggests that we’re getting different bytes back from the JPEG compressor. Let’s start investigating there.”
 
 Although monitoring and alerting are considered a part of the SRE/production management domain, where the insight of “Error Budgets” is well understood,[^9] CI comes from a perspective that still tends to be focused on absolutes. Framing CI as the “left
 shift” of alerting starts to suggest ways to reason about those policies and propose better best practices:
