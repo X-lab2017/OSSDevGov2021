@@ -62,23 +62,16 @@ CI和警报共享一个基本的概念框架。例如，在局部信号(单元�
 
 ---
 
-Although monitoring and alerting are considered a part of the SRE/production management domain, where the insight of “Error Budgets” is well understood,[^9] CI comes from a perspective that still tends to be focused on absolutes. Framing CI as the “left
-shift” of alerting starts to suggest ways to reason about those policies and propose better best practices:
+尽管监视和警报被认为是SRE/生产管理领域的一部分，它们对于“错误预算”的观点也被充分的理解[^9] ，但CI仍然倾向于绝对的视角。将CI定义为警示的“左移”就是开始建议推行这些策略及其更好的最佳实践：
 
-- Having a 100% green rate on CI, just like having 100% uptime for a production service, is awfully expensive. If that is actually your goal, one of the biggest problems is going to be a race condition between testing and submission.
+- 在CI上拥有100%的绿色率，就像生产服务拥有100%的正常运行时间一样，是非常昂贵的。如果这确实是你的目标，那么最大的问题之一就是测试和提交之间的竞争条件。
+- 一般来说，不应该把每一次警报当作同等原因来处理。如果在生产中触发警报，但服务实际上没有受到影响，那么关闭警报才是正确的选择。对于测试失败也是如此：在我们的CI系统学会如何说明“这个测试因为不相关的原因失败了”之前，我们或许应该对禁用失败的测试更包容一点，因为并不是所有的测试失败都预示着即将到来的生产问题。
+- “如果我们最新的CI运行结果不是绿色的，所有人都不能提交”，这种策略可能是一种误导。如果CI报告了一个问题，那么在让人们提交或加重这个问题之前，肯定应该对此类失败进行调查。但是，如果很好地理解了根本原因，而且很明显不会影响生产，那么阻塞提交是不合理的
 
-- Treating every alert as an equal cause for alarm is not generally the correct approach. If an alert fires in production but the service isn’t actually impacted, silencing the alert is the correct choice. The same is true for test failures: until our
-  CI systems learn how to say, “This test is known to be failing for irrelevant reasons,” we should probably be more liberal in accepting changes that disable a failed test. Not all test failures are indicative of upcoming production issues.
+这种“CI是一种警报”的观点仍是初步提出，我们还在研究如何完全将两者划成等号。考虑到所涉及的较高风险，SRE在围绕监视和警报的最佳实践方面投入了大量精力也就不足为奇了，而CI则被视为一种更奢侈的功能。[^10]在接下来的几年里,软件工程的任务将是见证现有CI环境的行为实践被赋予新的概念，来帮助调整测试和CI景观，测试中的最佳实践可以帮助明确监控和报警的目标和策略。
 
-- Policies that say, “Nobody can commit if our latest CI results aren’t green” are probably misguided. If CI reports an issue, such failures should definitely be investigated before letting people commit or compound the issue. But if the root cause is well understood and clearly would not affect production, blocking commits is unreasonable.
-
-This “CI is alerting” insight is new, and we’re still figuring out how to fully draw parallels. Given the higher stakes involved, it’s unsurprising that SRE has put a lot of thought into best practices surrounding monitoring and alerting, whereas CI has been viewed as more of a luxury feature.[^10] For the next few years, the task in software engineering will be to see where existing SRE practice can be reconceptualized in a CI context to help reformulate the testing and CI landscape—and perhaps where best
-practices in testing can help clarify goals and policies on monitoring and alerting.
-
-
-
-[^9]: Aiming for 100% uptime is the wrong target. Pick something like 99.9% or 99.999% as a business or product trade-off, define and monitor your actual uptime, and use that “budget” as an input to how aggressively you’re willing to push risky releases.
-[^10]: We believe CI is actually critical to the software engineering ecosystem: a must-have, not a luxury. But that is not universally understood yet.
+[^9]: 不应该以100%正常的运行时间作为目标。而是选择99.9%或99.999%作为业务或产品的取舍，定义并监控你的实际正常运行时间，并使用“预算”作为你愿意以多大的力度推送风险版本。
+[^10]:  我们相信CI对于软件工程生态系统实际上是至关重要的:是必须的，而不是奢侈的。但这一点还没有得到普遍理解。
 
 ---
 
