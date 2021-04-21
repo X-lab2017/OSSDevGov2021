@@ -1,6 +1,6 @@
 ### 期中作业要求
 
-任务：全班翻译《Software Engineering at Google》电子书
+任务：文档型内容协作——以《Software Engineering at Google》文档为例
 
 - 23 组同学分章节翻译，分组情况：[https://shimo.im/docs/9gcg9rVkYKDrDjd6](https://shimo.im/docs/9gcg9rVkYKDrDjd6)
 
