@@ -52,7 +52,7 @@ icy:
 
 CI和警报在开发人员工作流程中的总目标是一样的——尽可能快地发现问题。CI强调开发人员早期的工作流程，并通过显示失败的测试来捕获问题。警报重点关注同一工作流的后期，并通过监控指标，在它们超过某个阈值时发起报告来捕获问题。两者都是“尽快自动发现问题”的形式。
 
-一个管理有方的警报系统有助于令你的服务等级目标(service-level objective, SLOs)得到满足。一个好的CI系统有助于确保你的构建处于良好的状态——代码编译、然后测试通过，之后如果需要还可以部署一个新发布。这两个领域的最佳实践策略都着重于逼真度和可操作的警报:只有违反重要的基本不变量时，测试才会失败，而不是因为测试脆弱或不稳定。每隔几次CI运行就失败一次的不稳定测试，或者每隔几分钟就发出一次虚假警报并为值班者生成一个页面，都是有很大问题的。如果没法采取行动，就不应该发出警报。如果它实际上没有违反SUT的不变量，那么它就不该是失败的测试。
+一个管理有方的警报系统有助于令你的服务等级目标(service-level objective, SLOs)得到满足。一个好的CI系统有助于确保你的构建处于良好的状态——代码编译、然后测试通过，之后如果需要还可以部署一个新发布。这两个领域的最佳实践策略都着重于逼真度和可操作的警报:只有违反重要的基本不变量时，测试才会失败，而不是因为测试脆弱或不稳定。每隔几次CI运行就失败一次的不稳定测试，或者每隔几分钟就发出一次虚假警报并为on-call生成一个页面，都是有很大问题的。如果没法采取行动，就不应该发出警报。如果它实际上没有违反SUT的不变量，那么它就不该是失败的测试。
 
 CI和警报共享一个基本的概念框架。例如，在局部信号(单元测试、监视独立统计信息/基于原因的警报)和交叉依赖信号(集成和发布测试、黑盒探测)之间存在类似的关系。衡量一个综合系统是否在工作的最高逼真度指标是端到端信号，但这种逼真度是不稳定的、而且增加了资源成本，并且不容易调试根本的原因。
 
@@ -75,24 +75,17 @@ CI和警报共享一个基本的概念框架。例如，在局部信号(单元�
 
 ---
 
-### CI Challenges
+### CI的挑战
 
-We’ve discussed some of the established best practices in CI and have introduced some of the challenges involved, such as the potential disruption to engineer productivity of unstable, slow, conflicting, or simply too many tests at presubmit. Some common additional challenges when implementing CI include the following:
+我们已经讨论了一些已实行的最佳CI实践，并引入了一些涉及的挑战，例如不稳定的、缓慢的、相互冲突的工程生产团队，或者只是在预提交时测试太多这样的潜在隐患。在实现CI时，一些常见的额外挑战包括:
 
-- *Presubmit optimization*, including which tests to run at presubmit time given the potential issues we’ve already described, and how to run them.
-- *Culprit finding* and *failure isolation*: Which code or other change caused the problem, and which system did it happen in? “Integrating upstream microservices” is one approach to failure isolation in a distributed architecture, when you
-  want to figure out whether a problem originated in your own servers or a backend. In this approach, you stage combinations of your stable servers along with upstream microservices’ new servers. (Thus, you are integrating the microservices’
-  latest changes into your testing.) This approach can be particularly challenging due to version skew: not only are these environments often incompatible, but you’re also likely to encounter false positives—problems that occur in a particular
-  staged combination that wouldn’t actually be spotted in production.
+- *预提交优化*，包括根据我们已经描述的潜在问题，确定哪些测试要在预提交时运行，以及如何运行它们。
+- *找出罪魁祸首*和*故障隔离*：问题是被哪些代码或者其他改动导致的？它发生在哪个系统上？“集成上游微服务”是一种分布式架构中进行故障隔离的方法，当你想要确定问题是源于你本地的服务器还是后端时。在这种方法中，你可以组合稳定服务器和上游微服务的新服务器。（因此，你正在将微服务的最新更改集成到你的测试中。）由于版本倾斜，这种方法可能特别具有挑战性:不仅这些环境经常不兼容，而且你还可能遇到在特定的集成中出现的误报问题，而在生产中实际上不会发现这些问题。
+- *资源约束*：测试需要资源来运行，大型测试可能非常昂贵。此外，在整个过程中插入自动化测试的基础设施的成本是相当大的。
 
-- *Resource constraints*: Tests need resources to run, and large tests can be very expensive. In addition, the cost for the infrastructure for inserting automated testing throughout the process can be considerable.
+另外还需要面临*失败管理*的挑战——当测试失败时该怎么做。尽管较小的问题通常可以很快得到解决，但我们的许多团队发现，当涉及到大型端到端测试时，很难有一个一致通过的测试集。它们本身就是残缺的或者不稳定的，难以调试；需要有一种机制来暂时禁用并跟踪它们，这样发布才能继续进行。谷歌的一项常见技术是使用由on-call或设计发布工程师提交的bug“热点列表”，并将其划分到合适的团队。这些错误如果可以自动生成和归档就更好了——我们的一些较大的产品都是这样做的，如谷歌Web服务器(GWS)和谷歌助理。为了确保任何阻止发布的bug都能被立即修复，这些热点列表应该被妥善管理。非发布版本的断点也应该被修复；它们不那么紧急，但也应该被优先考虑，这样测试集仍然有用，而不仅仅是一堆被禁用的、旧的测试。通常，端到端测试失败所捕获的问题实际上与测试有关，而不是代码。
 
-There’s also the challenge of *failure management*—what to do when tests fail. Although smaller problems can usually be fixed quickly, many of our teams find that it’s extremely difficult to have a consistently green test suite when large end-to-end
-tests are involved. They inherently become broken or flaky and are difficult to debug; there needs to be a mechanism to temporarily disable and keep track of them so that the release can go on. A common technique at Google is to use bug “hotlists” filed by an on-call or release engineer and triaged to the appropriate team. Even better is when these bugs can be automatically generated and filed—some of our larger products, like Google Web Server (GWS) and Google Assistant, do this. These hotlists
-should be curated to make sure any release-blocking bugs are fixed immediately. Nonrelease blockers should be fixed, too; they are less urgent, but should also be prioritized so the test suite remains useful and is not simply a growing pile of disabled,
-old tests. Often, the problems caught by end-to-end test failures are actually with tests rather than code.
-
-Flaky tests pose another problem to this process. They erode confidence similar to a broken test, but finding a change to roll back is often more difficult because the failure won’t happen all the time. Some teams rely on a tool to remove such flaky tests from presubmit temporarily while the flakiness is investigated and fixed. This keeps confidence high while allowing for more time to fix the problem.
+不稳定的测试给这个过程带来了另一个问题。它们类似于残缺的测试，降低了团队的信心，而且更难找到一个代码变更来回滚，因为失败不会一直发生。一些团队依赖于某种工具，在这些不稳定的测试被调查和修复的时候，暂时从预提交中删除这些不稳定的测试。这样可以保持较高的信心，同时留出更多时间来解决问题。
 
 ---
 
