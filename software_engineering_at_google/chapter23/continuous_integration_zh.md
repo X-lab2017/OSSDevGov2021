@@ -89,26 +89,23 @@ CI和警报共享一个基本的概念框架。例如，在局部信号(单元�
 
 ---
 
-*Test instability* is another significant challenge that we’ve already looked at in the context of presubmits. One tactic for dealing with this is to allow multiple attempts of the test to run. This is a common test configuration setting that teams use. Also, within
-test code, retries can be introduced at various points of specificity. 
+*测试不稳定性*是另一个重要的挑战，这个在预提交的背景下就已经被我们所考虑。处理这一问题的一个策略是允许测试多次尝试运行。这是团队常常使用的一个测试配置。同样，在测试代码中，可以在不同的特定点引入重试。
 
-Another approach that helps with test instability (and other CI challenges) is hermetic testing, which we’ll look at in the next section.
+另一种有助于解决测试不稳定性（和其他CI挑战）的方法是密封测试，我们将在下一节中讨论。
 
-### Hermetic Testing
+### 密封测试
 
-Because talking to a live backend is unreliable, we often use hermetic backends for larger-scoped tests. This is particularly useful when we want to run these tests on presubmit, when stability is of utmost importance. In Chapter 11, we introduced the concept of hermetic tests:
+因为与在线的后端通信并不可靠，所以我们经常使用密封的后端来进行更大范围的测试。当我们想在预提交版本上运行这些测试时，这特别有用，因为稳定性是最重要的。在第11章中，我们介绍了密封测试的概念:
 
-> *Hermetic tests*: tests run against a test environment (i.e., application servers and resources) that is entirely self-contained (i.e., no external dependencies like production backends).
+> *密封测试*：针对完全自包含的测试环境（即应用程序服务器和资源）运行的测试（即没有类似生产后端那样的外部依赖）。
 
-Hermetic tests have two important properties: greater determinism (i.e., stability) and isolation. Hermetic servers are still prone to some sources of nondeterminism, like system time, random number generation, and race conditions. But, what goes into
-the test doesn’t change based on outside dependencies, so when you run a test twice with the same application and test code, you should get the same results. If a hermetic test fails, you know that it’s due to a change in your application code or tests (with a minor caveat: they can also fail due to a restructuring of your hermetic test environment, but this should not change very often). For this reason, when CI systems rerun tests hours or days later to provide additional signals, hermeticity makes test failures easier to narrow down.
+密封测试有两个重要的特性：更高的确定性（即稳定性）和隔离性。密封的服务器仍然容易受到一些不确定性的影响，比如系统时间、随机数生成和竞态条件。但是，参与测试的内容不会根据外部依赖项而改变，所以当你使用相同的应用程序和测试代码再次运行测试时，应该会得到相同的结果。如果密封测试失败，你知道这是由于应用程序代码或测试的更改所致（有一个小警告：它们也可能由于密封测试环境的重新构造而失败，不过环境不常发生变化）。因此，当CI系统在数小时或数天之后重新运行测试以提供额外的信号时，密封测试失败更容易缩小范围。
 
-The other important property, isolation, means that problems in production should not affect these tests. We generally run these tests all on the same machine as well, so we don’t have to worry about network connectivity issues. The reverse also holds:
-problems caused by running hermetic tests should not affect production.
+另外还有一个重要的特性，隔离性，意味着生产中的问题应该不会影响这些测试。我们通常也会在同一台机器上运行这些测试，所以我们不必担心网络连接问题。反过来也成立：运行密封测试引起的问题应该不会影响生产。
 
-Hermetic test success should not depend on the user running the test. This allows people to reproduce tests run by the CI system and allows people (e.g., library developers) to run tests owned by other teams.
+密封测试的成功应该不会依赖于运行测试的用户。这允许人们重新运行由CI系统运行的测试，并允许人们（例如，lib库开发人员）运行其他团队的测试。
 
-One type of hermetic backend is a fake. As discussed in Chapter 13, these can be cheaper than running a real backend, but they take work to maintain and have limited fidelity.
+有一种专门仿造的密封后端。正如第13章所讨论的，这些可能比运行一个真正的后端成本更低，但是它们需要维护并且逼真度有限。
 
 ----
 
