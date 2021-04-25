@@ -1,0 +1,11 @@
+.gitignore
+*.ini
+target
+out
+*.iml
+classes
+META_INF
+logs
+.idea
+*.sh
+*.xml
