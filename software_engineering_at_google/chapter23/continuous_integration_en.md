@@ -127,7 +127,7 @@ Record/replay (see Chapter 14) systems record live backend responses, cache them
 
 ​	The test passes when it probably shouldn’t have because we are hitting the cache too much and missing problems that would surface when capturing a new response.
 
-False negatives
+*False negatives*
 
 ​	The test fails when it probably shouldn’t have because we are hitting the cache too little. This requires responses to be updated, which can take a long time and lead to test failures that must be fixed, many of which might not be actual problems.
 This process is often submit-blocking, which is not ideal.

@@ -105,32 +105,27 @@ CI和警报共享一个基本的概念框架。例如，在局部信号(单元�
 
 密封测试的成功应该不会依赖于运行测试的用户。这允许人们重新运行由CI系统运行的测试，并允许人们（例如，lib库开发人员）运行其他团队的测试。
 
-有一种专门仿造的密封后端。正如第13章所讨论的，这些可能比运行一个真正的后端成本更低，但是它们需要维护并且逼真度有限。
+有一种专门仿造的密封后端。正如第13章所讨论的，这些可能比运行一个真正的后端成本更低，但是它们需要维护并且逼真度有限。要实现预提交版本的集成测试，最纯净的选择是使用一个完全密封的设置，即启动整个沙盒化堆栈[^11]，然后谷歌为流行的组件(如数据库)提供开箱即用的沙箱配置，使设置起来更加容易。小型应用程序的组件越少，实行起来就越容易，但在谷歌有例外，即使是一个DisplayAds的应用，都会在每次预提交和连续提交时从头启动大约400个服务器。自从系统创建以来，记录/重放模式已经流行于更大的系统，而且比启动一个大型沙盒化堆栈更便宜。
 
 ----
 
-The cleanest option to achieve a presubmit-worthy integration test is with a fully hermetic setup—that is, starting up the entire stack sandboxed[^11]—and Google provides out-of-the-box sandbox configurations for popular components, like databases, to
-make it easier. This is more feasible for smaller applications with fewer components, but there are exceptions at Google, even one (by DisplayAds) that starts about four hundred servers from scratch on every presubmit as well as continuously on postsubmit. Since the time that system was created, though, record/replay has emerged as a more popular paradigm for larger systems and tends to be cheaper than starting up a large sandboxed stack.
+记录/回放系统（见第14章）记录并缓存实时的后端响应，然后在密封测试环境中回放它们。记录/回放是减少测试不稳定性的强大工具，但它的一个缺点是导致测试不稳定，很难在以下两者之间取得平衡：
 
-Record/replay (see Chapter 14) systems record live backend responses, cache them, and replay them in a hermetic test environment. Record/replay is a powerful tool for reducing test instability, but one downside is that it leads to brittle tests: it’s difficult to strike a balance between the following:
+*漏报率*
 
-*False positives*
+​	测试在不应该通过的情况下通过了，因为我们访问了太多次缓存从而错过了在捕捉新响应时可能出现的问题。	
 
-​	The test passes when it probably shouldn’t have because we are hitting the cache too much and missing problems that would surface when capturing a new response.
+*误报率*
 
-False negatives
+​	测试在不应该失败的情况下失败了，因为我们命中的缓存太少。这需要对响应进行更新，可能耗时较长并导致一些需要修复的测试失败，其中许多可能不是真正的问题。这个过程通常是阻塞提交的，这并不理想。
 
-​	The test fails when it probably shouldn’t have because we are hitting the cache too little. This requires responses to be updated, which can take a long time and lead to test failures that must be fixed, many of which might not be actual problems.
-This process is often submit-blocking, which is not ideal.
+理想情况下，记录/重放系统应该只检测有问题的更改，并且只在请求以有意义的方式更改时避开缓存。如果该更改产生了新的问题，代码更改的作者将使用更新的响应重新运行测试，查看测试是否仍然失败，并因此得到该问题的警报。实际上，在一个不断变化的大型系统中，是很难知道一个请求何时以一种有意义的方式改变的。
 
-Ideally, a record/replay system should detect only problematic changes and cachemiss only when a request has changed in a meaningful way. In the event that that change causes a problem, the code change author would rerun the test with an updated
-response, see that the test is still failing, and thereby be alerted to the problem. In practice, knowing when a request has changed in a meaningful way can be incredibly difficult in a large and ever-changing system.
+[^11]: 实际上，通常很难创建一个完全的沙盒化测试环境，但是可以通过减少外部依赖来实现所需的稳定性。
 
-#### The Hermetic Google Assistant
+#### 密封的Google Assistant
 
-Google Assistant provides a framework for engineers to run end-to-end tests, including a test fixture with functionality for setting up queries, specifying whether to simulate on a phone or a smart home device, and validating responses throughout an exchange with Google Assistant.
-
-[^11]: In practice, it’s often difficult to make a completely sandboxed test environment, but the desired stability can be achieved by minimizing outside dependencies.
+Google Assistant为工程师提供了一个框架来运行端到端测试，包括一个Test Fixture（测试固件），该测试固件具有设置查询的功能，还能指定在电话上或者智能家居设备上进行模拟，以及验证与Google Assistant之间的响应。
 
 ---
 
