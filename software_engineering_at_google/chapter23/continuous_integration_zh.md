@@ -125,27 +125,24 @@ CI和警报共享一个基本的概念框架。例如，在局部信号(单元�
 
 #### 密封的Google Assistant
 
-Google Assistant为工程师提供了一个框架来运行端到端测试，包括一个Test Fixture（测试固件），该测试固件具有设置查询的功能，还能指定在电话上或者智能家居设备上进行模拟，以及验证与Google Assistant之间的响应。
+Google Assistant为工程师提供了一个框架来运行端到端测试，包括一个Test Fixture（测试固件），该测试固件具有设置查询的功能，还能指定在电话上或者智能家居设备上进行模拟，以及验证与Google Assistant之间的响应。它最成功的是使它的测试集在预提交上完全密封。当团队以前在预提交上运行非密封测试时，测试通常会失败。甚至某些时候，团队将看到超过50个代码更改绕过并忽略了测试结果。而通过将预提交移至密封环境，团队将运行时间缩短了14倍，几乎没有任何不稳定性。它仍然可以看到失败，但这些失败往往相当容易找到并回滚。
 
 ---
 
-One of its greatest success stories was making its test suite fully hermetic on presubmit. When the team previously used to run nonhermetic tests on presubmit, the tests would routinely fail. In some days, the team would see more than 50 code changes
-bypass and ignore the test results. In moving presubmit to hermetic, the team cut the runtime by a factor of 14, with virtually no flakiness. It still sees failures, but those failures tend to be fairly easy to find and roll back.
+现在非密封测试已经被推送到提交后，它反而导致失败在那里累积。调试失败的端到端测试仍然很困难，一些团队甚至没有时间去尝试，所以他们只能禁用它们。让它停止所有人的开发进度相比这还算好，但它可能会导致生产环境报错。
 
-Now that nonhermetic tests have been pushed to post-submit, it results in failures accumulating there instead. Debugging failing end-to-end tests is still difficult, and some teams don’t have time to even try, so they just disable them. That’s better than having it stop all development for everyone, but it can result in production failures.
+该团队目前面临的挑战之一是继续微调其缓存机制，以便预提交能够捕获更多类型的问题，这些问题在过去只在提交后才发现，而不会带来太多的脆弱性。
 
-One of the team’s current challenges is to continue to fine-tuning its caching mechanisms so that presubmit can catch more types of issues that have been discovered only post-submit in the past, without introducing too much brittleness.
+另一个问题是如何为去中心化的Assistant进行预提交测试，因为组件正在将它们转换为微服务。由于Assistant有一个庞大而复杂的堆栈，在预提交上运行一个密封堆栈，其工程工作、协调和资源方面的成本，都将是非常高的。
 
-Another is how to do presubmit testing for the decentralized Assistant given that components are shifting into their own microservices. Because the Assistant has a large and complex stack, the cost of running a hermetic stack on presubmit, in terms
-of engineering work, coordination, and resources, would be very high.
+最后，该团队正在以一种聪明的后提交的失败隔离策略来利用这种去中心化环境。对于Assistant中的每个*N*微服务，团队将运行一个提交后的环境，其中包含在头部构建的微服务，以及其他*N-1*个服务的生产（或接近它的）版本，以将问题隔离到新构建的服务器上。
+这种设置通常需要*O(N<sup>2</sup>)*成本才能实现，但该团队使用一个名为*热交换*的功能将成本降至*O(N)*。原理是，热交换允许请求指示服务器去“交换”后端地址，而不是通常的地址。所以只需要运行*N*个服务器，每个微服务都需要一个，并且它们可以在这N个环境中重用交换同一组生产后端。
 
-Finally, the team is taking advantage of this decentralization in a clever new postsubmit failure-isolation strategy. For each of the *N* microservices within the Assistant, the team will run a post-submit environment containing the microservice built at head, along with production (or close to it) versions of the other *N – 1* services, to isolate problems to the newly built server. This setup would normally be *O(N<sup>2</sup>)* cost to facilitate, but the team leverages a cool feature called *hotswapping* to cut this cost to *O(N)*. Essentially, hotswapping allows a request to instruct a server to “swap” in the address of a backend to call instead of the usual one. So only *N* servers need to be run, one for each of the microservices cut at head—and they can reuse the same set of prod backends swapped in to each of these N “environments.”
+正如我们在本节中所看到的，密封测试可以减少更大范围测试中的不稳定性，并帮助隔离故障，解决在前一节中我们所阐述的两个重要CI挑战。然而，密封后端也可能更昂贵，因为它们使用更多的资源，并且设置更慢。许多团队在他们的测试环境中组合使用密封后端和在线后端。
 
-As we’ve seen in this section, hermetic testing can both reduce instability in largerscoped tests and help isolate failures—addressing two of the significant CI challenges we identified in the previous section. However, hermetic backends can also be more expensive because they use more resources and are slower to set up. Many teams use combinations of hermetic and live backends in their test environments.
+### 在谷歌的CI
 
-### CI at Google
-
-Now let’s look in more detail at how CI is implemented at Google. First, we’ll look at our global continuous build, TAP, used by the vast majority of teams at Google, and how it enables some of the practices and addresses some of the challenges that we looked at in the previous section. We’ll also look at one application, Google Takeout, and how a CI transformation helped it scale both as a platform and as a service.
+现在让我们更详细地看看CI是如何在谷歌实现的。首先，我们将看看我们的全局持续构建，即被谷歌的绝大多数团队所使用的TAP，以及它如何使一些实践成为可能，并解决我们在上一节中所看到的一些挑战。我们还将讨论谷歌Takeout这一应用，以及它在转变为CI的过程中，CI是如何帮助它扩展为平台和服务的。
 
 ---
 
