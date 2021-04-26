@@ -1,6 +1,7 @@
 # CHAPTER 13 Test Doubles
 
 ## Real Implementations
+
 At Google, the preference for real implementations developed over time as we saw
 that overuse of mocking frameworks had a tendency to pollute tests with repetitive
 code that got out of sync with the real implementation and made refactoring difficult.
