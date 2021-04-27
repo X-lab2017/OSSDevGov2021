@@ -181,7 +181,7 @@ changes to be accepted, the CLA must be signed.
 
 [issue-template]: ./.github/ISSUE_TEMPLATE/enhancement.md
 
-[good-first-issues]: https://github.com/X-lab2017/OSSDevGov2021/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22+
+[good-first-issues]: https://github.com/X-lab2017/OSSDevGov2021/issues/18
 
 [repo]: https://github.com/X-lab2017/OSSDevGov2021
 
