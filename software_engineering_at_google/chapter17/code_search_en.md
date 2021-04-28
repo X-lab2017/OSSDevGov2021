@@ -116,7 +116,7 @@ call sites to actual implementation, and using named types rather than generic t
 because it’s then easy to find all usages.
 
 5 Sadowski, Caitlin, Kathryn T. Stolee, and Sebastian Elbaum. “How Developers Search for Code: A Case
-Study” In Proceedings of the 2015 10th Joint Meeting on Foundations of Soware Engineering (ESEC/FSE 2015).
+Study” In Proceedings of the 2015 10th Joint Meeting on Foundations of Software Engineering (ESEC/FSE 2015).
 https://doi.org/10.1145/2786805.2786855.
 
 ---
