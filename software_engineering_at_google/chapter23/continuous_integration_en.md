@@ -2,7 +2,7 @@
 
 Written by Rachel Tannenbaum Edited by Lisa Carey
 
-*Continuous Integration*, or CI, is generally defined as “a software development prac‐ tice where members of a team integrate their work frequently [...] Each integration is verified by an automated build (including test) to detect integration errors as quickly as possible.”<sup>1</sup> Simply put, the fundamental goal of CI is to automatically catch problematic changes as early as possible.
+*Continuous Integration*, or CI, is generally defined as “a software development practice where members of a team integrate their work frequently [...] Each integration is verified by an automated build (including test) to detect integration errors as quickly as possible.”<sup>1</sup> Simply put, the fundamental goal of CI is to automatically catch problematic changes as early as possible.
 
 In practice, what does “integrating work frequently” mean for the modern, distributed application? Today’s systems have many moving pieces beyond just the latest versioned code in the repository. In fact, with the recent trend toward microservices, the changes that break an application are less likely to live inside the project’s immediate codebase and more likely to be in loosely coupled microservices on the other side of a network call. Whereas a traditional continuous build tests changes in your binary, an extension of this might test changes to upstream microservices. The dependency is just shifted from your function call stack to an HTTP request or Remote Procedure Calls (RPC).
 
@@ -40,7 +40,7 @@ As discussed in Chapter 11, the cost of a bug grows almost exponentially the lat
 
 In general, as issues progress to the “right” in our diagram, they become costlier for the following reasons:
 
-- They must be triaged by an engineer who is likely unfamiliar with the problem‐ atic code change.
+- They must be triaged by an engineer who is likely unfamiliar with the problematic code change.
 - They require more work for the code change author to recollect and investigate the change.
 - They negatively affect others, whether engineers in their work or ultimately the end user.
 
@@ -85,7 +85,7 @@ The first step in Continuous Delivery (CD; discussed more fully in Chapter 24) i
 
 > *Release candidate* (RC): A cohesive, deployable unit created by an automated process,<sup>5</sup> assembled of code, configuration, and other dependencies that have passed the continuous build.
 
-Note that we include configuration in release candidates—this is extremely important, even though it can slightly vary between environments as the candidate is pro‐ moted. We’re not necessarily advocating you compile configuration into your binaries —actually, we would recommend dynamic configuration, such as experiments or feature flags, for many scenarios.<sup>6</sup>
+Note that we include configuration in release candidates—this is extremely important, even though it can slightly vary between environments as the candidate is promoted. We’re not necessarily advocating you compile configuration into your binaries —actually, we would recommend dynamic configuration, such as experiments or feature flags, for many scenarios.<sup>6</sup>
 
 Rather, we are saying that any static configuration you *do* have should be promoted as part of the release candidate so that it can undergo testing along with its corresponding code. Remember, a large percentage of production bugs are caused by “silly” configuration problems, so it’s just as important to test your configuration as it is your code (and to test it along *with* the same code that will use it). Version skew is often caught in this release-candidate-promotion process. This assumes, of course, that your static configuration is in version control—at Google, static configuration is in version control along with the code, and hence goes through the same code review process.
 
@@ -131,7 +131,7 @@ So, which tests *should* be run on presubmit? Our general rule of thumb is: only
 
 We don’t want to waste valuable engineer productivity by waiting too long for slow tests or for too many tests—we typically limit presubmit tests to just those for the project where the change is happening. We also run tests concurrently, so there is a resource decision to consider as well. Finally, we don’t want to run unreliable tests on presubmit, because the cost of having many engineers affected by them, debugging the same problem that is not related to their code change, is too high.
 
-Most teams at Google run their small tests (like unit tests) on presubmit8—these are the obvious ones to run as they tend to be the fastest and most reliable. Whether and how to run larger-scoped tests on presubmit is the more interesting question, and this varies by team. For teams that do want to run them, hermetic testing is a proven approach to reducing their inherent instability. Another option is to allow large- scoped tests to be unreliable on presubmit but disable them aggressively when they start failing.
+Most teams at Google run their small tests (like unit tests) on presubmit<sup>8</sup>—these are the obvious ones to run as they tend to be the fastest and most reliable. Whether and how to run larger-scoped tests on presubmit is the more interesting question, and this varies by team. For teams that do want to run them, hermetic testing is a proven approach to reducing their inherent instability. Another option is to allow large- scoped tests to be unreliable on presubmit but disable them aggressively when they start failing.
 
 ### Release candidate testing
 
