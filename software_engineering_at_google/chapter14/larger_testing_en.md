@@ -196,7 +196,7 @@ on the AdWords test.
 
 Other “larger” testing patterns also existed circa 2002. The Google search frontend
 relied heavily on manual QA—manual versions of end-to-end test scenarios. And
-Gmail got its version of a “local demo” environment—a script to bring up an end-toend Gmail environment locally with some generated test users and mail data for local
+Gmail got its version of a “local demo” environment—a script to bring up an end-to-end Gmail environment locally with some generated test users and mail data for local
 manual testing.
 
 When C/J Build (our first continuous build framework) launched, it did not distin‐
