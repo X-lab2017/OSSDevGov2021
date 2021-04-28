@@ -146,46 +146,45 @@ Google Assistant为工程师提供了一个框架来运行端到端测试，包�
 
 ---
 
-#### TAP: Google’s Global Continuous Build
+#### TAP: 谷歌的全局持续构建
 
 *Adam Bender*
 
-We run a massive continuous build, called the Test Automation Platform (TAP), of our entire codebase. It is responsible for running the majority of our automated tests. As a direct consequence of our use of a monorepo, TAP is the gateway for almost all changes at Google. Every day it is responsible for handling more than 50,000 unique changes and running more than four billion individual test cases. 
+我们对整个代码库运行了一个大规模的持续构建，称为自动化测试平台（Test Automation Platform，TAP）。它负责运行我们大部分的自动化测试。作为我们使用monorepo的一个直接结果，TAP把关谷歌几乎所有的更改。每天，它负责处理超过50,000个独特的变更，并运行超过40亿个单独的测试用例。
 
-TAP is the beating heart of Google’s development infrastructure. Conceptually, the process is very simple. When an engineer attempts to submit code, TAP runs the associated tests and reports success or failure. If the tests pass, the change is allowed into the codebase.
+TAP是谷歌发展基础设施的跳动心脏。从概念上讲，这个过程非常简单。当工程师试图提交代码时，TAP运行相关测试并报告成功或失败。如果测试通过，更改就被允许进入代码库。
 
-##### Presubmit optimization
+##### 预提交的优化
 
-To catch issues quickly and consistently, it is important to ensure that tests are run against every change. Without a CB, running tests is usually left to individual engineer discretion, and that often leads to a few motivated engineers trying to run all tests and keep up with the failures.
+为了快速且一致地捕获问题，确保对每个更改都运行测试是很重要的。如果没有CB，通常由工程师个人自行决策测试的运行，这常常导致一些有动力的工程师试图运行所有测试并跟踪失败。
 
-As discussed earlier, waiting a long time to run every test on presubmit can be severely disruptive, in some cases taking hours. To minimize the time spent waiting, Google’s CB approach allows potentially breaking changes to land in the repository (remember that they become immediately visible to the rest of the company!). All we ask is for each team to create a fast subset of tests, often a project’s unit tests, that can be run before a change is submitted (usually before it is sent for code review)—the presubmit. Empirically, a change that passes the presubmit has a very high likelihood (95%+) of passing the rest of the tests, and we optimistically allow it to be integrated so that other engineers can then begin to use it.
+如前所述，在预提交上花很长时间去运行每个测试可能会造成严重破坏，某些情况下需要数个小时。为了最小化等待的时间，谷歌的CB方法允许潜在的破坏性更改进入存储库（请记住，它们对公司的其他人员是立即可见的！）我们要求每个团队创建一个快速的可以在预提交变更提交（通常是在它被发送给代码审查之前）之前运行的测试子集，通常是一个项目的单元测试。从经验来看，通过预提交的更改有很高的可能性（95%以上）通过剩下的测试，我们乐观地允许它被集成，这样其他工程师就可以开始使用它。
 
-After a change has been submitted, we use TAP to asynchronously run all potentially affected tests, including larger and slower tests.
+提交更改后，我们使用TAP异步运行所有可能受影响的测试，包括较大和较慢的测试。
 
-When a change causes a test to fail in TAP, it is imperative that the change be fixed quickly to prevent blocking other engineers. We have established a cultural norm that strongly discourages committing any new work on top of known failing tests, though flaky tests make this difficult. Thus, when a change is committed that breaks a team’s build in TAP, that change may prevent the team from making forward progress or building a new release. As a result, dealing with breakages quickly is imperative.
+当更改导致TAP中的测试失败时，必须迅速修复更改，以防止阻塞其他工程师。我们已经建立了一种文化规范，强烈反对在已知失败的测试上提交任何新工作，尽管不稳定的测试使这变得困难。因此，当提交了一个破坏了团队在TAP中的构建的变更时，该变更可能会阻止团队向前推进或构建一个新的发布版本。因此，快速处理错误是势在必行的。
 
-To deal with such breakages, each team has a “Build Cop.” The Build Cop’s responsibility is keeping all the tests passing in their particular project, regardless of who breaks them. When a Build Cop is notified of a failing test in their project, they drop whatever they are doing and fix the build. This is usually by identifying the offending change and determining whether it needs to be rolled back (the preferred solution) or can be fixed going forward (a riskier proposition).
+为了处理这种错误，每个团队都有一个构建警察（Build Cop）。构建警察的责任是不管谁破坏了他们的特定项目，都要保持它们中的所有测试通过。当Build Cop收到项目中测试失败的通知时，他们会放下正在做的工作，并修复构建。这通常是通过识别有问题的更改并确定它是需要回滚（首选的解决方案）还是可以继续修复（风险更高的建议）。
 
 ---
 
-In practice, the trade-off of allowing changes to be committed before verifying all tests has really paid off; the average wait time to submit a change is around 11 minutes, often run in the background. Coupled with the discipline of the Build Cop, we are able to efficiently detect and address breakages detected by longer running tests with a minimal amount of disruption.
+在实践中，在验证所有测试之前允许提交更改的折衷做法确实得到了回报；提交更改的平均等待时间约为11分钟，通常在后台运行。结合构建Cop的原则，我们能够以最小的破坏量有效地检测和处理由长时间运行的测试检测到的错误。
 
-##### Culprit finding
+##### 寻找错误根源
 
-One of the problems we face with large test suites at Google is finding the specific change that broke a test. Conceptually, this should be really easy: grab a change, run the tests, if any tests fail, mark the change as bad. Unfortunately, due to a prevalence of flakes and the occasional issues with the testing infrastructure itself, having confidence that a failure is real isn’t easy. To make matters more complicated, TAP must evaluate so many changes a day (more than one a second) that it can no longer run every test on every change. Instead, it falls back to batching related changes together, which reduces the total number of unique tests to be run. Although this approach can make it faster to run tests, it can obscure which change in the batch caused a test to break.
+在谷歌的大型测试集中，我们面临的一个问题是找到破坏测试的特定更改。从概念上讲，这应该非常容易：获取更改，运行测试，如果任何测试失败，将更改标记为BAD。不幸的是，由于碎片的普遍存在和测试基础设施本身偶尔出现的问题，是很难相信失败是真实存在的。让事情变得更复杂的是，TAP必须每天评估如此多的更改（每秒不止一个），以至于它不能对每个更改再次运行每个测试。相反，它会将相关的更改放在一起批量处理，这减少了唯一测试的总数。尽管这种方法可以更快地运行测试，但它可能会掩盖批处理中是哪些更改导致测试中断。
 
-To speed up failure identification, we use two different approaches. First, TAP automatically splits a failing batch up into individual changes and reruns the tests against each change in isolation. This process can sometimes take a while to converge on a failure, so in addition, we have created culprit finding tools that an individual developer can use to binary search through a batch of changes and identify which one is the likely culprit.
+为了加速故障识别，我们使用了两种不同的方法。首先，TAP自动将失败的批处理分割成单独的更改，并针对每个更改独立地重新运行测试。这个过程有时需要一段时间才能集中在一个故障上，因此，作为补充，我们已经创建了错误根源查找工具，单个开发人员就可以使用这些工具对一批更改进行二分查找，并确定哪一个可能是罪魁祸首。
 
-##### Failure management
+##### 故障管理
 
-After a breaking change has been isolated, it is important to fix it as quickly as possible. The presence of failing tests can quickly begin to erode confidence in the test suite. As mentioned previously, fixing a broken build is the responsibility of the Build Cop. The most effective tool the Build Cop has is the *rollback*.
+在一个中断的更改被隔离之后，尽快修复它是很重要的。失败测试的出现会很快侵蚀人们对测试集的信心。如前所述，修复失败的构建是构建警察的职责。构建警察拥有的最有效的工具是*回滚*。
 
-Rolling a change back is often the fastest and safest route to fix a build because it quickly restores the system to a known good state.[^12] In fact, TAP has recently been upgraded to automatically roll back changes when it has high confidence that they are
-the culprit.
+回滚更改通常是修复构建的最快和最安全的途径，因为它可以快速地将系统恢复到已知的良好状态。[^12]事实上，TAP最近升级了，当它确信某些更改是罪魁祸首时，它会自动回滚这些更改。
 
-Fast rollbacks work hand in hand with a test suite to ensure continued productivity. Tests give us confidence to change, rollbacks give us confidence to undo. Without tests, rollbacks can’t be done safely. Without rollbacks, broken tests can’t be fixed quickly, thereby reducing confidence in the system.
+快速回滚与测试集一起工作，以确保持续的生产力。测试给了我们改变的信心，回滚给了我们撤销的信心。没有测试，就不能安全地执行回滚。没有回滚，就不能快速修复失败的测试，从而降低了对系统的信心。
 
-[^12]: Any change to Google’s codebase can be rolled back with two clicks!
+[^12]: 对谷歌的代码库的任何更改都可以使用双击回滚!
 
 ---
 
