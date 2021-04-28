@@ -39,7 +39,7 @@ but large tests provide more confidence that the overall system works as intende
 And having actual automated tests scales in ways that manual testing does not.
 
 ### Fidelity
-The primary reason larger tests exist is to address delity. Fidelity is the property by
+The primary reason larger tests exist is to address fidelity. Fidelity is the property by
 which a test is reflective of the real behavior of the system under test (SUT).
 
 One way of envisioning fidelity is in terms of the environment. As Figure 14-1 illus‐
