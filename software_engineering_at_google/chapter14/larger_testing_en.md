@@ -292,6 +292,7 @@ consist of a workflow with the following phases:
 • Seed necessary test data
 • Perform actions using the system under test
 • Verify behaviors
+
 ## The System Under Test 
 
 One key component of large tests is the aforementioned SUT (see Figure 14-5). A typical unit test focuses its attention on one class or module. Moreover, the test code runs in the same process (or Java Virtual Machine [JVM], in the Java case) as the code being tested. For larger tests, the SUT is often very different; one or more separate processes with test code often (but not always) in its own process.
@@ -566,3 +567,388 @@ Generating enough useful traffic for a diff test can be a challenging problem. T
 Setup 
 
 Configuring and maintaining one SUT is fairly challenging. Creating two at a time can double the complexity, especially if these share interdependencies.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------
+
+## UAT
+
+Tests of these type have the following characteristics:
+• SUT: machine-hermetic or cloud-deployed isolated
+• Data: handcrafted
+• Verification: assertions
+
+A key aspect of unit tests is that they are written by the developer writing the code
+under test. But that makes it quite likely that misunderstandings about the intended
+behavior of a product are reflected not only in the code, but also the unit tests. Such
+unit tests verify that code is “Working as implemented” instead of “Working as
+intended.”
+
+For cases in which there is either a specific end customer or a customer proxy (a cus‐
+tomer committee or even a product manager), UATs are automated tests that exercise
+the product through public APIs to ensure the overall behavior for specific user jour‐
+neys is as intended. Multiple public frameworks exist (e.g., Cucumber and RSpec) to
+make such tests writable/readable in a user-friendly language, often in the context of
+“runnable specifications.”
+
+Google does not actually do a lot of automated UAT and does not use specification
+languages very much. Many of Google’s products historically have been created by the
+software engineers themselves. There has been little need for runnable specification
+languages because those defining the intended product behavior are often fluent in
+the actual coding languages themselves.
+
+## Probers and Canary Analysis
+
+Tests of these type have the following characteristics:
+• SUT: production
+• Data: production
+• Verification: assertions and A/B diff (of metrics)
+
+Probers and canary analysis are ways to ensure that the production environment
+itself is healthy. In these respects, they are a form of production monitoring, but they
+are structurally very similar to other large tests.
+
+Probers are functional tests that run encoded assertions against the production envi‐
+ronment. Usually these tests perform well-known and deterministic read-only actions
+so that the assertions hold even though the production data changes over time. For
+example, a prober might perform a Google search at www.google.com and verify that
+a result is returned, but not actually verify the contents of the result. In that respect, 
+they are “smoke tests” of the production system, but they provide early detection of
+major issues.
+
+Canary analysis is similar, except that it focuses on when a release is being pushed to
+the production environment. If the release is staged over time, we can run both
+prober assertions targeting the upgraded (canary) services as well as compare health
+metrics of both the canary and baseline parts of production and make sure that they
+are not out of line.
+
+Probers should be used in any live system. If the production rollout process includes
+a phase in which the binary is deployed to a limited subset of the production
+machines (a canary phase), canary analysis should be used during that procedure.
+
+### Limitations
+
+Any issues caught at this point in time (in production) are already affecting end users.
+
+If a prober performs a mutable (write) action, it will modify the state of production.
+This could lead to one of three outcomes: nondeterminism and failure of the asser‐
+tions, failure of the ability to write in the future, or user-visible side effects.
+
+## Disaster Recovery and Chaos Engineering
+
+Tests of these type have the following characteristics:
+• SUT: production
+• Data: production and user-crafted (fault injection)
+• Verification: manual and A/B diff (metrics)
+
+These test how well your systems will react to unexpected changes or failures.
+
+For years, Google has run an annual war game called DiRT (Disaster Recovery Test‐
+ing) during which faults are injected into our infrastructure at a nearly planetary
+scale. We simulate everything from datacenter fires to malicious attacks. In one mem‐
+orable case, we simulated an earthquake that completely isolated our headquarters in
+Mountain View, California, from the rest of the company. Doing so exposed not only
+technical shortcomings but also revealed the challenge of running a company when
+all the key decision makers were unreachable.
+
+The impacts of DiRT tests require a lot of coordination across the company; by con‐
+trast, chaos engineering is more of a “continuous testing” for your technical infra‐
+structure. Made popular by Netflix, chaos engineering involves writing programs that
+continuously introduce a background level of faults into your systems and seeing
+what happens. Some of the faults can be quite large, but in most cases, chaos testing
+tools are designed to restore functionality before things get out of hand. The goal of
+chaos engineering is to help teams break assumptions of stability and reliability and
+help them grapple with the challenges of building resiliency in. Today, teams at Goo‐
+gle perform thousands of chaos tests each week using our own home-grown system
+called Catzilla.
+
+These kinds of fault and negative tests make sense for live production systems that
+have enough theoretical fault tolerance to support them and for which the costs and
+risks of the tests themselves are affordable.
+
+### Limitations
+
+Any issues caught at this point in time (in production) are already affecting end users.
+
+DiRT is quite expensive to run, and therefore we run a coordinated exercise on an
+infrequent scale. When we create this level of outage, we actually cause pain and neg‐
+atively impact employee performance.
+
+If a prober performs a mutable (write) action, it will modify the state of production.
+This could lead to either nondeterminism and failure of the assertions, failure of the
+ability to write in the future, or user-visible side effects.
+
+## User Evaluation
+
+Tests of these type have the following characteristics:
+• SUT: production
+• Data: production
+• Verification: manual and A/B diffs (of metrics)
+
+Production-based testing makes it possible to collect a lot of data about user behavior.
+We have a few different ways to collect metrics about the popularity of and issues
+with upcoming features, which provides us with an alternative to UAT:
+
+#### Dogfooding
+
+It’s possible using limited rollouts and experiments to make features in produc‐
+tion available to a subset of users. We do this with our own staff sometimes (eat
+our own dogfood), and they give us valuable feedback in the real deployment
+environment.
+
+#### Experimentation
+
+A new behavior is made available as an experiment to a subset of users without
+their knowing. Then, the experiment group is compared to the control group at
+an aggregate level in terms of some desired metric. For example, in YouTube, we
+had a limited experiment changing the way video upvotes worked (eliminating
+the downvote), and only a portion of the user base saw this change.
+
+This is a massively important approach for Google. One of the first stories a Noo‐
+gler hears upon joining the company is about the time Google launched an
+experiment changing the background shading color for AdWords ads in Google
+Search and noticed a significant increase in ad clicks for users in the experimen‐
+tal group versus the control group.
+
+#### Rater evaluation
+
+Human raters are presented with results for a given operation and choose which
+one is “better” and why. This feedback is then used to determine whether a given
+change is positive, neutral, or negative. For example, Google has historically used
+rater evaluation for search queries (we have published the guidelines we give our
+raters). In some cases, the feedback from this ratings data can help determine
+launch go/no-go for algorithm changes. Rater evaluation is critical for nondeter‐
+ministic systems like machine learning systems for which there is no clear correct
+answer, only a notion of better or worse.
+
+# Large Tests and the Developer Workflow
+
+We’ve talked about what large tests are, why to have them, when to have them, and
+how much to have, but we have not said much about the who. Who writes the tests?
+Who runs the tests and investigates the failures? Who owns the tests? And how do we
+make this tolerable?
+
+Although standard unit test infrastructure might not apply, it is still critical to inte‐
+grate larger tests into the developer workflow. One way of doing this is to ensure that
+automated mechanisms for presubmit and post-submit execution exist, even if these
+are different mechanisms than the unit test ones. At Google, many of these large tests
+do not belong in TAP. They are nonhermetic, too flaky, and/or too resource intensive.
+But we still need to keep them from breaking or else they provide no signal and
+become too difficult to triage. What we do, then, is to have a separate post-submit
+continuous build for these. We also encourage running these tests presubmit, because
+that provides feedback directly to the author.
+
+A/B diff tests that require manual blessing of diffs can also be incorporated into such
+a workflow. For presubmit, it can be a code-review requirement to approve any diffs
+in the UI before approving the change. One such test we have files release-blocking
+bugs automatically if code is submitted with unresolved diffs.
+
+In some cases, tests are so large or painful that presubmit execution adds too much
+developer friction. These tests still run post-submit and are also run as part of the
+release process. The drawback to not running these presubmit is that the taint makes
+it into the monorepo and we need to identify the culprit change to roll it back. But we
+need to make the trade-off between developer pain and the incurred change latency
+and the reliability of the continuous build.
+
+## Authoring Large Tests
+
+Although the structure of large tests is fairly standard, there is still a challenge with
+creating such a test, especially if it is the first time someone on the team has done so.
+
+The best way to make it possible to write such tests is to have clear libraries, docu‐
+mentation, and examples. Unit tests are easy to write because of native language sup‐
+port (JUnit was once esoteric but is now mainstream). We reuse these assertion
+libraries for functional integration tests, but we also have created over time libraries
+for interacting with SUTs, for running A/B diffs, for seeding test data, and for orches‐
+trating test workflows.
+
+Larger tests are more expensive to maintain, in both resources and human time, but
+not all large tests are created equal. One reason that A/B diff tests are popular is that
+they have less human cost in maintaining the verification step. Similarly, production
+SUTs have less maintenance cost than isolated hermetic SUTs. And because all of this
+authored infrastructure and code must be maintained, the cost savings can
+compound.
+
+However, this cost must be looked at holistically. If the cost of manually reconciling
+diffs or of supporting and safeguarding production testing outweighs the savings, it
+becomes ineffective.
+
+## Running Large Tests
+
+We mentioned above how our larger tests don’t fit in TAP and so we have alternate
+continuous builds and presubmits for them. One of the initial challenges for our
+engineers is how to even run nonstandard tests and how to iterate on them.
+
+As much as possible, we have tried to make our larger tests run in ways familiar for
+our engineers. Our presubmit infrastructure puts a common API in front of running
+both these tests and running TAP tests, and our code review infrastructure shows
+both sets of results. But many large tests are bespoke and thus need specific docu‐
+mentation for how to run them on demand. This can be a source of frustration for
+unfamiliar engineers.
+
+### Speeding up tests
+
+Engineers don’t wait for slow tests. The slower a test is, the less frequently an engineer
+will run it, and the longer the wait after a failure until it is passing again.
+
+The best way to speed up a test is often to reduce its scope or to split a large test into
+two smaller tests that can run in parallel. But there are some other tricks that you can
+do to speed up larger tests.
+
+Some naive tests will use time-based sleeps to wait for nondeterministic action to
+occur, and this is quite common in larger tests. However, these tests do not have
+thread limitations, and real production users want to wait as little as possible, so it is
+best for tests to react the way real production users would. Approaches include the
+following:
+• Polling for a state transition repeatedly over a time window for an event to com‐
+plete with a frequency closer to microseconds. You can combine this with a time‐
+out value in case a test fails to reach a stable state.
+• Implementing an event handler.
+• Subscribing to a notification system for an event completion.
+
+Note that tests that rely on sleeps and timeouts will all start failing when the fleet run‐
+ning those tests becomes overloaded, which spirals because those tests need to be
+rerun more often, increasing the load further.
+
+#### Lower internal system timeouts and delays
+
+A production system is usually configured assuming a distributed deployment
+topology, but an SUT might be deployed on a single machine (or at least a cluster
+of colocated machines). If there are hardcoded timeouts or (especially) sleep
+statements in the production code to account for production system delay, these
+should be made tunable and reduced when running tests.
+
+#### Optimize test build time
+
+One downside of our monorepo is that all of the dependencies for a large test are
+built and provided as inputs, but this might not be necessary for some larger
+tests. If the SUT is composed of a core part that is truly the focus of the test and
+some other necessary peer binary dependencies, it might be possible to use pre‐
+built versions of those other binaries at a known good version. Our build system
+(based on the monorepo) does not support this model easily, but the approach is
+actually more reflective of production in which different services release at differ‐
+ent versions.
+
+### Driving out flakiness
+
+Flakiness is bad enough for unit tests, but for larger tests, it can make them unusable.
+A team should view eliminating flakiness of such tests as a high priority. But how can
+flakiness be removed from such tests?
+
+Minimizing flakiness starts with reducing the scope of the test—a hermetic SUT will
+not be at risk of the kinds of multiuser and real-world flakiness of production or a
+shared staging environment, and a single-machine hermetic SUT will not have the
+network and deployment flakiness issues of a distributed SUT. But you can mitigate
+other flakiness issues through test design and implementation and other techniques.
+In some cases, you will need to balance these with test speed.
+
+Just as making tests reactive or event driven can speed them up, it can also remove
+flakiness. Timed sleeps require timeout maintenance, and these timeouts can be
+embedded in the test code. Increasing internal system timeouts can reduce flakiness,
+whereas reducing internal timeouts can lead to flakiness if the system behaves in a
+nondeterministic way. The key here is to identify a trade-off that defines both a toler‐
+able system behavior for end users (e.g., our maximum allowable timeout is n sec‐
+onds) but handles flaky test execution behaviors well.
+
+A bigger problem with internal system timeouts is that exceeding them can lead to
+difficult errors to triage. A production system will often try to limit end-user expo‐
+sure to catastrophic failure by handling possible internal system issues gracefully. For
+example, if Google cannot serve an ad in a given time limit, we don’t return a 500, we
+just don’t serve an ad. But this looks to a test runner as if the ad-serving code might
+be broken when there is just a flaky timeout issue. It’s important to make the failure
+mode obvious in this case and to make it easy to tune such internal timeouts for test
+scenarios.
+
+### Making tests understandable
+
+A specific case for which it can be difficult to integrate tests into the developer work‐
+flow is when those tests produce results that are unintelligible to the engineer run‐
+ning the tests. Even unit tests can produce some confusion—if my change breaks
+your test, it can be difficult to understand why if I am generally unfamiliar with your
+code—but for larger tests, such confusion can be insurmountable. Tests that are
+assertive must provide a clear pass/fail signal and must provide meaningful error out‐
+put to help triage the source of failure. Tests that require human investigation, like
+A/B diff tests, require special handling to be meaningful or else risk being skipped
+during presubmit.
+
+How does this work in practice? A good large test that fails should do the following:
+
+#### Have a message that clearly identifies what the failure is
+
+The worst-case scenario is to have an error that just says “Assertion failed” and a
+stack trace. A good error anticipates the test runner’s unfamiliarity with the code
+and provides a message that gives context: “In test_ReturnsOneFullPageOfSear‐
+chResultsForAPopularQuery, expected 10 search results but got 1.” For a perfor‐
+mance or A/B diff test that fails, there should be a clear explanation in the output
+of what is being measured and why the behavior is considered suspect.
+
+#### Minimize the effort necessary to identify the root cause of the discrepancy
+
+A stack trace is not useful for larger tests because the call chain can span multiple
+process boundaries. Instead, it’s necessary to produce a trace across the call chain
+or to invest in automation that can narrow down the culprit. The test should pro‐
+duce some kind of artifact to this effect. For example, Dapper is a framework
+used by Google to associate a single request ID with all the requests in an RPC
+call chain, and all of the associated logs for that request can be correlated by that
+ID to facilitate tracing.
+
+#### Provide support and contact information.
+
+It should be easy for the test runner to get help by making the owners and sup‐
+porters of the test easy to contact.
+
+## Owning Large Tests
+
+Larger tests must have documented owners—engineers who can adequately review
+changes to the test and who can be counted on to provide support in the case of test
+failures. Without proper ownership, a test can fall victim to the following:
+• It becomes more difficult for contributors to modify and update the test
+• It takes longer to resolve test failures
+
+And the test rots.
+
+Integration tests of components within a particular project should be owned by the
+project lead. Feature-focused tests (tests that cover a particular business feature across
+a set of services) should be owned by a “feature owner”; in some cases, this owner
+might be a software engineer responsible for the feature implementation end to end;
+in other cases it might be a product manager or a “test engineer” who owns the
+description of the business scenario. Whoever owns the test must be empowered to
+ensure its overall health and must have both the ability to support its maintenance
+and the incentives to do so.
+
+It is possible to build automation around test owners if this information is recorded
+in a structured way. Some approaches that we use include the following:
+
+#### Regular code ownership
+
+In many cases, a larger test is a standalone code artifact that lives in a particular
+location in our codebase. In that case, we can use the OWNERS (Chapter 9)
+information already present in the monorepo to hint to automation that the
+owner(s) of a particular test are the owners of the test code.
+
+##### Per-test annotations
+
+In some cases, multiple test methods can be added to a single test class or mod‐
+ule, and each of these test methods can have a different feature owner. We use
+per-language structured annotations to document the test owner in each of these
+cases so that if a particular test method fails, we can identify the owner to contact.
+
+# Conclusion
+
+A comprehensive test suite requires larger tests, both to ensure that tests match the
+fidelity of the system under test and to address issues that unit tests cannot ade‐
+quately cover. Because such tests are necessarily more complex and slower to run,
+care must be taken to ensure such larger tests are properly owned, well maintained,
+and run when necessary (such as before deployments to production). Overall, such
+larger tests must still be made as small as possible (while still retaining fidelity) to
+avoid developer friction. A comprehensive test strategy that identifies the risks of a
+system, and the larger tests that address them, is necessary for most software projects.
+
+# TL;DRs
+
+• Larger tests cover things unit tests cannot.
+• Large tests are composed of a System Under Test, Data, Action, and Verification.
+• A good design includes a test strategy that identifies risks and larger tests that
+mitigate them.
+• Extra effort must be made with larger tests to keep them from creating friction in
+the developer workflow.
+
