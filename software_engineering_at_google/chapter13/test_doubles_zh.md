@@ -1,5 +1,25 @@
 # 第十三章 测试问题
 
+## 交互测试
+
+交互测试是一种验证如何调用函数而不实际调用函数实现的方法。如果一个函数没有被正确调用，测试就会失败。例如，如果这个函数根本没有被调用，它被调用了很多次，或者它被调用时使用了错误的参数。
+
+例13-9展示了一个交互测试的实例。来自Mockito mock框架的verify(…)方法用于验证lookupUser()是否按预期被调用。
+
+例子 13-9. 交互测试（Interaction Testing）
+```java
+// 通过由模拟框架创建的测试替身
+AccessManager accessManager = new AccessManager(mockAuthorizationService);
+accessManager.userHasAccess(USER_ID);
+// 如果没有调用accessManager.userHasAccess(USER_ID)，测试将会失败
+// mockAuthorizationService.lookupUser(USER_ID).
+verify(mockAuthorizationService).lookupUser(USER_ID);
+```
+
+与存根类似，交互测试通常是通过模拟框架完成的。与手工创建包含跟踪函数调用频率和传入参数的代码的新类相比，这减少了样板代码。
+
+交互测试有时被称为模拟。我们在本章中避免使用这个术语，因为它可能会与模拟框架混淆，模拟框架既可以用于存根测试，也可以用于交互测试。正如本章后面所讨论的，交互测试在某些情况下是有用的，但应该在可能的时候避免，因为过度使用很容易导致脆弱的测试。
+
 ## 真实的实现
 
 在谷歌，对真实的实现的偏爱是随着时间的推移而发展起来的，因为我们看到过度使用mocking框架有一种倾向，即用重复的代码污染测试，与真实实现不同步，使重构变得困难。我们将在本章后面更详细地讨论这个话题。
