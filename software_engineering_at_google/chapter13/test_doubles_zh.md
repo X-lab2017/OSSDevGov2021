@@ -372,3 +372,200 @@ fakes可以是一个强大的测试工具：它们执行得很快，并允许你
 ## 打桩
 
 正如本章前面所讨论的，打桩是一种测试的方式，为一个函数硬编码行为，否则它本身就没有行为。它通常是一种快速而简单的方法来替代测试中的真实实现。例如，例13-12中的代码使用打桩来模拟信用卡服务器的响应
+
+例子 13-12. 使用打桩来模拟信用卡服务器的响应
+```java
+@Test public void getTransactionCount() {
+ transactionCounter = new TransactionCounter(mockCreditCardServer);
+ // Use stubbing to return three transactions.
+ when(mockCreditCardServer.getTransactions()).thenReturn(
+ newList(TRANSACTION_1, TRANSACTION_2, TRANSACTION_3));
+ assertThat(transactionCounter.getTransactionCount()).isEqualTo(3);
+}
+```
+
+### 过度使用打桩的危害
+因为打桩在测试中很容易使用，所以很多时候都会想使用，因为进行真正的调用是非常不容易的。然而，对于需要维护这些测试的工程师而言，过度使用打桩测试会导致生产力的重大损失。
+
+#### 测试变得不清晰
+打桩测试需要编写大量额外的代码来定义被测试的函数行为。如果不熟悉被测系统的具体实现，这些额外的代码就很难理解。一个打桩不适合作为测试方法的重要标志是，当你发现你自己看被测系统时，是为了理解为什么某些函数需要被打桩测试，这个时候打桩就不是一个合适的测试方法了。
+
+#### 测试变得脆弱
+stubbing将代码的实现细节暴露在测试中。当你的生产代码中的实现细节发生变化时，你需要更新你的测试来反映这些变化。理想情况下，一个好的测试应该只在面向用户的API行为发生改变的时候才需要改变，他应该不收API的实现细节影响。
+
+#### 测试变得低效
+对于打桩测试，没有办法确保被打桩测试的方法和真正实现的时候一样的，如下面所示语句的部分硬编码对add()方法（“如果传入1和2，则应该返回3”）；
+```java
+when(stubCalculator.add(1, 2)).thenReturn(3);
+```
+如果被测系统依赖于真实实现的内容，那么打桩是一个很糟糕的选择，因为你将被迫重复实现的细节，而且无法保证实现的正确性（例如，被测试的函数和真实的实现一致）
+此外，使用打桩没有办法存储状态，这会导致测试代码的某一方面十分困难。例如：如果你在真实或假的实现上调用database.save(item),你可以通过调用database.get(item.id())来获得这个item，因为这两个调用在内部都是可访问的，但如果使用stubbing，就无法做到这一点。
+
+#### 过度使用打桩的例子
+例13-13. 大量使用打桩
+```java
+@Test public void creditCardIsCharged() {
+ // mocking framework生成的单元测试
+ paymentProcessor =
+ new PaymentProcessor(mockCreditCardServer, mockTransactionProcessor);
+ // 为这些单元测试生成打桩
+ when(mockCreditCardServer.isServerAvailable()).thenReturn(true);
+ when(mockTransactionProcessor.beginTransaction()).thenReturn(transaction);
+ when(mockCreditCardServer.initTransaction(transaction)).thenReturn(true);
+ when(mockCreditCardServer.pay(transaction, creditCard, 500))
+ .thenReturn(false);
+ when(mockTransactionProcessor.endTransaction()).thenReturn(true);
+ // 调用被测系统
+ paymentProcessor.processPayment(creditCard, Money.dollars(500));
+ // 这里没有办法知道pay()方法是否真正在事务中调用
+ // 所以在该测试中唯一可以被验证的只是
+ // pay() 方法被调用
+ verify(mockCreditCardServer).pay(transaction, creditCard, 500);
+}
+```
+例13-14 重写了上面的测试，但避免使用打桩测试。可以感受到测试的简介以及实现细节（例如交易processor的使用方法）并不暴露在测试中。并不需要特殊的配置，因为credit card server知道如何运行。
+例 13-14 重写测试来避免打桩
+```java
+@Test public void creditCardIsCharged() {
+ paymentProcessor =
+ new PaymentProcessor(creditCardServer, transactionProcessor);
+ // 调用被测系统
+ paymentProcessor.processPayment(creditCard, Money.dollars(500));
+ // 查看信用卡服务状态来判断交易是否进行
+ assertThat(creditCardServer.getMostRecentCharge(creditCard))
+ .isEqualTo(500);
+}
+```
+
+我们显然不希望测试与外部信用卡服务进行交流，所以使用一个虚拟的信用卡服务会更适合。如果不能使用虚拟的，另一个选择是使用一个server的真实实现，与另一个信用卡服务进行交流，虽然这回增加测试的执行时间。（我们将在下一章探讨封装服务）
+
+### 什么情况下适合使用打桩？
+
+打桩并不是真正调用的万能替代物，当你需要在被测系统处于某一状态时，使一个函数返回一个特定值时，打桩时合适的，如例13-12那样，需要被测系统返回一个非空的事务列表。因为函数的行为在测试中被定义，所以打桩可以模拟各种各样的返回值或报错，而这些可能无法在实际运行中被触发。
+
+为了确保测试的目标明确，每个打桩函数应该与测试断言有着直接的联系。因此，一个测试应该仅打桩测试少量的函数，因为打桩大量的函数会导致测试不清晰。一个需要多个打桩测试的函数可以表名，打桩被过多使用，或者被测系统过于复杂，需要被重构。
+
+即使打桩是适合的，真实或者假的实现也仍然适用，因为他们不会暴露实现细节并且他们比起打桩更能保证代码的正确性。但打桩是一个合理的技术，当他的使用不会使得代码变得过分复杂时。
+
+## 交互测试
+正如本章前面所讨论的，交互测试是一种验证函数如何被调用的方法，而不需要实际调用该函数的实现。
+Mocking框架使得执行交互测试变得容易。然而，为了保持测试的有用性、可读性和对变化的适应性，重要的是只在必要时进行交互测试。
+
+### 优先选择状态测试而不是交互测试
+与交互测试不同，状态测试偏向于通过状态来对代码进行测试。
+通过状态测试，你可以调用被测系统，并验证是否返回了正确的值，或者被测系统的其他状态是否被正确改变。例13-15给出了一个状态测试的例子。
+例13-15 状态测试
+```java
+@Test public void sortNumbers() {
+ NumberSorter numberSorter = new NumberSorter(quicksort, bubbleSort);
+ // 调用被测系统
+ List sortedList = numberSorter.sortNumbers(newList(3, 1, 2));
+ // 验证返回的list被排序。
+ // 并不在意调用了哪种排序算法，只需要返回结果是正确的
+ assertThat(sortedList).isEqualTo(newList(1, 2, 3));
+}
+```
+
+例13-16说明了一个类似的测试场景，但却使用了交互测试。请注意，这个测试不可能确定数字是否真的被排序，因为测试并不知道如何去对数字进行排序--它所能告诉的仅是被测系统视图对数据进行排序。
+例13-16 交互测试
+```java
+@Test public void sortNumbers_quicksortIsUsed() {
+ // 通过mocking framework生成的单元测试
+ NumberSorter numberSorter =
+ new NumberSorter(mockQuicksort, mockBubbleSort);
+ // 调用被测系统
+ numberSorter.sortNumbers(newList(3, 1, 2));
+ // 验证numberSorter.sortNumbers() 调用 quicksort.
+ // 该测试将会失败如果mockQuicksort.sort() 没有被调用 (e.g., 如果
+ // mockBubbleSort被调用) 或者他被使用了错误的参数进行调用
+ verify(mockQuicksort).sort(newList(3, 1, 2));
+}
+```
+
+在谷歌，我们发现，强调状态测试更具有可扩展性；它减少了测试的脆性，使之更容易随着时间的推移而改变和维护代码。交互测试的主要问题是，它不能告诉你被测系统是否正常工作；它仅能告诉你验证某些函数的调用是否符合预期。他需要你对代码的行为做出预测，例如，“如果database.save(item)被调用，我们假设这个item会被存储到数据库中”。状态测试更好因为他时间上验证了这个假设（例如，通过将item存储到数据库中，如何查询数据库来验证这个item是否存在）
+交互测试的另一个缺点是，他利用了被测系统的实现细节--为了验证一个函数是否被调用，会在测试时调用这个函数。与打桩类似，这些额外的代码，使得测试变得脆弱，因为他在测试中泄露了生产代码的实现细节。谷歌的一些人开玩笑地把过度使用交互测试的测试成为变更检测器测试，因为他们面对生产代码的任何变更都会变得失效，即便被测系统的行为保持不变。
+
+### 什么时候适合用交互测试？
+下面是一些有必要使用交互测试的场景：
+- 因为不能使用真实或者虚拟的实现（例如真实的实现太慢而家的实现不存在）时，你无法进行状态测试。作为代替选项，你可以进行交互测试来验证某些函数是否被调用。虽然这种实现很不理想，但他确实提供了保证被测系统按预期工作的基本信心。
+- 对一个函数的调用次数或顺序不同可能导致一些超出预期的行为。这种时候交互测试是有用的，因为用状态测试很难验证这种行为。例如，如果你希望一个缓存功能减少访问数据库的次数，你可以通过验证一个数据库对象被访问次数没有超过预期。使用Mockito， 代码类似于下面这样：
+```java
+verify(databaseReader, atMostOnce()).selectRecords();
+```
+交互测试并不能完全取代状态测试。如果不能够再单元测试中进行状态测试，强烈建议考虑用更大范围的测试来完善你的测试套件。例如，你有一个单元测试同归哦交互测试来验证数据库的使用，考虑添加一个集成测试，可以对真实的数据库进行状态测试。更大范围的测试是降低风险的重要策略，我们将在下一章中讨论。
+
+### 交互测试的最佳实践
+在进行交互测试时，遵循这些做法可以减少一些前述缺点的影响。
+#### 倾向于只对状态改变的函数进行交互测试
+当被测系统在一个依赖关系上调用一个函数时，该调用属于以下两种情况之一：
+状态改变
+    对被测系统之外的部分有影响的功能。例如：sendEmail(), saveRecord(), logAccess()
+非状态改变
+对被测系统之外的部分没有影响的函数，它们返回关于被测系统之外的信息，并且不修改任何东西。例如： getUser(),findResults(), readFile()
+一般来说，应该只对那些改变状态的函数进行交互测试。对非状态改变的函数进行交互测试通常是多余的，因为被测系统将调用函数的返回值用来做其他工作，你可以通过断言来对该值进行判断。交互本身对正确性来说不是一个重要的细节，因为他没有其他的副作用。
+ 对非状态变化的函数进行交互测试会使你的测试变得很脆弱，因为你需要在交互模式发生变化时更新测试。这也使得测试的可读性降低，因为额外的断言使得更难确定哪些断言对于确保代码的正确性是重要的。相比之下，状态改变的交互代表了你的代码为了改变其他地方的状态所做的事情。
+例13-17演示了对状态变化和非状态变化函数的交互测试
+```java
+@Test public void grantUserPermission() {
+ UserAuthorizer userAuthorizer =
+ new UserAuthorizer(mockUserService, mockPermissionDatabase);
+ when(mockPermissionService.getPermission(FAKE_USER)).thenReturn(EMPTY);
+ 
+ // 调用被测系统
+ userAuthorizer.grantPermission(USER_ACCESS);
+ 
+ // addPermission() 是state-changing, 所以使用交互测试来验证
+ // 是否被调用是更合理的
+ verify(mockPermissionDatabase).addPermission(FAKE_USER, USER_ACCESS);
+ 
+ // getPermission() 是non-state-changing,所以这行代码并不需要
+ // 交互测试不一定需要：
+ // getPermission()在该测试中打桩更重要
+ verify(mockPermissionDatabase).getPermission(FAKE_USER);
+}
+```
+#### 避免过度规则化
+在第12章，我们讨论了为什么对行为进行测试比对方法进行测试更有效。这意味着一个测试方法应该更注重验证一个方法或类的表现，而不是在一个测试中验证多个行为。
+在进行交互测试时，我们应该通过避免过度规定哪些函数和参数需要被验证来达到统一的原则。这能使测试更加的清晰和简洁。这也导致了测试对非测试范围以内的行为改变时，更具有弹性，当改变了一个函数的调用方式时，更少的测试将会失败。
+例13-18说明了非规范化的交互测试。该测试的目的是验证用户名是否包含在问候语中，但如果不相关的行为改变之后，这个测试将失败。
+例13-18. 过度规范化交互测试
+```java
+@Test public void displayGreeting_renderUserName() {
+ when(mockUserService.getUserName()).thenReturn("Fake User");
+ userGreeter.displayGreeting(); // 调用被测系统.
+ 
+ // 如果 setText() 参数被修改，该测试将会失败
+ verify(userPrompt).setText("Fake User", "Good morning!", "Version 2.1");
+ 
+ // 如果 setIcon() 方法被调用，测试将会失败, 尽管该方法对测试而言很重要
+ // 即使没有验证用户名
+ verify(userPrompt).setIcon(IMAGE_SUNSHINE);
+}
+```
+例13-19说明了交互测试在指定相关参数和函数时应该更加谨慎。被测试的行为被分隔成不同的测试，并且每个测试都保证验证最小数量的被测行为是正确的。
+例 13-19 精心设计的交互测试
+```java
+@Test public void displayGreeting_renderUserName() {
+ when(mockUserService.getUserName()).thenReturn("Fake User");
+ userGreeter.displayGreeting(); // 调用被测方法.
+ verify(userPrompter).setText(eq("Fake User"), any(), any());
+}
+@Test public void displayGreeting_timeIsMorning_useMorningSettings() {
+ setTimeOfDay(TIME_MORNING);
+ userGreeter.displayGreeting(); // 调用被测方法.
+ verify(userPrompt).setText(any(), eq("Good morning!"), any());
+ verify(userPrompt).setIcon(IMAGE_SUNSHINE);
+}
+```
+
+## 结论
+我们了解到单元测试对工程开发速度的重要性，因为他们可以帮助对代码进行全面的测试，并确保你的测试快速运行。另一方面，滥用测试会严重领影响生产力，因为他们会导致测试不清晰，效果差。这就是为什么工程师必须了解如何有效的应用测试。
+
+是进行实际实现还是使用单元测试，应该使用哪一种单元测试一直没有一个准确的答案。工程师在决定在实际情形中使用哪种方法比较适合时，需要做一些权衡。尽管单元测试在解决那些难以在测试中使用的依赖，但如果你想最大限度的提升对代码的自信，在某些时候仍然需要在测试中使用这些依赖。下一章将介绍大范围的测试，将不会在意这些依赖关系的使用是否适用于单元测试；例如，尽管他们很慢或是不确定的。
+
+TL;DRS
+- 真实实现比单元测试更受欢迎
+- 如果在测试中真实的实现不能被使用，那么用假的实现往往是一个理想的解决方案
+- 过度使用打桩测试会导致测试不清晰和脆弱
+- 交互测试应该尽可能避免：因为它会暴露被测系统的实现细节而导致测试变得脆弱
+
