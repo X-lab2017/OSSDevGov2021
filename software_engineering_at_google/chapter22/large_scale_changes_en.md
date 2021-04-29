@@ -33,7 +33,7 @@ After a global change has been generated, the author then starts running Rosie. 
 
 We talk more about the specific test-mail-submit process for each shard below.
 
-> <center>Cattle Versus Pets</center>
+> ​                                                                                       **Cattle Versus Pets**
 >
 > We often use the “cattle and pets” analogy when referring to individual machines in a distributed computing environment, but the same principles can apply to changes within a codebase.
 >
