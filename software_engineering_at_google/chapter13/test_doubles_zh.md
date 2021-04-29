@@ -200,7 +200,7 @@ assertThat(accessManager.userHasAccess(USER_ID)).isTrue();
 
 交互测试是一种验证如何调用函数而不实际调用函数实现的方法。如果一个函数没有被正确调用，测试就会失败。例如，如果这个函数根本没有被调用，它被调用了很多次，或者它被调用时使用了错误的参数。
 
-例13-9展示了一个交互测试的实例。来自Mockito mock框架的verify(…)方法用于验证lookupUser()是否按预期被调用。
+例13-9展示了一个交互测试的实例。来自Mockito模拟框架的verify(…)方法用于验证lookupUser()是否按预期被调用。
 
 例子 13-9. 交互测试
 
@@ -290,7 +290,7 @@ public abstract String getQueryValue();
 
 Foo foo = new Foo(new A(new B(new C()), new D()), new E(), ..., new Z());
 
-使用测试替身是很诱人的，因为构建一个测试替身是很简单的。例如，在使用Mockito嘲讽框架时，只需要构建测试替身：
+使用测试替身是很诱人的，因为构建一个测试替身是很简单的。例如，在使用Mockito模拟框架时，只需要构建测试替身：
 
  @Mock Foo mockFoo;
 
