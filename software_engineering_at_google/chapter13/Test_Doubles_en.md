@@ -923,7 +923,7 @@ Functions that don’t have side effects; they return information about the worl
 outside the system under test and don’t modify anything. Examples: getUser(),
 findResults(), readFile().
 
-In general, you should perform interaction testing only for functions that are statechanging. Performing interaction testing for non-state-changing functions is usually
+In general, you should perform interaction testing only for functions that are state-changing. Performing interaction testing for non-state-changing functions is usually
 redundant given that the system under test will use the return value of the function to
 do other work that you can assert. The interaction itself is not an important detail for
 correctness, because it has no side effects.
@@ -934,7 +934,7 @@ It also makes the test less readable given that the additional assertions make i
 difficult to determine which assertions are important for ensuring correctness of the
 code. By contrast, state-changing interactions represent something useful that your
 code is doing to change state somewhere else.
-Example 13-17 demonstrates interaction testing on both state-changing and nonstate-changing functions.
+Example 13-17 demonstrates interaction testing on both state-changing and non-state-changing functions.
 
 Example 13-17. State-changing and non-state-changing interaction
 
@@ -959,7 +959,7 @@ Example 13-17. State-changing and non-state-changing interaction
 
 ```
 
-#### Avoid overspecication
+#### Avoid overspecification
 
 In Chapter 12, we discuss why it is useful to test behaviors rather than methods. This means that a test method should focus on verifying one behavior of a method or class rather than trying to verify multiple behaviors in a single test.
 
