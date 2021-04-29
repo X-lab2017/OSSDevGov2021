@@ -1,9 +1,8 @@
 # CHAPTER 13 Test Doubles
 
-Unit tests are a critical tool for keeping developers productive and reducing defects in code. Although they can be easy to write for simple code, writing them becomes diffi‐
-cult as code becomes more complex. 
+Unit tests are a critical tool for keeping developers productive and reducing defects in code. Although they can be easy to write for simple code, writing them becomes difficult as code becomes more complex.
 
-For example, imagine trying to write a test for a function that sends a request to an external server and then stores the response in a database. Writing a handful of tests might be doable with some effort. But if you need to write hundreds or thousands of tests like this, your test suite will likely take hours to run, and could become flaky due to issues like random network failures or tests overwriting one another’s data. 
+For example, imagine trying to write a test for a function that sends a request to an external server and then stores the response in a database. Writing a handful of tests might be doable with some effort. But if you need to write hundreds or thousands of tests like this, your test suite will likely take hours to run, and could become flaky due to issues like random network failures or tests overwriting one another’s data.
 
 Test doubles come in handy in such cases. A test double is an object or function that can stand in for a real implementation in a test, similar to how a stunt double can stand in for an actor in a movie. The use of test doubles is often referred to as mock‐ing, but we avoid that term in this chapter because, as we’ll see, that term is also used to refer to more specific aspects of test doubles.
 
@@ -15,7 +14,7 @@ The previous two chapters introduced the concept of small tests and discussed wh
 
 The use of test doubles introduces a few complications to software development that require some trade-offs to be made. The concepts introduced here are discussed in more depth throughout this chapter:
 
-*Testability*
+### Testability
 
 To use test doubles, a codebase needs to be designed to be testable—it should be
 possible for tests to swap out real implementations with test doubles. For exam‐
@@ -24,7 +23,7 @@ double in place of a real database. If the codebase isn’t designed with testin
 mind and you later decide that tests are needed, it can require a major commit‐
 ment to refactor the code to support the use of test doubles.
 
-*Applicability*
+### Applicability
 
 Although proper application of test doubles can provide a powerful boost to
 engineering velocity, their improper use can lead to tests that are brittle, complex,
@@ -33,7 +32,7 @@ improperly across a large codebase, potentially resulting in major losses in pro
 ductivity for engineers. In many cases, test doubles are not suitable and engineers
 should prefer to use real implementations instead.
 
-*Fidelity*
+### Fidelity
 
 Fidelity refers to how closely the behavior of a test double resembles the behavior
 of the real implementation that it’s replacing. If the behavior of a test double sig‐
@@ -678,6 +677,7 @@ way to replace a real implementation in a test. For example, the code in
 Example 13-12 uses stubbing to simulate the response from a credit card server.
 
 Example 13-12. Using stubbing to simulate responses
+
 ```java
 @Test public void getTransactionCount() {
  transactionCounter = new TransactionCounter(mockCreditCardServer);
@@ -700,36 +700,47 @@ Stubbing involves writing extra code to define the behavior of the functions bei
 stubbed. Having this extra code detracts from the intent of the test, and this code can
 be difficult to understand if you’re not familiar with the implementation of the system
 under test.
+
 A key sign that stubbing isn’t appropriate for a test is if you find yourself mentally
 stepping through the system under test in order to understand why certain functions
 in the test are stubbed.
 
 #### Tests become brittle
+
 Stubbing leaks implementation details of your code into your test. When implemen‐
 tation details in your production code change, you’ll need to update your tests to
 reflect these changes. Ideally, a good test should need to change only if user-facing
 behavior of an API changes; it should remain unaffected by changes to the API’s
 implementation.
+
 #### Tests become less effective
+
 With stubbing, there is no way to ensure the function being stubbed behaves like the
 real implementation, such as in a statement like that shown in the following snippet
 that hardcodes part of the contract of the add() method (“If 1 and 2 are passed in, 3
 will be returned”):
+
 ```java
 when(stubCalculator.add(1, 2)).thenReturn(3);
 ```
+
 Stubbing is a poor choice if the system under test depends on the real implementa‐
 tion’s contract because you will be forced to duplicate the details of the contract, and
 there is no way to guarantee that the contract is correct (i.e., that the stubbed function
 has fidelity to the real implementation).
+
 Additionally, with stubbing there is no way to store state, which can make it difficult
 to test certain aspects of your code. For example, if you call database.save(item) on
 either a real implementation or a fake, you might be able to retrieve the item by call‐
 ing database.get(item.id()) given that both of these calls are accessing internal
 state, but with stubbing, there is no way to do this.
+
 #### An example of overusing stubbing
+
 Example 13-13 illustrates a test that overuses stubbing.
+
 Example 13-13. Overuse of stubbing
+
 ```java
 @Test public void creditCardIsCharged() {
  // Pass in test doubles that were created by a mocking framework.
@@ -750,12 +761,13 @@ Example 13-13. Overuse of stubbing
  verify(mockCreditCardServer).pay(transaction, creditCard, 500);
 }
 ```
+
 Example 13-14 rewrites the same test but avoids using stubbing. Notice how the test
 is shorter and that implementation details (such as how the transaction processor is
-used) are not exposed in the test. No special setup is needed because the credit card
+used) are not exposed in the test. No special setup is needed because the credit card server knows how to behave.
 
-server knows how to behave.
 Example 13-14. Refactoring a test to avoid stubbing
+
 ```java
 @Test public void creditCardIsCharged() {
  paymentProcessor =
@@ -767,6 +779,7 @@ Example 13-14. Refactoring a test to avoid stubbing
  .isEqualTo(500);
 }
 ```
+
 We obviously don’t want such a test to talk to an external credit card server, so a fake
 credit card server would be more suitable. If a fake isn’t available, another option is to
 use a real implementation that talks to a hermetic credit card server, although this will
@@ -774,17 +787,20 @@ increase the execution time of the tests. (We explore hermetic servers in the ne
 chapter.)
 
 ### When Is Stubbing Appropriate?
+
 Rather than a catch-all replacement for a real implementation, stubbing is appropri‐
 ate when you need a function to return a specific value to get the system under test
 into a certain state, such as Example 13-12 that requires the system under test to
 return a non-empty list of transactions. Because a function’s behavior is defined inline
 in the test, stubbing can simulate a wide variety of return values or errors that might
 not be possible to trigger from a real implementation or a fake.
+
 To ensure its purpose is clear, each stubbed function should have a direct relationship
 with the test’s assertions. As a result, a test typically should stub out a small number
 of functions because stubbing out many functions can lead to tests that are less clear.
 A test that requires many functions to be stubbed can be a sign that stubbing is being
 overused, or that the system under test is too complex and should be refactored.
+
 Note that even when stubbing is appropriate, real implementations or fakes are still
 preferred because they don’t expose implementation details and they give you more
 guarantees about the correctness of the code compared to stubbing. But stubbing can
@@ -792,17 +808,21 @@ be a reasonable technique to use, as long as its usage is constrained so that te
 become overly complex.
 
 ### Interaction Testing
+
 As discussed earlier in this chapter, interaction testing is a way to validate how a func‐
 tion is called without actually calling the implementation of the function.
 Mocking frameworks make it easy to perform interaction testing. However, to keep
 tests useful, readable, and resilient to change, it’s important to perform interaction
 testing only when necessary
+
 #### Prefer State Testing Over Interaction Testing
+
 In contrast to interaction testing, it is preferred to test code through state testing.
 With state testing, you call the system under test and validate that either the correct
 value was returned or that some other state in the system under test was properly
 changed. Example 13-15 presents an example of state testing.
 Example 13-15. State testing
+
 ```java
 @Test public void sortNumbers() {
  NumberSorter numberSorter = new NumberSorter(quicksort, bubbleSort);
@@ -813,11 +833,14 @@ Example 13-15. State testing
  assertThat(sortedList).isEqualTo(newList(1, 2, 3));
 }
 ```
+
 Example 13-16 illustrates a similar test scenario but instead uses interaction testing.
 Note how it’s impossible for this test to determine that the numbers are actually sor‐
 ted, because the test doubles don’t know how to sort the numbers—all it can tell you
 is that the system under test tried to sort the numbers.
+
 Example 13-16. Interaction testing
+
 ```java
 @Test public void sortNumbers_quicksortIsUsed() {
  // Pass in test doubles that were created by a mocking framework.
@@ -831,8 +854,10 @@ Example 13-16. Interaction testing
  verify(mockQuicksort).sort(newList(3, 1, 2));
 }
 ```
+
 At Google, we’ve found that emphasizing state testing is more scalable; it reduces test
 brittleness, making it easier to change and maintain code over time.
+
 The primary issue with interaction testing is that it can’t tell you that the system
 under test is working properly; it can only validate that certain functions are called as
 expected. It requires you to make an assumption about the behavior of the code; for
@@ -840,6 +865,7 @@ example, “If database.save(item) is called, we assume the item will be saved t
 database.” State testing is preferred because it actually validates this assumption (such
 as by saving an item to a database and then querying the database to validate that the
 item exists).
+
 Another downside of interaction testing is that it utilizes implementation details of
 the system under test—to validate that a function was called, you are exposing to the
 test that the system under test calls this function. Similar to stubbing, this extra code
@@ -848,21 +874,26 @@ into tests. Some people at Google jokingly refer to tests that overuse interacti
 duction code, even if the behavior of the system under test remains unchanged.
 
 ### When Is Interaction Testing Appropriate?
+
 There are some cases for which interaction testing is warranted:
--  You cannot perform state testing because you are unable to use a real implemen‐
+
+- You cannot perform state testing because you are unable to use a real implemen‐
 tation or a fake (e.g., if the real implementation is too slow and no fake exists). As
 a fallback, you can perform interaction testing to validate that certain functions
 are called. Although not ideal, this does provide some basic level of confidence
 that the system under test is working as expected.
--  Differences in the number or order of calls to a function would cause undesired
+
+- Differences in the number or order of calls to a function would cause undesired
 behavior. Interaction testing is useful because it could be difficult to validate this
 behavior with state testing. For example, if you expect a caching feature to reduce
 the number of calls to a database, you can verify that the database object is not
 accessed more times than expected. Using Mockito, the code might look similar
 to this:
+
 ```java
 verify(databaseReader, atMostOnce()).selectRecords();
 ```
+
 Interaction testing is not a complete replacement for state testing. If you are not able
 to perform state testing in a unit test, strongly consider supplementing your test suite
 with larger-scoped tests that do perform state testing. For instance, if you have a unit
@@ -870,23 +901,33 @@ test that validates usage of a database through interaction testing, consider ad
 integration test that can perform state testing against a real database. Larger-scope
 testing is an important strategy for risk mitigation, and we discuss it in the next
 chapter.
+
 ### Best Practices for Interaction Testing
+
 When performing interaction testing, following these practices can reduce some of
 the impact of the aforementioned downsides.
+
 #### Prefer to perform interaction testing only for state-changing functions
+
 When a system under test calls a function on a dependency, that call falls into one of
 two categories:
-State-changing
+
+###### State-changing
+
 Functions that have side effects on the world outside the system under test.
 Examples: sendEmail(), saveRecord(), logAccess().
-Interaction Testing | 277Non-state-changing
+
+##### Non-state-changing
+
 Functions that don’t have side effects; they return information about the world
 outside the system under test and don’t modify anything. Examples: getUser(),
 findResults(), readFile().
+
 In general, you should perform interaction testing only for functions that are statechanging. Performing interaction testing for non-state-changing functions is usually
 redundant given that the system under test will use the return value of the function to
 do other work that you can assert. The interaction itself is not an important detail for
 correctness, because it has no side effects.
+
 Performing interaction testing for non-state-changing functions makes your test brit‐
 tle because you’ll need to update the test anytime the pattern of interactions changes.
 It also makes the test less readable given that the additional assertions make it more
@@ -894,7 +935,9 @@ difficult to determine which assertions are important for ensuring correctness o
 code. By contrast, state-changing interactions represent something useful that your
 code is doing to change state somewhere else.
 Example 13-17 demonstrates interaction testing on both state-changing and nonstate-changing functions.
+
 Example 13-17. State-changing and non-state-changing interaction
+
 ```java
 @Test public void grantUserPermission() {
  UserAuthorizer userAuthorizer =
@@ -913,20 +956,25 @@ Example 13-17. State-changing and non-state-changing interaction
  // getPermission() was already stubbed earlier in this test.
  verify(mockPermissionDatabase).getPermission(FAKE_USER);
 }
+
 ```
+
 #### Avoid overspecication
-In Chapter 12, we discuss why it is useful to test behaviors rather than methods. This
-means that a test method should focus on verifying one behavior of a method or class
-rather than trying to verify multiple behaviors in a single test
+
+In Chapter 12, we discuss why it is useful to test behaviors rather than methods. This means that a test method should focus on verifying one behavior of a method or class rather than trying to verify multiple behaviors in a single test.
+
 When performing interaction testing, we should aim to apply the same principle by
 avoiding overspecifying which functions and arguments are validated. This leads to
 tests that are clearer and more concise. It also leads to tests that are resilient to
 changes made to behaviors that are outside the scope of each test, so fewer tests will
 fail if a change is made to a way a function is called.
+
 Example 13-18 illustrates interaction testing with overspecification. The intention of
 the test is to validate that the user’s name is included in the greeting prompt, but the
 test will fail if unrelated behavior is changed.
+
 Example 13-18. Overspecifed interaction tests
+
 ```java
 @Test public void displayGreeting_renderUserName() {
  when(mockUserService.getUserName()).thenReturn("Fake User");
@@ -941,11 +989,14 @@ Example 13-18. Overspecifed interaction tests
  verify(userPrompt).setIcon(IMAGE_SUNSHINE);
 }
 ```
+
 Example 13-19 illustrates interaction testing with more care in specifying relevant
 arguments and functions. The behaviors being tested are split into separate tests, and
 each test validates the minimum amount necessary for ensuring the behavior it is
 testing is correct.
+
 Example 13-19. Well-specifed interaction tests
+
 ```java
 @Test public void displayGreeting_renderUserName() {
  when(mockUserService.getUserName()).thenReturn("Fake User");
@@ -961,22 +1012,29 @@ Example 13-19. Well-specifed interaction tests
 ```
 
 ## Conclusion
+
 We’ve learned that test doubles are crucial to engineering velocity because they can
 help comprehensively test your code and ensure that your tests run fast. On the other
 hand, misusing them can be a major drain on productivity because they can lead to
 tests that are unclear, brittle, and less effective. This is why it’s important for engineers
 to understand the best practices for how to effectively apply test doubles.
+
 There is often no exact answer regarding whether to use a real implementation or a
 test double, or which test double technique to use. An engineer might need to make
 some trade-offs when deciding the proper approach for their use case.
+
 Although test doubles are great for working around dependencies that are difficult to
 use in tests, if you want to maximize confidence in your code, at some point you still
 want to exercise these dependencies in tests. The next chapter will cover larger-scope
 testing, for which these dependencies are used regardless of their suitability for unit
 tests; for example, even if they are slow or nondeterministic.
+
 ## TL;DRs
+
 • A real implementation should be preferred over a test double.
+
 • A fake is often the ideal solution if a real implementation can’t be used in a test.
+
 • Overuse of stubbing leads to tests that are unclear and brittle.
-• Interaction testing should be avoided when possible: it leads to tests that are brit‐
-tle because it exposes implementation details of the system under test.
+
+• Interaction testing should be avoided when possible: it leads to tests that are brittle because it exposes implementation details of the system under test.
