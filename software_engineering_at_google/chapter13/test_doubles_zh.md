@@ -1,4 +1,218 @@
-# 第十三章 测试问题
+# 第十三章 测试替身
+
+单元测试是保持开发人员生产力和减少代码缺陷的关键工具。虽然对于简单的代码来说编写单元测试很容易，但是当代码变得更复杂时，编写它们就很困难了。
+
+例如，设想为一个函数编写测试，该函数的作用是向外部服务器发送请求，然后将响应存储在数据库中。编写少量测试可能是可行的，但是如果你需要编写成百上千个这样的测试，那么你的这些测试很可能需要运行数小时，并且可能会因为随机的网络故障或者测试覆盖了其他数据等问题而变得不稳定。
+
+在这种情况下，测试替身（Test doubles）就派上用场了。测试替身是一个对象或函数，可以在测试中代替真实的实现，类似于替身可以代替电影中的演员。测试替身的使用通常被称为模拟，但我们在本章中会避免使用这个术语，因为我们将看到，这个术语也被用来指代测试替身的更具体的方面。
+
+或许最明显的测试替身的类型就是其行为与真实的实现类似的对象，但是是一个更简单的实现，比如内存数据库。其他类型的测试替身能够验证系统特定的细节，例如通过触发罕见的错误条件，或者确保在不实际执行函数实现的情况下调用重量级函数。
+
+前两章介绍了小型测试的概念，并讨论了为什么它们应该组成测试套件中的大多数测试。然而，由于跨多个进程或机器通信，生产代码通常不适合小型测试的约束。测试替身比真正的实现要轻量得多，从而允许您编写许多快速执行且不易出错的小型测试。
+
+## 测试替身对软件开发的影响
+
+测试替身的使用给软件开发带来了一些复杂性，这需要进行一些权衡。本章将对这里介绍的概念进行更深入的讨论。
+
+*可测试性（Testability）*
+
+要使用测试替身，必须将一个代码库设计成可测试的，以便测试能够用测试替身来交换真实的实现。例如，调用数据库的代码需要足够灵活以便能够使用测试替身来代替真实的数据库。
+如果您在设计代码库时没有考虑到测试，而后来又决定需要测试，那么这可能需要投入大量精力来重构代码以支持使用测试替身。
+
+*适用性（Applicability）*
+
+虽然正确地应用测试替身可以大大提高工程速度，但不正确使用它们会导致测试变得脆弱、复杂和低效。当在大型代码库中不恰当地使用测试替身时，这些缺点会被放大，这可能会极大地影响工程师的生产力。在很多情况下，测试替身是不合适的，工程师应该更倾向于使用真实的实现。
+
+*保真度（Fidelity）*
+
+保真度指的是测试替身的行为与它所替代的真实实现的行为有多相似。如果一个测试替身的行为与真正的实现明显不同，测试使用的测试替身可能不会提供多少价值。例如，假设您试图为一个数据库编写一个带有测试替身的测试，测试忽略了任何添加到数据库的数据，并且总是返回空的结果。但是，完美的保真度可能并不可行；为了适合在测试中使用，测试替身通常需要比实际实现简单得多。在很多情况下，即使没有完全的保真度，也应该使用测试替身。使用测试替身的单元测试通常需要由实际实现的更大范围的测试来补充。
+
+## Google中的测试替身
+
+在Google上，我们已经看到了无数的例子，这些例子说明了测试替身给代码库带来的生产力和软件质量方面的好处，以及它们在使用不当时可能造成的负面影响。基于这些经验，我们在Google所遵循的做法随着时间的推移而不断发展。从历史上看，关于如何有效使用测试替身的指导原则很少，但是随着我们看到许多团队代码库中出现了通用模式和反模式，最佳实践也在不断发展。
+
+我们从惨痛的教训中学到的一课是过度使用模拟框架的危险，它允许你轻松地创建测试替身(我们将在本章后面更详细地讨论模拟框架)。当模拟框架第一次在谷歌上使用时，它们就像是铁锤打在钉子上，可以很容易地针对孤立的代码片段编写高度集中的测试，而不必担心如何构造代码的依赖关系。直到数年和无数次的测试之后，我们才开始意识到这种测试的成本：虽然这些测试很容易编写，但考虑到它们需要不断地维护，而很少发现错误，因此我们遭受了很大的痛苦。现在，Google的钟摆已经开始向另一个方向摆动，许多工程师避免使用模拟框架，而倾向于编写更实际的测试。
+
+尽管本章中讨论的实践在Google上已经普遍得到了认可，但各个团队之间的实际应用差异很大。这种差异来自于工程师对这些实践的不一致的知识，现有代码库中的惯性不符合这些实践，或者团队只做短期内最容易的事情而不考虑长期影响。
+
+## 基本概念
+
+在深入研究如何有效地使用测试替身之前，我们先介绍一些与之相关的基本概念。这些为我们将在本章后面讨论的最佳实践奠定了基础。
+
+### 测试替身的一个例子
+
+假设一个电子商务网站需要处理信用卡支付。其核心部分可能类似于示例13-1中所示的代码。
+
+例子13-1. 信用卡服务
+
+```java
+class PaymentProcessor {
+private CreditCardService creditCardService;
+...
+boolean makePayment(CreditCard creditCard, Money amount) {
+if (creditCard.isExpired()) { return false; }
+boolean success =
+creditCardService.chargeCreditCard(creditCard, amount);
+return success;
+}
+}
+```
+
+在测试中使用真实的信用卡服务是不可行的(想象一下运行测试产生的所有交易费用!)，但是可以使用一个测试替身来模拟真实系统的行为。示例13-2中的代码显示了一个非常简单的测试替身。
+
+例子 13-2. 一个简单的测试替身
+```java
+class TestDoubleCreditCardService implements CreditCardService {
+@Override
+public boolean chargeCreditCard(CreditCard creditCard, Money amount) {
+return true;
+}
+}
+```
+
+尽管这个测试替身看起来不是很有用，但在测试中使用它仍可以让我们能够测试makePayment()方法中的一些逻辑。例如，在示例13-3中，我们可以验证信用卡过期时方法是否正确，因为测试所执行的代码路径并不依赖于信用卡服务的行为。
+
+例子 13-3. 使用测试替身
+
+```java
+@Test public void cardIsExpired_returnFalse() {
+boolean success = paymentProcessor.makePayment(EXPIRED_CARD, AMOUNT);
+assertThat(success).isFalse();
+}
+```
+
+本章的下面几节将讨论如何在比这更复杂的情况下使用测试替身。
+
+### 接缝（Seams）
+
+如果代码的编写方式允许为代码编写单元测试，那么它就被称为可测试的。接缝是一种通过允许使用测试替身来使代码可测试的方法，它可以对被测试系统使用不同的依赖关系，而不是生产环境中使用的依赖关系。
+
+依赖项注入是引入接缝的常用技术。简而言之，当一个类使用依赖项注入时，它需要使用的任何类(即类的依赖项)都被传递给它，而不是直接实例化，这使得这些依赖项可以在测试中替换。
+例13-4展示了一个依赖注入的例子。它接受实例作为参数，而不是用构造器创建CreditCardService的实例
+
+
+例子 13-4. 依赖项注入
+
+```java
+class PaymentProcessor {
+private CreditCardService creditCardService;
+PaymentProcessor(CreditCardService creditCardService) {
+this.creditCardService = creditCardService;
+}
+...
+}
+```
+
+调用此构造函数的代码负责创建适当的creditcardservice实例。尽管生产代码可以通过与外部服务器通信的CreditCardService的实现，但测试可以通过测试替身，如示例13-5所示。
+
+例子 13-5. 通过测试替身
+
+```java
+PaymentProcessor paymentProcessor =
+new PaymentProcessor(new TestDoubleCreditCardService());
+```
+
+为了减少与手动指定构造函数相关的引用，可以使用自动依赖注入框架来自动构造对象图。在Google，Guice和Dagger是Java代码中常用的自动依赖注入框架。
+对于Python或JavaScript这样的动态类型语言，可以动态地替换单个函数或对象方法。依赖注入在这些语言中不那么重要，因为这种功能可以在测试中使用依赖的真正实现，同时仅覆盖不适合测试的依赖函数或方法。
+
+编写可测试代码需要预先投入。它在代码库生命周期的早期尤其关键，因为考虑可测试性的时间越晚，就越难应用到代码库。在没有考虑测试的情况下编写的代码通常需要进行重构或重写，然后才能添加适当的测试。
+
+### 模拟框架（Mocking Frameworks）
+
+模拟框架是一个软件库，它可以简化在测试中创建测试替身的过程；它允许您用模拟来替换对象，该模拟是测试双精度，其行为是在测试中内联指定的。模拟框架的使用减少了样板代码，因为您不需要在每次需要测试替身时都定义一个新类。
+
+示例13-6演示了Mockito的使用，这是一个针对Java的模拟框架。Mockito为CreditCardService创建一个替身，并让它返回一个特定的值。
+
+例子 13-6. 模拟框架
+```java
+class PaymentProcessorTest {
+...
+PaymentProcessor paymentProcessor;
+// 只用一行代码创建CreditCardService的测试替身
+@Mock CreditCardService mockCreditCardService;
+@Before public void setUp() {
+// 被测系统通过测试替身
+paymentProcessor = new PaymentProcessor(mockCreditCardService);
+}
+@Test public void chargeCreditCardFails_returnFalse() {
+// Give some behavior to the test double: it will return false
+// anytime the chargeCreditCard() method is called. The usage of
+// “any()” for the method’s arguments tells the test double to
+// return false regardless of which arguments are passed.
+when(mockCreditCardService.chargeCreditCard(any(), any())
+.thenReturn(false);
+boolean success = paymentProcessor.makePayment(CREDIT_CARD, AMOUNT);
+assertThat(success).isFalse();
+}
+}
+```
+
+大多数主流编程语言都有模拟框架。在Google，我们在Java中使用Mockito，在c++中使用Googletest中的googlemock组件，以及Python的unittest。
+尽管模拟框架简化了测试替身的使用，但它们也带来了一些重要的警告，因为它们的过度使用通常会使代码库更加难以维护。我们将在本章后续讨论这些问题。
+
+## 使用测试替身的技术
+
+使用测试替身有三种主要的技术。本节将简要介绍这些技术，让您快速了解它们是什么以及它们之间的区别。本章后面的章节将详细介绍如何有效地应用它们。
+了解这些技术之间区别的工程师，在需要使用测试替身时，更有可能知道使用哪种合适的技术。
+
+### 伪造（Faking）
+
+伪造是API的轻量级实现，它的行为类似于真正的实现，但不适合生产；例如，内存数据库。例子13-7展示了一个伪造的例子。
+
+例子 13-7. 一个简单的伪造
+
+```java
+// Creating the fake is fast and easy.
+AuthorizationService fakeAuthorizationService =
+new FakeAuthorizationService();
+AccessManager accessManager = new AccessManager(fakeAuthorizationService):
+// Unknown user IDs shouldn’t have access.
+assertFalse(accessManager.userHasAccess(USER_ID));
+// The user ID should have access after it is added to
+// the authorization service.
+fakeAuthorizationService.addAuthorizedUser(new User(USER_ID));
+assertThat(accessManager.userHasAccess(USER_ID)).isTrue();
+```
+
+当需要使用测试替身时，使用伪造品通常是理想的技术，但是对于需要在测试中使用的对象，伪造品可能不存在，并且编写伪造品可能有一定挑战性，因为您需要确保它和现在到将来的真正实现具有相似的行为。
+
+### 存根（Stubbing）
+
+存根是向某个函数赋予行为的过程，否则该函数本身就没有行为，您可以向函数确切指定要返回的值（也就是说，对返回值进行存根）。
+
+示例13-8演示了存根。来自Mockito模拟框架的when(…). thenreturn(…)方法调用指定了lookupUser()方法的行为。
+
+例子 13-8. 存根
+```java
+// 通过由模拟框架创建的测试替身
+AccessManager accessManager = new AccessManager(mockAuthorizationService):
+// 如果返回null，用户ID不应该被获取
+when(mockAuthorizationService.lookupUser(USER_ID)).thenReturn(null);
+assertThat(accessManager.userHasAccess(USER_ID)).isFalse();
+// 如果返回非null值，用户ID应该可以被获取
+when(mockAuthorizationService.lookupUser(USER_ID)).thenReturn(USER);
+assertThat(accessManager.userHasAccess(USER_ID)).isTrue();
+```
+
+### 交互测试（Interaction Testing）
+
+交互测试是一种验证如何调用函数而不实际调用函数实现的方法。如果一个函数没有被正确调用，测试就会失败。例如，如果这个函数根本没有被调用，它被调用了很多次，或者它被调用时使用了错误的参数。
+
+例13-9展示了一个交互测试的实例。来自Mockito mock框架的verify(…)方法用于验证lookupUser()是否按预期被调用。
+
+例子 13-9. 交互测试
+```java
+// 通过由模拟框架创建的测试替身
+AccessManager accessManager = new AccessManager(mockAuthorizationService);
+accessManager.userHasAccess(USER_ID);
+// 如果没有调用accessManager.userHasAccess(USER_ID)，测试将会失败
+// mockAuthorizationService.lookupUser(USER_ID).
+verify(mockAuthorizationService).lookupUser(USER_ID);
+```
+
+与存根类似，交互测试通常是通过模拟框架完成的。与手工创建包含跟踪函数调用频率和传入参数的代码的新类相比，这减少了样板代码。
+
+交互测试有时被称为模拟。我们在本章中避免使用这个术语，因为它可能会与模拟框架混淆，模拟框架既可以用于存根测试，也可以用于交互测试。正如本章后面所讨论的，交互测试在某些情况下是有用的，但应该在可能的时候避免，因为过度使用很容易导致脆弱的测试。
 
 ## 真实的实现
 
@@ -158,6 +372,7 @@ fakes可以是一个强大的测试工具：它们执行得很快，并允许你
 ## 打桩
 
 正如本章前面所讨论的，打桩是一种测试的方式，为一个函数硬编码行为，否则它本身就没有行为。它通常是一种快速而简单的方法来替代测试中的真实实现。例如，例13-12中的代码使用打桩来模拟信用卡服务器的响应
+
 例子 13-12. 使用打桩来模拟信用卡服务器的响应
 ```java
 @Test public void getTransactionCount() {
@@ -353,3 +568,4 @@ TL;DRS
 - 如果在测试中真实的实现不能被使用，那么用假的实现往往是一个理想的解决方案
 - 过度使用打桩测试会导致测试不清晰和脆弱
 - 交互测试应该尽可能避免：因为它会暴露被测系统的实现细节而导致测试变得脆弱
+
