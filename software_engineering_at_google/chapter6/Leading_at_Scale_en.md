@@ -8,7 +8,6 @@
 
 <p align="right" style="font-weight:bold;font-size:20px">Edited by Riona MacNamara</p>
 
-
 In Chapter 5, we talked about what it means to go from being an “individual contributor” to being an explicit leader of a team. It’s a natural progression to go from leading one team to leading a set of related teams, and this chapter talks about how to be effective as you continue along the path of engineering leadership.
 
 As your role evolves, all the best practices still apply. You’re still a “servant leader”; you’re just serving a larger group. That said, the scope of problems you’re solving becomes larger and more abstract. You’re gradually forced to become “higher level.” That is, you’re less and less able to get into the technical or engineering details of things, and you’re being pushed to go “broad” rather than “deep.” At every step, this process is frustrating: you mourn the loss of these details, and you come to realize that your prior engineering expertise is becoming less and less relevant to your job. Instead, your effectiveness depends more than ever on your general technical intuition and ability to galvanize engineers to move in good directions.
@@ -79,7 +78,7 @@ There’s a risk here. If you don’t frame your process as continuous rebalanci
 >
 > So what changed? At some point, we took a step back, identified the blinders, and did a full reevaluation of the trade-offs. It turns out that the pursuit of “quality” has not one, but *two* different costs. The first cost is to the user: more quality usually means more data being sent out, which means more latency. The second cost is to Google: more quality means doing more work to generate the data, which costs more CPU time in our servers—what we call “serving capacity.” Although leadership had often trodden carefully around the trade-off between quality and capacity, it had never treated latency as a full citizen in the calculus. As the old joke goes, “Good, Fast, Cheap—pick two.” A simple way to depict the trade-offs is to draw a triangle of tension between Good (Quality), Fast (Latency), and Cheap (Capacity), as illustrated in Figure 6-1.
 >
-> <img src="images\Trade-offs within Web Search; pick two!.png" alt="img" style="zoom:80%;" />
+> <div align="center"><img src="images\Trade-offs within Web Search; pick two!.png" alt="img" style="zoom:80%;" /></div>
 >
 > <p align="center">Figure 6-1. Trade-offs within Web Search; pick two!</p>
 >
@@ -169,7 +168,7 @@ So now you’re in a pickle. You’ve been given a new problem, but (usually) no
 
 So really, the cycle of success is more of a spiral (see Figure 6-2). Over months and years, your organization is scaling by tackling new problems and then figuring out how to compress them so that it can take on new, parallel struggles. If you’re lucky, you’re allowed to hire more people as you go. More often than not, though, your hiring doesn’t keep pace with the scaling. Larry Page, one of Google’s founders, would probably refer to this spiral as “uncomfortably exciting.”
 
-<img src="images\The spiral of success.png" alt="The spiral of success" style="zoom:150%;" />
+<div align="center"><img src="images\The spiral of success.png" alt="The spiral of success" style="zoom:150%;" /></div>
 
 <p align="center">Figure 6-2. The spiral of success</p>
 
