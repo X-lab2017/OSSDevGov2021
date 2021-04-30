@@ -149,8 +149,7 @@ ting and structure. There are also many rules that put forth a decision on a see
 ingly small issue solely to guarantee that things are done in only one way. For example, take the choice of the number of spaces to use for indentation or the limit set on line length.<sup>5</sup>。It’s the consistency of having one answer rather than the
 answer itself that is the valuable part here.
 
-- Consistency enables scaling. Tooling is key for an organization to scale, and con‐
-sistent code makes it easier to build tools that can understand, edit, and generate
+- Consistency enables scaling. Tooling is key for an organization to scale, and consistent code makes it easier to build tools that can understand, edit, and generate
 code. The full benefits of the tools that depend on uniformity can’t be applied if
 everyone has little pockets of code that differ—if a tool can keep source files
 updated by adding missing imports or removing unused includes, if different
