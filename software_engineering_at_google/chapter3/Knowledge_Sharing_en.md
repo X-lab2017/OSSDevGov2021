@@ -300,3 +300,90 @@ Creating and maintaining centralized, canonical sources of information is expens
 Google has a broad and deep set of official guidance for engineers, including style guides, official software engineering best practices, guides for code review and testing,  and Tips of the Week (TotW).
 
 The corpus of information is so large that it s impractical to expect engineers to read it all end to end, much less be able to absorb so much information at once. Instead, a human expert already familiar with a guideline can send a link to a fellow engineer, who then can read the reference and learn more. The expert saves time by not needing to personally explain a company-wide practice, and the learner now knows that there is a canonical source of trustworthy information that they can access whenever necessary. Such a process scales knowledge because it enables human experts to recognize and solve a specific information need by leveraging common, scalable resources.
+
+#### go/ links 
+go/ links (sometimes referred to as goto/ links) are Google’s internal URL shortener.16Most Google-internal references have at least one internal go/ link. For example, “go/spanner” provides information about Spanner, “go/python” is Google’s Python developer guide. The content can live in any repository (g3doc, Google Drive, GoogleSites, etc.), but having a go/ link that points to it provides a predictable, memorableway to access it. This yields some nice benefits:
+
+•go/ links are so short that it’s easy to share them in conversation (“Y ou shouldcheck out go/frobber!”). This is much easier than having to go find a link andthen send a message to all interested parties. Having a low-friction way to sharereferences makes it more likely that that knowledge will be shared in the firstplace.
+
+•go/ links provide a permalink to the content, even if the underlying URLchanges. When an owner moves content to a different repository (for example,moving content from a Google doc to g3doc), they can simply update the go/link’s target URL. The go/ link itself remains unchanged.
+
+go/ links are so ingrained into Google culture that a virtuous cycle has emerged: aGoogler looking for information about Frobber will likely first check go/frobber. Ifthe go/ link doesn’t point to the Frobber Developer Guide (as expected), the Googlerwill generally configure the link themselves. As a result, Googlers can usually guessthe correct go/ link on the first try.
+
+#### Codelabs 
+Google codelabs are guided, hands-on tutorials that teach engineers new concepts orprocesses by combining explanations, working best-practice example code, and codeexercises.17 A canonical collection of codelabs for technologies broadly used acrossGoogle is available at go/codelab. These codelabs go through several rounds of formalreview and testing before publication. Codelabs are an interesting halfway pointbetween static documentation and instructor-led classes, and they share the best andworst features of each. Their hands-on nature makes them more engaging than tradi‐tional documentation, but engineers can still access them on demand and completethem on their own; but they are expensive to maintain and are not tailored to thelearner’s specific needs.
+
+#### Static analysis
+Static analysis tools are a powerful way to share best practices that can be checkedprogrammatically. Every programming language has its own particular static analysistools, but they have the same general purpose: to alert code authors and reviewers toways in which code can be improved to follow style and best practices. Some tools goone step further and offer to automatically apply those improvements to the code.
+
+Setting up static analysis tools requires an upfront investment, but as soon as they arein place, they scale efficiently. When a check for a best practice is added to a tool,every engineer using that tool becomes aware of that best practice. This also frees upengineers to teach other things: the time and effort that would have gone into man‐ually teaching the (now automated) best practice can instead be used to teach some‐thing else. Static analysis tools augment engineers’ knowledge. They enable anorganization to apply more best practices and apply them more consistently thanwould otherwise be possible.
+
+
+### Staying in the Loop
+Some information is critical to do one’s job, such as knowing how to do a typicaldevelopment workflow. Other information, such as updates on popular productivitytools, is less critical but still useful. For this type of knowledge, the formality of theinformation sharing medium depends on the importance of the information beingdelivered. For example, users expect official documentation to be kept up to date, buttypically have no such expectation for newsletter content, which therefore requiresless maintenance and upkeep from the owner.
+
+#### Newsletters
+Google has a number of company-wide newsletters that are sent to all engineers,including EngNews (engineering news), Ownd (Privacy/Security news), and Google’s
+Greatest Hits (report of the most interesting outages of the quarter). These are a goodway to communicate information that is of interest to engineers but isn’t mission crit‐ical. For this type of update, we’ve found that newsletters get better engagement whenthey are sent less frequently and contain more useful, interesting content. Otherwise,newsletters can be perceived as spam.
+
+Even though most Google newsletters are sent via email, some are more creative intheir distribution. Testing on the Toilet (testing tips) and Learning on the Loo (productivity tips) are single-page newsletters posted inside toilet stalls. This unique delivery medium helps the Testing on the Toilet and Learning on the Loo stand out from other newsletters, and all issues are archived online.
+
+#### Communities
+Googlers like to form cross-organizational communities around various topics to share knowledge. These open channels make it easier to learn from others outside
+your immediate circle and avoid information islands and duplication. Google Groupsare especially popular: Google has thousands of internal groups with varying levels of formality. Some are dedicated to troubleshooting; others, like the Code Health group,are more for discussion and guidance. Internal Google+ is also popular among Googlers as a source of informal information because people will post interesting technical breakdowns or details about projects they are working on.
+
+## Readability: Standardized MentorshipThrough Code Review
+
+At Google, “readability” refers to more than just code readability; it is a standardized,Google-wide mentorship process for disseminating programming language best practices. Readability covers a wide breadth of expertise, including but not limited to language idioms, code structure, API design, appropriate use of common libraries,documentation, and test coverage.
+
+Readability started as a one-person effort. In Google’s early days, Craig Silverstein(employee ID #3) would sit down in person with every new hire and do a line-by-line“readability review” of their first major code commit. It was a nitpicky review that covered everything from ways the code could be improved to whitespace conventions. This gave Google’s codebase a uniform appearance but, more important, it taught best practices, highlighted what shared infrastructure was available, and showed new hires what it’s like to write code at Google.
+
+Inevitably, Google’s hiring rate grew beyond what one person could keep up with. So many engineers found the process valuable that they volunteered their own time to scale the program. Today, around 20% of Google engineers are participating in the readability process at any given time, as either reviewers or code authors.
+
+#### What Is the Readability Process?
+Code review is mandatory at Google. Every changelist (CL)18 requires readability approval, which indicates that someone who has readability certification for that language has approved the CL. Certified authors implicitly provide readability approval of their own CLs; otherwise, one or more qualified reviewers must explicitly give readability approval for the CL. This requirement was added after Google grew to a point where it was no longer possible to enforce that every engineer received code reviews that taught best practices to the desired rigor.
+
+Within Google, having readability certification is commonly referred to as “having readability” for a language. Engineers with readability have demonstrated that they consistently write clear, idiomatic, and maintainable code that exemplifies Google’s best practices and coding style for a given language. They do this by submitting CLs through the readability process, during which a centralized group of readability reviewers review the CLs and give feedback on how much it demonstrates the various areas of mastery. As authors internalize the readability guidelines, they receive fewer and fewer comments on their CLs until they eventually graduate from the process and formally receive readability. Readability brings increased responsibility: engineers with readability are trusted to continue to apply their knowledge to their own code and to act as reviewers for other engineers’ code.
+
+Around 1 to 2% of Google engineers are readability reviewers. All reviewers are volunteers, and anyone with readability is welcome to self-nominate to become a readability reviewer. Readability reviewers are held to the highest standards because they are expected not just to have deep language expertise, but also an aptitude for teaching through code review. They are expected to treat readability as first and foremost a mentoring and cooperative process, not a gatekeeping or adversarial one. Readability reviewers and CL authors alike are encouraged to have discussions during the review process. Reviewers provide relevant citations for their comments so that authors can learn about the rationales that went into the style guidelines (“Chesterson’s fence”). If the rationale for any given guideline is unclear, authors should ask for clarification (“ask questions”).
+
+Readability is deliberately a human-driven process that aims to scale knowledge in a standardized yet personalized way. As a complementary blend of written and tribal knowledge, readability combines the advantages of written documentation, which can be accessed with citable references, with the advantages of expert human reviewers, who know which guidelines to cite. Canonical guidelines and language recommendations are comprehensively documented—which is good!—but the corpus of information is so large19 that it can be overwhelming, especially to newcomers.
+
+#### Why Have This Process?
+
+Code is read far more than it is written, and this effect is magnified at Google’s scale and in our (very large) monorepo.20 Any engineer can look at and learn from the wealth of knowledge that is the code of other teams, and powerful tools like Kythe make it easy to find references throughout the entire codebase (see Chapter 17). An important feature of documented best practices (see Chapter 8) is that they provide consistent standards for all Google code to follow. Readability is both an enforcement and propagation mechanism for these standards.
+
+One of the primary advantages of the readability program is that it exposes engineers to more than just their own team’s tribal knowledge. To earn readability in a given language, engineers must send CLs through a centralized set of readability reviewers who review code across the entire company. Centralizing the process makes a significant trade-off: the program is limited to scaling linearly rather than sublinearly with organization growth, but it makes it easier to enforce consistency, avoid islands, and avoid (often unintentional) drifting from established norms.
+
+The value of codebase-wide consistency cannot be overstated: even with tens of thousands of engineers writing code over decades, it ensures that code in a given language will look similar across the corpus. This enables readers to focus on what the code does rather than being distracted by why it looks different than code that they’re used to. Large-scale change authors (see Chapter 22) can more easily make changes across the entire monorepo, crossing the boundaries of thousands of teams. People canchange teams and be confident that the way that the new team uses a given language is not drastically different than their previous team.
+
+These benefits come with some costs: readability is a heavyweight process compared to other mediums like documentation and classes because it is mandatory and enforced by Google tooling (see Chapter 19). These costs are nontrivial and includethe following:
+
+•Increased friction for teams that do not have any team members with readability, because they need to find reviewers from outside their team to give readability approval on CLs.
+
+•Potential for additional rounds of code review for authors who need readability review.
+
+•Scaling disadvantages of being a human-driven process. Limited to scaling linearly to organization growth because it depends on human reviewers doing specialized code reviews.
+
+The question, then, is whether the benefits outweigh the costs. There’s also the factorof time: the full effect of the benefits versus the costs are not on the same timescale.The program makes a deliberate trade-off of increased short-term code-review latency and upfront costs for the long-term payoffs of higher-quality code,repository-wide code consistency, and increased engineer expertise. The longer timescale of the benefits comes with the expectation that code is written with a potential lifetime of years, if not decades.
+
+As with most—or perhaps all—engineering processes, there’s always room for improvement. Some of the costs can be mitigated with tooling. A number of readability comments address issues that could be detected statically and commented on automatically by static analysis tooling. As we continue to invest in static analysis, readability reviewers can increasingly focus on higher-order areas, like whether a particular block of code is understandable by outside readers who are not intimately familiar with the codebase instead of automatable detections like whether a line has trailing whitespace.
+
+But aspirations aren’t enough. Readability is a controversial program: some engineers complain that it’s an unnecessary bureaucratic hurdle and a poor use of engineer time. Are readability’s trade-offs worthwhile? For the answer, we turned to our trusty Engineering Productivity Research (EPR) team. 
+
+The EPR team performed in-depth studies of readability, including but not limited to whether people were hindered by the process, learned anything, or changed their behavior after graduating. These studies showed that readability has a net positive impact on engineering velocity. CLs by authors with readability take statistically significantly less time to review and submit than CLs by authors who do not have readability.22 Self-reported engineer satisfaction with their code quality—lacking more objective measures for code quality—is higher among engineers who have readability versus those who do not. A significant majority of engineers who complete the program report satisfaction with the process and find it worthwhile. They report learning from reviewers and changing their own behavior to avoid readability issues when writing and reviewing code.
+
+Google has a very strong culture of code review, and readability is a natural extension of that culture. Readability grew from the passion of a single engineer to a formal program of human experts mentoring all Google engineers. It evolved and changed with Google’s growth, and it will continue to evolve as Google’s needs change.
+
+### Conclusion
+Knowledge is in some ways the most important (though intangible) capital of a soft‐ ware engineering organization, and sharing of that knowledge is crucial for making an organization resilient and redundant in the face of change. A culture that promotes open and honest knowledge sharing distributes that knowledge efficiently across the organization and allows that organization to scale over time. In most cases, investments into easier knowledge sharing reap manyfold dividends over the life of a company.
+### TL;DRs
+•Psychological safety is the foundation for fostering a knowledge-sharingenvironment.
+
+•Start small: ask questions and write things down.
+
+•Make it easy for people to get the help they need from both human experts and documented references.
+
+•At a systemic level, encourage and reward those who take time to teach and broaden their expertise beyond just themselves, their team, or their organization.
+
+•There is no silver bullet: empowering a knowledge-sharing culture requires a combination of multiple strategies, and the exact mix that works best for your organization will likely change over time.
