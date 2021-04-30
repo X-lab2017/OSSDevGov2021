@@ -2,32 +2,19 @@
 *Written by Nina Chen and Mark Barolak
 Edited by Riona MacNamara*
 
-Your organization understands your problem domain better than some random per‐
-son on the internet; your organization should be able to answer most of its own ques‐
-tions. To achieve that, you need both experts who know the answers to those
-questions and mechanisms to distribute their knowledge, which is what we’ll explore
-in this chapter. These mechanisms range from the utterly simple (Ask questions;
-Write down what you know) to the much more structured, such as tutorials and
-classes. Most importantly, however, your organization needs a culture of learning, and
-that requires creating the psychological safety that permits people to admit to a lack
-of knowledge.
+Your organization understands your problem domain better than some random person on the internet; your organization should be able to answer most of its own questions. To achieve that, you need both experts who know the answers to those questions and mechanisms to distribute their knowledge, which is what we’ll explore in this chapter. These mechanisms range from the utterly simple (Ask questions;Write down what you know) to the much more structured, such as tutorials and classes. Most importantly, however, your organization needs a culture of learning, and that requires creating the psychological safety that permits people to admit to a lack of knowledge.
 
 ## Challenges to Learning ##
 
-Sharing expertise across an organization is not an easy task. Without a strong culture
-of learning, challenges can emerge. Google has experienced a number of these chal‐
-lenges, especially as the company has scaled:
+Sharing expertise across an organization is not an easy task. Without a strong culture of learning, challenges can emerge. Google has experienced a number of these challenges, especially as the company has scaled:
 
 *Lack of psychological safety*
 
-An environment in which people are afraid to take risks or make mistakes in
-front of others because they fear being punished for it. This often manifests as a
-culture of fear or a tendency to avoid transparency.
+An environment in which people are afraid to take risks or make mistakes in front of others because they fear being punished for it. This often manifests as a culture of fear or a tendency to avoid transparency.
 
 *Information islands*
 
-Knowledge fragmentation that occurs in different parts of an organization that
-don’t communicate with one another or use shared resources. In such an environment, each group develops its own way of doing things.1 This often leads
+Knowledge fragmentation that occurs in different parts of an organization that don’t communicate with one another or use shared resources. In such an environment, each group develops its own way of doing things. This often leads
 to the following:
 
 *Information fragmentation*
@@ -45,8 +32,7 @@ Each island has its own ways of doing the same thing, and these might or might n
 *Single point of failure (SPOF)*
 
 A bottleneck that occurs when critical information is available from only a single person. This is related to bus factor, which is discussed in more detail in Chapter 2.
-SPOFs can arise out of good intentions: it can be easy to fall into a habit of “Let
-me take care of that for you.” But this approach optimizes for short-term efficiency (“It’s faster for me to do it”) at the cost of poor long-term scalability (the team never learns how to do whatever it is that needs to be done). This mindset also tends to lead to all-or-nothing expertise.
+SPOFs can arise out of good intentions: it can be easy to fall into a habit of “Let me take care of that for you.” But this approach optimizes for short-term efficiency (“It’s faster for me to do it”) at the cost of poor long-term scalability (the team never learns how to do whatever it is that needs to be done). This mindset also tends to lead to all-or-nothing expertise.
 
 *All-or-nothing expertise*
 
@@ -141,7 +127,7 @@ It doesn’t matter whether you’re new to a team or a senior leader: you shoul
 should find a new environment).
 
 It’s especially critical for those in leadership roles to model this behavior: it’s important not to mistakenly equate “seniority” with “knowing everything.” In fact, the more you know, the more you know you don’t know. Openly asking questions4 or expressing gaps in knowledge reinforces that it’s OK for others to do the same.
- 
+
 On the receiving end, patience and kindness when answering questions fosters an environment in which people feel safe looking for help. Making it easier to overcome the initial hesitation to ask a question sets the tone early: reach out to solicit questions, and make it easy for even “trivial” questions to get an answer. Although engineers could probably figure out tribal knowledge on their own, they’re not here to work in a vacuum. Targeted help allows engineers to be productive faster, which it turn makes their entire team more productive.
 
 ## Understand Context
@@ -198,3 +184,119 @@ code as well as discuss confidential information.
 
 
 Like Stack Overflow, YAQS shares many of the same advantages of mailing lists and adds refinements: answers marked as helpful are promoted in the user interface, and users can edit questions and answers so that they remain accurate and useful as code and facts change. As a result, some mailing lists have been superseded by YAQS,whereas others have evolved into more general discussion lists that are less focused on problem solving.
+
+## Scaling Your Knowledge:You Always Have Something to Teach
+
+Teaching is not limited to experts, nor is expertise a binary state in which you are either a novice or an expert. Expertise is a multidimensional vector of what you know: everyone has varying levels of expertise across different areas. This is one of the reasons why diversity is critical to organizational success: different people bring different perspectives and expertise to the table (see Chapter 4). Google engineers teach others in a variety of ways, such as office hours, giving tech talks, teaching classes, writing documentation, and reviewing code.
+
+###  Office Hours 
+
+Sometimes it s really important to have a human to talk to, and in those instances, office hours can be a good solution. Office hours are a regularly scheduled (typically weekly) event during which one or more people make themselves available to answer questions about a particular topic. Office hours are almost never the first choice for knowledge sharing: if you have an urgent question, it can be painful to wait for the next session for an answer; and if you re hosting office hours, they take up time and need to be regularly promoted. That said, they do provide a way for people to talk to an expert in person. This is particularly useful if the problem is still ambiguous enough that the engineer doesn't yet know what questions to ask (such as when they re just starting to design a new service) or whether the problem is about something so specialized that there just isn t documentation on it. 
+
+### Tech Talks and Classes 
+
+Google has a robust culture of both internal and external tech talks and classes. Our engEDU (Engineering Education) team focuses on providing Computer Science education to many audiences, ranging from Google engineers to students around the world. At a more grassroots level, our g2g (Googler2Googler) program lets Googlers sign up to give or attend talks and classes from fellow Googlers. The program is wildly successful, with thousands of participating Googlers teaching topics from the technical (e.g., Understanding Vectorization in Modern CPUs ) to the just-for-fun (e.g., Beginner Swing Dance ).
+
+Tech talks typically consist of a speaker presenting directly to an audience. Classes, on the other hand, can have a lecture component but often center on in-class exercises and therefore require more active participation from attendees. As a result, instructor-led classes are typically more demanding and expensive to create and maintain than tech talks and are reserved for the most important or difficult topics. That said, after a class has been created, it can be scaled relatively easily because many instructors can teach a class from the same course materials. We ve found that classes tend to work best when the following circumstances exist:
+
+* The topic is complicated enough that it s a frequent source of misunderstanding. Classes take a lot of work to create, so they should be developed only when they re addressing specific needs.
+* The topic is relatively stable. Updating class materials is a lot of work, so if the subject is rapidly evolving, other forms of sharing knowledge will have a better bang for the buck.
+* The topic benefits from having teachers available to answer questions and provide personalized help. If students can easily learn without directed help, selfserve mediums like documentation or recordings are more efficient. A number of introductory classes at Google also have self-study versions.
+* There is enough demand to offer the class regularly. Otherwise, potential learners will get the information they need in other ways rather than waiting for the class. At Google, this is particularly a problem for small, geographically remote offices.
+
+### Documentation
+
+Documentation is written knowledge whose primary goal is to help its readers learn something. Not all written knowledge is necessarily documentation, although it can be useful as a paper trail. For example, it s possible to find an answer to a problem in a mailing list thread, but the primary goal of the original question on the thread was to seek answers, and only secondarily to document the discussion for others.
+
+In this section, we focus on spotting opportunities for contributing to and creating formal documentation, from small things like fixing a typo to larger efforts such as documenting tribal knowledge.
+
+> For a more comprehensive discussion of documentation, see Chapter 10.
+
+#### Updating documentation
+
+The first time you learn something is the best time to see ways that the existing documentation and training materials can be improved. By the time you ve absorbed and understood a new process or system, you might have forgotten what was difficult or what simple steps were missing from the Getting Started documentation. At this stage, if you find a mistake or omission in the documentation, fix it! Leave the campground cleaner than you found it,7 and try to update the documents yourself, even when that documentation is owned by a different part of the organization.
+
+At Google, engineers feel empowered to update documentation regardless of who owns it and we often do even if the fix is as small as correcting a typo. This level of community upkeep increased notably with the introduction of g3doc, which made it much easier for Googlers to find a documentation owner to review their suggestion. It also leaves an auditable trail of change history no different than that for code.
+
+#### Creating documentation
+
+As your proficiency grows, write your own documentation and update existing docs. For example, if you set up a new development flow, document the steps. You can then make it easier for others to follow in your path by pointing them to your document. Even better, make it easier for people to find the document themselves. Any sufficiently undiscoverable or unsearchable documentation might as well not exist. This is another area in which g3doc shines because the documentation is predictably located right next to the source code, as opposed to off in an (unfindable) document or webpage somewhere.
+
+Finally, make sure there s a mechanism for feedback. If there s no easy and direct way for readers to indicate that documentation is outdated or inaccurate, they are likely not to bother telling anyone, and the next newcomer will come across the same problem. People are more willing to contribute changes if they feel that someone will actually notice and consider their suggestions. At Google, you can file a documentation bug directly from the document itself.
+
+In addition, Googlers can easily leave comments on g3doc pages. Other Googlers can see and respond to these comments and, because leaving a comment automatically files a bug for the documentation owner, the reader doesn t need to figure out who to contact.
+
+#### Promoting documentation
+
+Traditionally, encouraging engineers to document their work can be difficult. Writing documentation takes time and effort that could be spent on coding, and the benefits that result from that work are not immediate and are mostly reaped by others. Asymmetrical trade-offs like these are good for the organization as a whole given that many people can benefit from the time investment of a few, but without good incentives, it can be challenging to encourage such behavior. We discuss some of these structural incentives in the section Incentives and recognition on page 57.
+
+However, a document author can often directly benefit from writing documentation. Suppose that team members always ask you for help debugging certain kinds of production failures. Documenting your procedures requires an upfront investment of time, but after that work is done, you can save time in the future by pointing team members to the documentation and providing hands-on help only when needed.
+
+Writing documentation also helps your team and organization scale. First, the information in the documentation becomes canonicalized as a reference: team members can refer to the shared document and even update it themselves. Second, the canonicalization may spread outside the team. Perhaps some parts of the documentation are not unique to the team s configuration and become useful for other teams looking to resolve similar problems.
+
+### Code
+
+At a meta level, code is knowledge, so the very act of writing code can be considered a form of knowledge transcription. Although knowledge sharing might not be a direct intent of production code, it is often an emergent side effect, which can be facilitated by code readability and clarity.
+
+Code documentation is one way to share knowledge; clear documentation not only benefits consumers of the library, but also future maintainers. Similarly, implementation comments transmit knowledge across time: you re writing these comments expressly for the sake of future readers (including Future You!). In terms of tradeoffs, code comments are subject to the same downsides as general documentation: they need to be actively maintained or they can quickly become out of date, as anyone who has ever read a comment that directly contradicts the code can attest.
+
+Code reviews (see Chapter 9) are often a learning opportunity for both author(s) and reviewer(s). For example, a reviewer s suggestion might introduce the author to a new testing pattern, or a reviewer might learn of a new library by seeing the author use it in their code. Google standardizes mentoring through code review with the readability process, as detailed in the case study at the end of this chapter.
+
+## Scaling Your Organization’s Knowledge
+
+Ensuring that expertise is appropriately shared across the organization becomes more difficult as the organization grows. Some things, like culture, are important at every stage of growth, whereas others, like establishing canonical sources of information, might be more beneficial for more mature organizations.
+
+### Cultivating a Knowledge-Sharing Culture
+
+Organizational culture is the squishy human thing that many companies treat as an afterthought. But at Google, we believe that focusing on the culture and environment first results in better outcomes than focusing on only the output such as the code of that environment.
+
+Making major organizational shifts is difficult, and countless books have been written on the topic. We don t pretend to have all the answers, but we can share specific steps Google has taken to create a culture that promotes learning.
+
+See the book Work Rules! for a more in-depth examination of Google’s culture.
+
+#### Respect
+
+The bad behavior of just a few individuals can make an entire team or community unwelcoming. In such an environment, novices learn to take their questions elsewhere, and potential new experts stop trying and don t have room to grow. In the worst cases, the group reduces to its most toxic members. It can be difficult to recover from this state.
+
+Knowledge sharing can and should be done with kindness and respect. In tech, tolerance or worse, reverence of the brilliant jerk is both pervasive and harmful, but being an expert and being kind are not mutually exclusive. The Leadership section of Google s software engineering job ladder outlines this clearly:
+
+> Although a measure of technical leadership is expected at higher levels, not all leadership is directed at technical problems. Leaders improve the quality of the people around them, improve the team s psychological safety, create a culture of teamwork and collaboration, defuse tensions within the team, set an example of Google s culture and values, and make Google a more vibrant and exciting place to work. Jerks are not good leaders.
+
+This expectation is modeled by senior leadership: Urs Hölzle (Senior Vice President of Technical Infrastructure) and Ben Treynor Sloss (Vice President, Founder of Google SRE) wrote a regularly cited internal document ( No Jerks ) about why Googlers should care about respectful behavior at work and what to do about it.
+
+#### Incentives and recognition
+
+Good culture must be actively nurtured, and encouraging a culture of knowledge sharing requires a commitment to recognizing and rewarding it at a systemic level. It s a common mistake for organizations to pay lip service to a set of values while actively rewarding behavior that does not enforce those values. People react to incentives over platitudes, and so it s important to put your money where your mouth is by putting in place a system of compensation and awards.
+
+Google uses a variety of recognition mechanisms, from company-wide standards such as performance review and promotion criteria to peer-to-peer awards between Googlers.
+
+Our software engineering ladder, which we use to calibrate rewards like compensation and promotion across the company, encourages engineers to share knowledge by noting these expectations explicitly. At more senior levels, the ladder explicitly calls out the importance of wider influence, and this expectation increases as seniority increases. At the highest levels, examples of leadership include the following:
+
+* Growing future leaders by serving as mentors to junior staff, helping them develop both technically and in their Google role
+* Sustaining and developing the software community at Google via code and design reviews, engineering education and development, and expert guidance to others in the field
+
+> See Chapters 5 and 6 for more on leadership.
+
+Job ladder expectations are a top-down way to direct a culture, but culture is also formed from the bottom up. At Google, the peer bonus program is one way we embrace the bottom-up culture. Peer bonuses are a monetary award and formal recognition that any Googler can bestow on any other Googler for above-and-beyond work. For example, when Ravi sends a peer bonus to Julia for being a top contributor to a mailing list regularly answering questions that benefit many readers he is publicly recognizing her knowledge-sharing work and its impact beyond her team. Because peer bonuses are employee driven, not management driven, they can have an important and powerful grassroots effect.
+
+Similar to peer bonuses are kudos: public acknowledgement of contributions (typically smaller in impact or effort than those meriting a peer bonus) that boost the visibility of peer-to-peer contributions.
+
+When a Googler gives another Googler a peer bonus or kudos, they can choose to copy additional groups or individuals on the award email, boosting recognition of the peer s work. It s also common for the recipient s manager to forward the award email to the team to celebrate one another s achievements.
+
+A system in which people can formally and easily recognize their peers is a powerful tool for encouraging peers to keep doing the awesome things they do. It s not the bonus that matters: it s the peer acknowledgement.
+
+### Establishing Canonical Sources of Information
+
+Canonical sources of information are centralized, company-wide corpuses of information that provide a way to standardize and propagate expert knowledge. They work best for information that is relevant to all engineers within the organization, which is otherwise prone to information islands. For example, a guide to setting up a basic developer workflow should be made canonical, whereas a guide for running a local Frobber instance is more relevant just to the engineers working on Frobber.
+
+Establishing canonical sources of information requires higher investment than maintaining more localized information such as team documentation, but it also has broader benefits. Providing centralized references for the entire organization makes broadly required information easier and more predictable to find and counters problems with information fragmentation that can arise when multiple teams grappling with similar problems produce their own often conflicting guides.
+
+Because canonical information is highly visible and intended to provide a shared understanding at the organizational level, it s important that the content is actively maintained and vetted by subject matter experts. The more complex a topic, the more critical it is that canonical content has explicit owners. Well-meaning readers might see that something is out of date but lack the expertise to make the significant structural changes needed to fix it, even if tooling makes it easy to suggest updates.
+
+Creating and maintaining centralized, canonical sources of information is expensive and time consuming, and not all content needs to be shared at an organizational level. When considering how much effort to invest in this resource, consider your audience. Who benefits from this information? You? Your team? Your product area? All engineers?
+
+#### Developer guides
+
+Google has a broad and deep set of official guidance for engineers, including style guides, official software engineering best practices, guides for code review and testing,  and Tips of the Week (TotW).
+
+The corpus of information is so large that it s impractical to expect engineers to read it all end to end, much less be able to absorb so much information at once. Instead, a human expert already familiar with a guideline can send a link to a fellow engineer, who then can read the reference and learn more. The expert saves time by not needing to personally explain a company-wide practice, and the learner now knows that there is a canonical source of trustworthy information that they can access whenever necessary. Such a process scales knowledge because it enables human experts to recognize and solve a specific information need by leveraging common, scalable resources.
