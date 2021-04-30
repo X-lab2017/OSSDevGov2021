@@ -5,6 +5,7 @@
 
 The previous chapter introduced two of the main axes along which Google classifies tests: size and scope. To recap, size refers to the resources consumed by a test and what it is allowed to do, and scope refers to how much code a test is intended to validate. Though Google has clear definitions for test size, scope tends to be a little fuzzier. We use the term unit test to refer to tests of relatively narrow scope, such as of a single class or method. Unit tests are usually small in size, but this isn’t always the case.
 After preventing bugs, the most important purpose of a test is to improve engineers’ productivity. Compared to broader-scoped tests, unit tests have many properties that make them an excellent way to optimize productivity:
+
 - They tend to be small according to Google’s definitions of test size. Small tests are fast and deterministic, allowing developers to run them frequently as part of their workflow and get immediate feedback.
 - They tend to be easy to write at the same time as the code they’re testing, allow‐ ing engineers to focus their tests on the code they’re working on without having to set up and understand a larger system.
 - They promote high levels of test coverage because they are quick and easy to write. High test coverage allows engineers to make changes with confidence that they aren’t breaking anything.
@@ -150,6 +151,234 @@ public void shouldCreateUsers() {
 ```
 
 This test more accurately expresses what we care about: the state of the system under test after interacting with it.
+
+The most common reason for problematic interaction tests is an over reliance on mocking frameworks. These frameworks make it easy to create test doubles that record and verify every call made against them, and to use those doubles in place of real objects in tests. This strategy leads directly to brittle interaction tests, and so we tend to prefer the use of real objects in favor of mocked objects, as long as the real objects are fast and deterministic.
+
+### Writing Clear Tests
+
+Sooner or later, even if we’ve completely avoided brittleness, our tests will fail. Failure is a good thing—test failures provide useful signals to engineers, and are one of the main ways that a unit test provides value.
+
+Test failures happen for one of two reasons:
+
+* The system under test has a problem or is incomplete. This result is exactly what tests are designed for: alerting you to bugs so that you can fix them.
+* The test itself is flawed. In this case, nothing is wrong with the system under test, but the test was specified incorrectly. If this was an existing test rather than one that you just wrote, this means that the test is brittle. The previous section dis‐ cussed how to avoid brittle tests, but it’s rarely possible to eliminate them entirely.
+
+When a test fails, an engineer’s first job is to identify which of these cases the failure falls into and then to diagnose the actual problem. The speed at which the engineer can do so depends on the test’s clarity. A clear test is one whose purpose for existing and reason for failing is immediately clear to the engineer diagnosing a failure. Tests fail to achieve clarity when their reasons for failure aren’t obvious or when it’s difficult to figure out why they were originally written. Clear tests also bring other benefits, such as documenting the system under test and more easily serving as a basis for new tests.
+
+Test clarity becomes significant over time. Tests will often outlast the engineers who wrote them, and the requirements and understanding of a system will shift subtly as it ages. It’s entirely possible that a failing test might have been written years ago by an engineer no longer on the team, leaving no way to figure out its purpose or how to fix it. This stands in contrast with unclear production code, whose purpose you can usu‐ ally determine with enough effort by looking at what calls it and what breaks when it’s removed. With an unclear test, you might never understand its purpose, since removing the test will have no effect other than (potentially) introducing a subtle hole in test coverage.
+
+In the worst case, these obscure tests just end up getting deleted when engineers can’t figure out how to fix them. Not only does removing such tests introduce a hole in test coverage, but it also indicates that the test has been providing zero value for perhaps the entire period it has existed (which could have been years).
+
+For a test suite to scale and be useful over time, it’s important that each individual test in that suite be as clear as possible. This section explores techniques and ways of thinking about tests to achieve clarity.
+
+### Make Your Tests Complete and Concise
+
+Two high-level properties that help tests achieve clarity are completeness and conciseness. A test is complete when its body contains all of the information a reader needs in order to understand how it arrives at its result. A test is concise when it contains no other distracting or irrelevant information. Example 12-6 shows a test that is neither complete nor concise:
+
+```java
+@Test public void shouldPerformAddition() { 
+    Calculator calculator = new Calculator(new RoundingStrategy(), 
+    "unused", ENABLE_COSINE_FEATURE, 0.01, calculusEngine, false);
+	int result = calculator.calculate(newTestCalculation()); 					 	 assertThat(result).isEqualTo(5); 
+    // Where did this number come from?
+}
+```
+
+The test is passing a lot of irrelevant information into the constructor, and the actual important parts of the test are hidden inside of a helper method. The test can be made more complete by clarifying the inputs of the helper method, and more concise by using another helper to hide the irrelevant details of constructing the calculator, as illustrated in Example 12-7.
+
+```java
+@Test
+public void shouldPerformAddition() { 
+	Calculator calculator = newCalculator();
+	int result = calculator.calculate(newCalculation(2, Operation.PLUS, 3));
+	assertThat(result).isEqualTo(5); 
+}
+```
+
+Ideas we discuss later, especially around code sharing, will tie back to completeness and conciseness. In particular, it can often be worth violating the DRY (Don’t Repeat Yourself) principle if it leads to clearer tests. Remember: a test’s body should contain all of the information needed to understand it without containing any irrelevant or distracting information.
+
+### Test Behaviors, Not Methods
+
+The first instinct of many engineers is to try to match the structure of their tests to the structure of their code such that every production method has a corresponding test method. This pattern can be convenient at first, but over time it leads to problems: as the method being tested grows more complex, its test also grows in complexity and becomes more difficult to reason about. For example, consider the snippet of code in Example 12-8, which displays the results of a transaction.
+
+```java
+public void displayTransactionResults(User user, Transaction transaction) { 	
+ 	ui.showMessage("You bought a " + transaction.getItemName());
+	if (user.getBalance() < LOW_BALANCE_THRESHOLD){ 
+		ui.showMessage("Warning: your balance is low!");
+	}
+}
+```
+
+It wouldn’t be uncommon to find a test covering both of the messages that might be shown by the method, as presented in Example 12-9.
+
+``` java
+public void testDisplayTransactionResults() { 
+	transactionProcessor.displayTransactionResults( 
+	newUserWithBalance( 
+		LOW_BALANCE_THRESHOLD.plus(dollars(2))), 
+		new Transaction("Some Item", dollars(3)));
+	assertThat(ui.getText()).contains("You bought a Some Item");
+	assertThat(ui.getText()).contains("your balance is low");
+}
+```
+
+With such tests, it’s likely that the test started out covering only the first method. Later, an engineer expanded the test when the second message was added (violating the idea of unchanging tests that we discussed earlier). This modification sets a bad precedent: as the method under test becomes more complex and implements more functionality, its unit test will become increasingly convoluted and grow more and more difficult to work with.
+
+The problem is that framing tests around methods can naturally encourage unclear tests because a single method often does a few different things under the hood and might have several tricky edge and corner cases. There’s a better way: rather than writing a test for each method, write a test for each behavior. A behavior is any guarantee that a system makes about how it will respond to a series of inputs while in a particular state. Behaviors can often be expressed using the words “given,” “when,”and “then”: “Given that a bank account is empty, when attempting to withdraw money from it, then the transaction is rejected.” The mapping between methods and behaviors is many-to-many: most nontrivial methods implement multiple behaviors, and some behaviors rely on the interaction of multiple methods. The previous example can be rewritten using behavior-driven tests, as presented in Example 12-10.
+
+``` java
+@Test 
+public void displayTransactionResults_showsItemName() {
+	transactionProcessor.displayTransactionResults( 
+		New User(), new Transaction("Some Item"));
+	assertThat(ui.getText()).contains("You bought a Some Item"); 
+}
+```
+
+``` java
+@Test 
+public void displayTransactionResults_showsLowBalanceWarning() {
+	transactionProcessor.displayTransactionResults(
+		newUserWithBalance( 
+		LOW_BALANCE_THRESHOLD.plus(dollars(2))),
+        new Transaction("SomeItem",dollars(3)));
+	assertThat(ui.getText()).contains("your balance is low");
+}
+```
+
+The extra boilerplate required to split apart the single test is more than worth it, and the resulting tests are much clearer than the original test. Behavior-driven tests tend to be clearer than method-oriented tests for several reasons. First, they read more like natural language, allowing them to be naturally understood rather than requiring laborious mental parsing. Second, they more clearly express cause and effect because each test is more limited in scope. Finally, the fact that each test is short and descriptive makes it easier to see what functionality is already tested and encourages engineers to add new streamlined test methods instead of piling onto existing methods.
+
+### Structure tests to emphasize behaviors
+
+Thinking about tests as being coupled to behaviors instead of methods significantly affects how they should be structured. Remember that every behavior has three parts: a “given” component that defines how the system is set up, a “when” component that defines the action to be taken on the system, and a “then” component that validates the result. Tests are clearest when this structure is explicit. Some frameworks like Cucumber and Spock directly bake in given/when/then. Other languages can use whitespace and optional comments to make the structure stand out, such as that shown in Example 12-11.
+
+``` java
+@Test 
+public void transferFundsShouldMoveMoneyBetweenAccounts() {
+	// Given two accounts with initial balances of $150 and $20 
+	Account account1 = newAccountWithBalance(usd(150));
+	Account account2 = newAccountWithBalance(usd(20));
+	// When transferring $100 from the first to the second account 
+	bank.transferFunds(account1, account2, usd(100));
+	// Then the new account balances should reflect the transfer
+	assertThat(account1.getBalance()).isEqualTo(usd(50));
+	assertThat(account2.getBalance()).isEqualTo(usd(120));
+}
+```
+
+This level of description isn’t always necessary in trivial tests, and it’s usually sufficient to omit the comments and rely on whitespace to make the sections clear. However, explicit comments can make more sophisticated tests easier to understand. This pat‐ tern makes it possible to read tests at three levels of granularity:
+
+1. A reader can start by looking at the test method name (discussed below) to get a rough description of the behavior being tested.
+2. If that’s not enough, the reader can look at the given/when/then comments for a formal description of the behavior.
+3. Finally, a reader can look at the actual code to see precisely how that behavior is expressed.
+
+This pattern is most commonly violated by interspersing assertions among multiple calls to the system under test (i.e. , combining the “when” and “then” blocks). Merging the “then” and “when” blocks in this way can make the test less clear because it makes it difficult to distinguish the action being performed from the expected result.
+
+When a test does want to validate each step in a multistep process, it’s acceptable to define alternating sequences of when/then blocks. Long blocks can also be made more descriptive by splitting them up with the word “and.” Example 12-12 shows what a relatively complex, behavior-driven test might look like.
+
+Example 12-12. Alternating when/then blocks within a test
+
+```java
+@Test 
+public void shouldTimeOutConnections() { // Given two users 
+    User user1 = newUser(); 
+    User user2 = newUser();
+	// And an empty connection pool with a 10-minute timeout 
+    Pool pool = newPool(Duration.minutes(10));
+	// When connecting both users to the pool 
+    pool.connect(user1); 
+    pool.connect(user2);
+	// Then the pool should have two connections
+    assertThat(pool.getConnections()).hasSize(2);
+	// When waiting for 20 minutes 
+    clock.advance(Duration.minutes(20));
+	// Then the pool should have no connections
+    assertThat(pool.getConnections()).isEmpty();
+	// And each user should be disconnected
+    assertThat(user1.isConnected()).isFalse();
+    assertThat(user2.isConnected()).isFalse();
+}
+```
+
+When writing such tests, be careful to ensure that you’re not inadvertently testing multiple behaviors at the same time. Each test should cover only a single behavior, and the vast majority of unit tests require only one “when” and one “then” block.
+
+### Name tests after the behavior being tested
+
+Method-oriented tests are usually named after the method being tested (e.g., a test for the updateBalance method is usually called testUpdateBalance). With more focused behavior-driven tests, we have a lot more flexibility and the chance to convey useful information in the test’s name. The test name is very important: it will often be the first or only token visible in failure reports, so it’s your best opportunity to communicate the problem when the test breaks. It’s also the most straightforward way to express the intent of the test.
+
+A test’s name should summarize the behavior it is testing. A good name describes both the actions that are being taken on a system and the expected outcome. Test names will sometimes include additional information like the state of the system or its environment before taking action on it. Some languages and frameworks make this easier than others by allowing tests to be nested within one another and named using strings, such as in Example 12-13, which uses Jasmine.
+
+``` 
+describe("multiplication", function() { 
+	describe("with a positive number", function() { 
+		var positiveNumber = 10;
+		it("is positive with another positive number", function() {
+			expect(positiveNumber * 10).toBeGreaterThan(0);
+		});
+		it("is negative with a negative number", function() {
+			expect(positiveNumber * -10).toBeLessThan(0);
+		}); });
+		describe("with a negative number", function() { 
+			var negativeNumber = 10;
+			it("is negative with a positive number", function() {
+				expect(negativeNumber * 10).toBeLessThan(0);
+			});
+			it("is positive with another negative number", function() {
+				expect(negativeNumber * -10).toBeGreaterThan(0);
+			}); 
+		}); 
+	});
+```
+
+Other languages require us to encode all of this information in a method name, lead‐ ing to method naming patterns like that shown in Example 12-14.
+
+Example 12-14. Some sample method naming patterns
+
+``` 
+multiplyingTwoPositiveNumbersShouldReturnAPositiveNumber multiply_postiveAndNegative_returnsNegative 
+divide_byZero_throwsException
+```
+
+Names like this are much more verbose than we’d normally want to write for methods in production code, but the use case is different: we never need to write code that calls these, and their names frequently need to be read by humans in reports. Hence, the extra verbosity is warranted.
+
+Many different naming strategies are acceptable so long as they’re used consistently within a single test class. A good trick if you’re stuck is to try starting the test name with the word “should.” When taken with the name of the class being tested, this naming scheme allows the test name to be read as a sentence. For example, a test of a BankAccount class named shouldNotAllowWithdrawalsWhenBalanceIsEmpty can be read as “BankAccount should not allow withdrawals when balance is empty.” By read‐ ing the names of all the test methods in a suite, you should get a good sense of the behaviors implemented by the system under test. Such names also help ensure that the test stays focused on a single behavior: if you need to use the word “and” in a test name, there’s a good chance that you’re actually testing multiple behaviors and should be writing multiple tests!
+
+### Don’t Put Logic in Tests
+
+Clear tests are trivially correct upon inspection; that is, it is obvious that a test is doing the correct thing just from glancing at it. This is possible in test code because each test needs to handle only a particular set of inputs, whereas production code must be generalized to handle any input. For production code, we’re able to write tests that ensure complex logic is correct. But test code doesn’t have that luxury—if you feel like you need to write a test to verify your test, something has gone wrong!
+
+Complexity is most often introduced in the form of logic. Logic is defined via the imperative parts of programming languages such as operators, loops, and conditionals. When a piece of code contains logic, you need to do a bit of mental computation to determine its result instead of just reading it off of the screen. It doesn’t take much logic to make a test more difficult to reason about. For example, does the test in Example 12-15 look correct to you?
+
+``` java
+@Test 
+public void shouldNavigateToAlbumsPage() { 
+    String baseUrl = "http://photos.google.com/"; 
+    Navigator nav = new Navigator(baseUrl); 
+    nav.goToAlbumPage(); 
+    assertThat(nav.getCurrentUrl()).isEqualTo(baseUrl + "/albums");
+}
+```
+
+There’s not much logic here: really just one string concatenation. But if we simplify the test by removing that one bit of logic, a bug immediately becomes clear, as demonstrated in Example 12-16.
+
+``` java
+@Test 
+public void shouldNavigateToPhotosPage() { 
+	Navigator nav = new Navigator("http://photos.google.com/");
+    nav.goToPhotosPage(); 
+    assertThat(nav.getCurrentUrl()))
+        .isEqualTo("http://photos.google.com//albums"); // Oops!
+}
+```
+
+When the whole string is written out, we can see right away that we’re expecting two slashes in the URL instead of just one. If the production code made a similar mistake, this test would fail to detect a bug. Duplicating the base URL was a small price to pay for making the test more descriptive and meaningful (see the discussion of DAMP versus DRY tests later in this chapter).
+
+If humans are bad at spotting bugs from string concatenation, we’re even worse at spotting bugs that come from more sophisticated programming constructs like loops and conditionals. The lesson is clear: in test code, stick to straight-line code over clever logic, and consider tolerating some duplication when it makes the test more descriptive and meaningful. We’ll discuss ideas around duplication and code sharing later in this chapter.
+
+### Write Clear Failure Messages
+
+One last aspect of clarity has to do not with how a test is written, but with what an engineer sees when it fails. In an ideal world, an engineer could diagnose a problem just from reading its failure message in a log or report without ever having to look at the test itself. A good failure message contains much the same information as the test’s name: it should clearly express the desired outcome, the actual outcome, and any relevant parameters.
 
 
 Here’s an example of a bad failure message:

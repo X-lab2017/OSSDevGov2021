@@ -169,6 +169,251 @@ public void shouldCreateUsers() {
 
 这个测试更准确地表达了我们所关心的：被测系统与之交互后的状态。
 
+交互测试出现问题的最常见原因是过度依赖mocking frameworks。这些框架可以很容易地创建测试替身，记录并验证针对它们的每个调用，并在测试中使用这些替身来代替真实对象。这种策略直接导致了脆弱的交互测试，因此我们倾向于使用真实对象而不是模拟对象，只要真实对象是快速和确定的。
+
+### 编写清晰的测试
+
+迟早，即使我们已经完全避免了脆性，我们的测试也会失败。失败是一件好事--测试失败为工程师提供了有用的信号，也是单元测试提供价值的主要方式之一。
+
+测试失败的发生是两个原因之一：
+
+* 被测试的系统有问题或不完整。这个结果正是测试的目的：提醒你注意错误，以便你能修复它们。
+* 测试本身是有缺陷的。在这种情况下，被测试的系统没有任何问题，但测试的指定是不正确的。如果这是一个现有的测试，而不是你刚刚写的，这意味着测试是脆性的。上一节讨论了如何避免脆性测试，但很少有可能完全消除它们。
+
+当测试失败时，工程师的首要工作是确定故障属于哪种情况，然后诊断出实际问题。工程师这样做的速度取决于测试的清晰程度。一个清晰的测试是指对于诊断故障的工程师来说，其存在的目的和失败的原因是非常明确的。如果测试失败的原因不明显，或者很难弄清楚最初写这些测试的原因，那么测试就无法达到清晰的效果。清晰的测试还能带来其他的好处，比如记录被测系统，更容易作为新测试的基础。
+
+随着时间的推移，测试的清晰度变得非常重要。测试往往比编写测试的工程师的寿命更长，而且随着时间的推移，对系统的要求和理解会发生微妙的变化。一个失败的测试完全有可能是多年前由一个已经不在团队中的工程师写的，这样就没有办法弄清楚它的目的或如何修复它。这与不明确的生产代码形成鲜明对比，通常情况下，你可以通过查看调用代码的内容和删除代码后的故障来确定其目的。对于一个不明确的测试，你可能永远不会明白它的目的，因为删除测试除了（可能）在测试覆盖率中引入一个微妙的漏洞外，没有其他影响。
+
+在最坏的情况下，这些晦涩难懂的测试最终会被删除，因为工程师不知道如何修复它们。删除这些测试不仅会在测试覆盖率上带来一个漏洞，而且还表明该测试在其存在的整个期间（可能是多年）一直提供零价值。
+
+对于一个测试套件来说，随着时间的推移，它是有用的，重要的是该套件中的每个单独的测试是尽可能的清晰。本节探讨了测试的技术和思维方式，以达到清晰的目的。
+
+### 使你的测试完整而简明
+
+帮助测试实现清晰的两个高级属性是完整性和一致性。一个测试是完整的，当它的主体包含读者需要的所有信息，以了解它是如何得出结果的。当一个测试不包含其他分散注意力的或不相关的信息时，它就是简洁的。例12-6显示了一个既不完整也不简洁的测试。
+
+*例12-6. 一个不完整且杂乱的测试*
+
+```java
+@Test public void shouldPerformAddition() { 
+    Calculator calculator = new Calculator(new RoundingStrategy(), 
+    "unused", ENABLE_COSINE_FEATURE, 0.01, calculusEngine, false);
+	int result = calculator.calculate(newTestCalculation());
+    assertThat(result).isEqualTo(5); 
+    // Where did this number come from?
+}
+```
+
+这个测试在构造函数中传递了很多不相关的信息，而测试的实际重要部分则隐藏在一个辅助方法中。通过澄清辅助方法的输入，测试可以变得更加完整，通过使用另一个辅助方法来隐藏构建计算器的无关细节，使测试更加简洁，如例 12-7 所示。
+
+*例12-7. 一个完整、简洁的测试*
+
+``` java
+@Test
+public void shouldPerformAddition() { 
+	Calculator calculator = newCalculator();
+	int result = calculator.calculate(newCalculation(2, Operation.PLUS, 3));
+	assertThat(result).isEqualTo(5); 
+}
+```
+
+我们稍后讨论的想法，特别是围绕代码共享，将与完整性和简洁性挂钩。特别是，如果违反DRY（Don't Repeat Yourself）原则，可以使测试更加清晰，这通常是值得的。记住：一个测试的主体应该包含理解它所需要的所有信息，而不包含任何不相关或不相干的信息。
+
+### 测试行为，而非方法
+
+许多工程师的第一直觉是试图将他们的测试结构与他们的代码结构相匹配，这样每个生产方法都有一个相应的测试方法。这种模式一开始很方便，但随着时间的推移，它导致了一些问题：随着被测试的方法越来越复杂，它的测试也越来越复杂，变得越来越难以推理。例如，考虑例12-8中的代码片段，它显示了一个交易的结果。
+
+许多工程师的第一直觉是试图将他们的测试结构与他们的代码结构相匹配，这样每个生产方法都有一个相应的测试方法。这种模式一开始很方便，但随着时间的推移，它导致了一些问题：随着被测试的方法越来越复杂，它的测试也越来越复杂，变得越来越难以推理。例如，考虑例12-8中的代码片段，它显示了一个交易的结果。
+
+*例12-8. 一个交易片段*
+
+``` java
+public void displayTransactionResults(User user, Transaction transaction) { 	
+ 	ui.showMessage("You bought a " + transaction.getItemName());
+	if (user.getBalance() < LOW_BALANCE_THRESHOLD){ 
+		ui.showMessage("Warning: your balance is low!");
+	}
+}
+```
+
+如例12-9所示，一个测试涵盖了该方法可能显示的两个信息，这并不罕见。
+
+*例12-9. 一个方法驱动的测试*
+
+```java
+public void testDisplayTransactionResults() { 
+	transactionProcessor.displayTransactionResults( 
+	newUserWithBalance( 
+		LOW_BALANCE_THRESHOLD.plus(dollars(2))), 
+		new Transaction("Some Item", dollars(3)));
+	assertThat(ui.getText()).contains("You bought a Some Item");
+	assertThat(ui.getText()).contains("your balance is low");
+}
+```
+
+对于这样的测试，很可能一开始测试只包括第一个方法。后来，当添加第二条信息时，一个工程师扩展了测试的内容（违反了我们前面讨论的不变的测试理念）。这种修改开创了一个不好的先例：随着被测方法变得越来越复杂，实现的功能越来越多，其单元测试也会变得越来越复杂，越来越难以操作。
+
+问题是，围绕方法的测试框架会自然而然地鼓励不明确的测试，因为一个方法经常在内部做一些不同的事情，并且可能有几个棘手的边缘和角落案例。有一个更好的方法：与其为每个方法写一个测试，不如为每个行为写一个测试。行为是一个系统对其在特定状态下如何响应一系列输入的任何保证。行为通常可以用 "给定"、"当 "和 "然后 "来表达。"鉴于一个银行账户是空的，当试图从该账户取钱时，该交易被拒绝"。方法和行为之间的映射是多对多的：大多数不重要的方法实现了多个行为，而一些行为则依赖于多个方法的交互。前面的例子可以用行为驱动的测试来重写，如例12-10所介绍。
+
+*例12-10. 一个行为驱动的测试*
+
+```java
+@Test 
+public void displayTransactionResults_showsItemName() {
+	transactionProcessor.displayTransactionResults( 
+		New User(), new Transaction("Some Item"));
+	assertThat(ui.getText()).contains("You bought a Some Item"); 
+}
+```
+
+``` java
+@Test 
+public void displayTransactionResults_showsLowBalanceWarning() {
+	transactionProcessor.displayTransactionResults(
+		newUserWithBalance( 
+		LOW_BALANCE_THRESHOLD.plus(dollars(2))),
+        new Transaction("SomeItem",dollars(3)));
+	assertThat(ui.getText()).contains("your balance is low");
+}
+```
+
+分开单个测试所需的额外的模板是值得的，所产生的测试要比原来的测试更清晰。行为驱动的测试往往比面向方法的测试更清晰，有几个原因。首先，他们读起来更像自然语言，允许他们自然地理解，而不是需要费力地进行心理解析。其次，它们更清楚地表达了因果关系，因为每个测试的范围更有限。最后，每个测试都是简短的、描述性的，这使得人们更容易看到哪些功能已经被测试了，并鼓励工程师们增加新的精简的测试方法，而不是堆积在现有的方法上。
+
+### 以强调行为为目的的构建测试
+
+将测试看作是与行为而不是方法的耦合，会大大影响测试的结构。影响了他们的结构。每个行为都有三个部分：一个定义系统如何设置的 "给定 "部分，一个定义系统行动的 "何时 "部分，以及一个验证结果的 "当时 "部分。 当这种结构是明确的时候，测试是最清晰的。一些框架，如Cucumber和Spock等一些框架直接在给定/时间/时间中进行测试。其他语言可以使用空白和可选的注释来使结构清晰，如例12-11所示。
+
+*例12-11. 一个结构良好的测试*
+
+```java
+@Test 
+public void transferFundsShouldMoveMoneyBetweenAccounts() {
+	// Given two accounts with initial balances of $150 and $20 
+	Account account1 = newAccountWithBalance(usd(150));
+	Account account2 = newAccountWithBalance(usd(20));
+	// When transferring $100 from the first to the second account 
+	bank.transferFunds(account1, account2, usd(100));
+	// Then the new account balances should reflect the transfer
+	assertThat(account1.getBalance()).isEqualTo(usd(50));
+	assertThat(account2.getBalance()).isEqualTo(usd(120));
+}
+```
+
+这种程度的描述在琐碎的测试中并不总是必要的，通常省略注释并依靠空白来使各部分清晰。然而，明确的注释可以使更复杂的测试更容易理解。这种方法使我们有可能在三个层次的粒度上阅读测试。
+
+1. 读者可以先看一下测试方法的名称（在下面讨论），以获得对被测试行为的大致描述。
+2. 如果这还不够，读者可以看一下给定/何时/何时的注释，以了解对行为的正式描述。
+3. 最后，读者可以看一下实际的代码，准确地看到这种行为是如何表达的。
+
+这种模式最常被违反的是在对被测系统的多次调用中穿插断言（即合并 "当 "和 "然后 "块）。以这种方式合并 "then "和 "when "块会使测试不那么清晰，因为它使人们难以区分正在执行的动作和预期结果。
+
+当一个测试确实想验证一个多步骤过程中的每个步骤时，定义when/then块的交替序列是可以接受的。长的区块也可以用 "and "字来分割，使其更具描述性。例12-12显示了一个相对复杂的、行为驱动的测试是什么样子的。
+
+```java
+@Test 
+public void shouldTimeOutConnections() { // Given two users 
+    User user1 = newUser(); 
+    User user2 = newUser();
+	// And an empty connection pool with a 10-minute timeout 
+    Pool pool = newPool(Duration.minutes(10));
+	// When connecting both users to the pool 
+    pool.connect(user1); 
+    pool.connect(user2);
+	// Then the pool should have two connections
+    assertThat(pool.getConnections()).hasSize(2);
+	// When waiting for 20 minutes 
+    clock.advance(Duration.minutes(20));
+	// Then the pool should have no connections
+    assertThat(pool.getConnections()).isEmpty();
+	// And each user should be disconnected
+    assertThat(user1.isConnected()).isFalse();
+    assertThat(user2.isConnected()).isFalse();
+}
+```
+
+在编写这种测试时，要注意确保你不会无意中同时测试多个行为。每个测试应该只覆盖一个行为，绝大多数的单元测试只需要一个 "when "和一个 "then "块。
+
+### 以被测试的行为命名测试
+
+面向方法的测试通常以被测试的方法命名（例如，对 updateBalance 方法的测试通常称为 testUpdateBalance）。对于更加集中的行为驱动的测试，我们有更多的灵活性，并有机会在测试的名称中传达有用的信息。测试名称非常重要：它通常是失败报告中第一个或唯一一个可见的标记，所以当测试中断时，它是你发现问题的最好机会。它也是表达测试意图的最直接的方式。
+
+一个测试的名字应该概括它所测试的行为。一个好的名字既能描述在系统上采取的行动，又能描述预期的结果。测试名称有时会包括额外的信息，如在对系统采取行动之前，系统的状态或其环境。一些语言和框架允许测试相互嵌套，并使用字符串命名，例如例12-13，其中使用了Jasmine，这样做比其他语言和框架更容易。
+
+*例12-13. 一些嵌套命名模式的例子*
+
+``` 
+describe("multiplication", function() { 
+	describe("with a positive number", function() { 
+		var positiveNumber = 10;
+		it("is positive with another positive number", function() {
+			expect(positiveNumber * 10).toBeGreaterThan(0);
+		});
+		it("is negative with a negative number", function() {
+			expect(positiveNumber * -10).toBeLessThan(0);
+		}); });
+		describe("with a negative number", function() { 
+			var negativeNumber = 10;
+			it("is negative with a positive number", function() {
+				expect(negativeNumber * 10).toBeLessThan(0);
+			});
+			it("is positive with another negative number", function() {
+				expect(negativeNumber * -10).toBeGreaterThan(0);
+			}); 
+		}); 
+	});
+```
+
+其他语言要求我们在方法名称中编码所有这些信息，导致方法的命名模式如例12-14所示。
+
+*例12-14. 一些示例方法的命名模式*
+
+``` 
+multiplyingTwoPositiveNumbersShouldReturnAPositiveNumber multiply_postiveAndNegative_returnsNegative 
+divide_byZero_throwsException
+```
+
+像这样的名字比我们通常为生产代码中的方法所写的要啰嗦得多，但使用情况不同：我们从来不需要写代码来调用这些方法，而且它们的名字经常需要由人类在报告中阅读。因此，额外的说明是有必要的。
+
+许多不同的命名策略是可以接受的，只要它们在一个测试类中使用一致。如果你被卡住了，一个好的技巧是尝试用 "should "这个词来开始测试名称。当与被测类的名称一起使用时，这种命名方案允许将测试名称作为一个句子来阅读。例如，一个名为shouldNotAllowWithdrawalsWhenBalanceIsEmpty的BankAccount类的测试可以被理解为 "BankAccount不应该允许在余额为空时提款"。通过阅读套件中所有测试方法的名称，你应该对被测系统实现的行为有一个很好的感觉。这样的名称也有助于确保测试集中在一个单一的行为上：如果你需要在测试名称中使用 "and "字，很有可能你实际上是在测试多个行为，应该编写多个测试。
+
+### 不要把逻辑放在测试中
+
+清晰的测试在检查时是微不足道的，也就是说，只需看一眼，就能看出一个测试在做正确的事情。这在测试代码中是可能的，因为每个测试只需要处理一组特定的输入，而生产代码必须被泛化以处理任何输入。对于生产代码，我们能够编写测试，确保复杂的逻辑是正确的。但测试代码没有这种奢侈--如果你觉得你需要写一个测试来验证你的测试，那就说明出了问题！这是不可能的。
+
+复杂性最常以逻辑的形式引入。逻辑是通过编程语言的指令性部分来定义的，如运算符、循环和条件等。当一段代码包含逻辑时，你需要做一些心理计算来确定其结果，而不是仅仅从屏幕上读出来。不需要太多的逻辑就可以使一个测试变得更难推理。例如，例12-15中的测试在你看来是否正确？
+
+*例12-15. 掩盖错误的逻辑*
+
+```java
+@Test 
+public void shouldNavigateToAlbumsPage() { 
+    String baseUrl = "http://photos.google.com/"; 
+    Navigator nav = new Navigator(baseUrl); 
+    nav.goToAlbumPage(); 
+    assertThat(nav.getCurrentUrl()).isEqualTo(baseUrl + "/albums");
+}
+```
+
+这里没有什么逻辑：实际上只是一个字符串连接。但是，如果我们通过删除这一点逻辑来简化测试，一个错误就会立刻变得清晰，如例12-16所示。
+
+```java
+@Test 
+public void shouldNavigateToPhotosPage() { 
+	Navigator nav = new Navigator("http://photos.google.com/");
+    nav.goToPhotosPage(); 
+    assertThat(nav.getCurrentUrl()))
+        .isEqualTo("http://photos.google.com//albums"); // Oops!
+}
+```
+
+当整个字符串被写出来的时候，我们可以马上看到，我们在URL中期望有两个斜线，而不是只有一个。如果生产代码犯了类似的错误，这个测试将无法检测到一个错误。为了使测试更有描述性和意义，重复基本的URL仅仅花费很小的代价（见本章后面关于DAMP与DRY测试的讨论）。
+
+如果人们不善于发现来自字符串连接的错误，那么我们更不善于发现来自更复杂的编程结构的错误，如循环和条件。这个道理十分明确：在测试代码中，坚持使用直线代码而不是清晰的逻辑，并考虑容忍一些冗余，当它使测试更具有描述性和意义时。我们将在本章后面讨论关于冗余和代码共享的想法。
+
+### 编写清晰的故障信息
+
+清晰度的最后一个方面与测试的编写方式无关，而是与工程师在测试失败时看到的内容有关。在一个理想的情况下，工程师可以通过阅读日志或报告中的失败信息来诊断一个问题，而不需要看测试本身。一个好的故障信息包含与测试名称相同的信息：它应该清楚地表达预期结果、实际结果和任意相关的参数。
+
 下面是一个错误失败消息的示例：
 
 	`Test failed: account is closed`
@@ -392,7 +637,7 @@ public void shouldReturnNameFromService() {
   assertThat(user.getName()).isEqualTo("Margaret Hamilton");
 }
 ```
-    
+
 ### 共享助手和验证
 在测试之间共享代码的最后一种常见方式是通过从测试方法的主体调用“助手方法”。我们已经讨论了帮助方法如何成为简洁构造测试值的有用方法—这种用法是有根据的，但是其他类型的帮助方法可能是危险的。
 
