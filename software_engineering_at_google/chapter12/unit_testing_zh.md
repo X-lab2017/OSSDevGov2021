@@ -168,3 +168,259 @@ public void shouldCreateUsers() {
 ```
 
 这个测试更准确地表达了我们所关心的：被测系统与之交互后的状态。
+
+下面是一个错误失败消息的示例：
+
+	`Test failed: account is closed`
+
+测试失败是因为帐户被关闭，还是帐户预期被关闭而测试失败是因为它没有被关闭?更好的失败信息将预期的结果与实际状态区分开来，并给出更多关于结果的上下文:
+```java
+Expected an account in state CLOSED, but got account:
+  <{name: "my-account", state: "OPEN"}
+```
+
+好的库可以帮助您更容易地编写有用的失败消息。考虑一下Java测试中的示例12-17中的断言，第一个使用了经典的JUnit断言，第二个使用了谷歌开发的断言库Truth:
+
+例12 – 17. 使用Truth库的断言
+```java
+Set<String> colors = ImmutableSet.of("red", "green", "blue");
+assertTrue(colors.contains("orange")); // JUnit
+assertThat(colors).contains("orange"); // Truth
+```
+
+因为第一个断言只接收一个布尔值，它只能给出一个通用的错误消息，比如“expected <true> but was <false>”，这在失败的测试输出中不是很有用。因为第二个断言显式地接收断言的主题，所以它能够给出一个更有用的错误消息:AssertionError: <[red, green, blue]>应该包含<orange>。"
+
+并不是所有的语言都有这样的助手，但它应该总是可以在故障消息中人为地指定重要信息。例如，Go中的测试断言通常类似于示例12-18。
+
+例12 - 18。Go中的断言测试
+
+```java
+result := Add(2, 3)
+if result != 5 {
+  t.Errorf("Add(2, 3) = %v, want %v", result, 5)
+}
+```
+
+### 测试和代码共享
+编写清晰的测试并避免脆弱性的最后一个方面与代码共享有关。大多数软件都试图实现一个叫做DRY的原则——“不要重复”你自己。”DRY指出，如果每个概念都被规范地表示在一个地方，并且代码复制保持在最低限度，那么软件就更容易维护。这种方法在使更改更容易方面特别有价值，因为工程师只需要更新一段代码，而不需要跟踪多个引用。不利的一面对于这种合并，它会使代码变得不清晰，要求读者遵循引用链来理解代码在做什么。
+在正常的生产代码中，这一缺点通常是为了使代码更容易更改和使用而付出的很小的代价。但是在测试代码的上下文中，这种成本/收益分析的结果略有不同。良好的测试被设计为稳定的，事实上，您通常希望当被测试的系统发生变化时它们中断。因此，当涉及到测试代码时，DRY没有那么多的好处。与此同时，测试的复杂性成本更高:产品代码有测试套件的好处，可以确保它在变得复杂时继续工作，而测试必须经得起考验
+测试代码不应该完全是“干的”，而应该经常努力成为“阻尼的”——也就是说，提倡“描述性和有意义的短语”。在测试中有一点重复是可以的，只要重复能使测试更简单、更清楚。为了说明这一点,示例12-19给出了一些过于枯燥的测试。
+
+示例19 一个太枯燥的测试
+
+```java
+@Test
+public void shouldAllowMultipleUsers() {
+  List<User> users = createUsers(false, false);
+  Forum forum = createForumAndRegisterUsers(users);
+  validateForumAndUsers(forum, users);
+}
+
+@Test
+public void shouldNotAllowBannedUsers() {
+  List<User> users = createUsers(true);
+  Forum forum = createForumAndRegisterUsers(users);
+  validateForumAndUsers(forum, users);
+}
+
+// Lots more tests...
+private static List<User> createUsers(boolean... banned) {
+  List<User> users = new ArrayList<>();
+  for (boolean isBanned : banned) {
+  users.add(newUser()
+  .setState(isBanned ? State.BANNED : State.NORMAL)
+  .build());
+}
+return users;
+}
+
+private static Forum createForumAndRegisterUsers(List<User> users) {
+  Forum forum = new Forum();
+  for (User user : users) {
+    try {
+      forum.register(user);
+    } catch(BannedUserException ignored) {}
+}
+  return forum;
+}
+private static void validateForumAndUsers(Forum forum, List<User> users) {
+  assertThat(forum.isReachable()).isTrue();
+  for (User user : users) {
+    assertThat(forum.hasRegisteredUser(user))
+      .isEqualTo(user.getState() == State.BANNED);
+}}
+```
+
+根据前面关于明确性的讨论，这段代码中的问题应该是显而易见的。首先，尽管测试主体非常简洁，但它们并不完整:重要的细节隐藏在helper方法中，读者不需要滚动到文件的完全不同部分就无法看到这些细节。这些帮助程序也充满了逻辑，使它们更难一眼验证(您发现bug了吗?)当重写测试以使用DAMP时，测试变得更加清晰，如图所示。
+
+12-20示例。测试应该是DAMP
+
+```java
+@Test
+public void shouldAllowMultipleUsers() {
+  User user1 = newUser().setState(State.NORMAL).build();
+  User user2 = newUser().setState(State.NORMAL).build();
+  Forum forum = new Forum();
+  forum.register(user1);
+  forum.register(user2);
+  assertThat(forum.hasRegisteredUser(user1)).isTrue();
+  assertThat(forum.hasRegisteredUser(user2)).isTrue();
+}
+@Test
+public void shouldNotRegisterBannedUsers() {
+  User user = newUser().setState(State.BANNED).build();
+  Forum forum = new Forum();
+  try {
+    forum.register(user);
+  } catch(BannedUserException ignored) {}
+  assertThat(forum.hasRegisteredUser(user)).isFalse();
+}
+```
+
+这些测试有更多的重复，测试主体也稍微长一些，但是额外的冗长是值得的。每一个单独的测试都更有意义，可以在不离开测试体的情况下完全理解。这些测试的读者可以自信地认为这些测试做了它们声称做的事情，并且没有隐藏任何bug。
+
+DAMP不能代替DRY，它是对它的补充。Helper方法和测试基础设施仍然可以通过使测试更简洁、排除与被测试的特定行为无关的重复步骤来使测试更清晰。重要的一点是，这样的重构应该着眼于使测试更具描述性和意义，而不仅仅是以减少重复的名义进行的。本节的其余部分将探索跨测试共享代码的常见模式
+
+### 共同价值观
+许多测试都是通过定义一组供测试使用的共享值，然后定义包含这些值如何交互的各种用例的测试来构建的。例12-21说明了这种测试的样子。
+
+12-21示例。具有二义性名称的共享值
+
+```java
+private static final Account ACCOUNT_1 = Account.newBuilder()
+  .setState(AccountState.OPEN).setBalance(50).build();
+private static final Account ACCOUNT_2 = Account.newBuilder()
+  .setState(AccountState.CLOSED).setBalance(0).build();
+private static final Item ITEM = Item.newBuilder()
+  .setName("Cheeseburger").setPrice(100).build();
+// Hundreds of lines of other tests...
+@Test
+public void canBuyItem_returnsFalseForClosedAccounts() {
+  assertThat(store.canBuyItem(ITEM, ACCOUNT_1)).isFalse();
+}
+@Test
+public void canBuyItem_returnsFalseWhenBalanceInsufficient() {
+  assertThat(store.canBuyItem(ITEM, ACCOUNT_2)).isFalse();
+}
+```
+
+这种策略可以使测试非常简洁，但是随着测试套件的增长，它会导致问题。首先，很难理解为什么要为一个测试选择一个特定的值。在示例12-21中，幸运的是，测试名称阐明了要测试的场景，但是您仍然需要向上滚动到定义，以确认ACCOUNT_1和ACCOUNT_2适用于这些场景。更具描述性的常量名称(例如，CLOSED_ACCOUNT和ACCOUNT_WITH_LOW_BALANCE)有所帮助,但他们仍然使其更难以看到的具体细节正在测试的价值,和易于重用这些值可以鼓励工程师这样做即使名称不确切描述测试需求。
+
+工程师通常喜欢使用共享常数，因为在每个测试中构造单独的值会很繁琐。实现这一目标的一个更好的方法是使用帮助方法(参见示例12-22)构造数据，该方法要求测试作者只指定他们关心的值，并为所有其他值设置合理的默认值7。在支持命名参数的语言中，这种构造很简单，但是没有命名参数的语言可以使用诸如Builder pat‐tern这样的构造来模拟它们(通常需要借助AutoValue这样的工具):
+
+例子12日至22日使用帮助器方法共享值
+
+```java
+# A helper method wraps a constructor by defining arbitrary defaults for
+# each of its parameters.
+def newContact(
+  firstName="Grace", lastName="Hopper", phoneNumber="555-123-4567"):
+  return Contact(firstName, lastName, phoneNumber)
+# Tests call the helper, specifying values for only the parameters that they
+# care about.
+def test_fullNameShouldCombineFirstAndLastNames(self):
+  def contact = newContact(firstName="Ada", lastName="Lovelace")
+  self.assertEqual(contact.fullName(), "Ada Lovelace")
+// Languages like Java that don’t support named parameters can emulate them
+// by returning a mutable "builder" object that represents the value under
+// construction.
+private static Contact.Builder newContact() {
+  return Contact.newBuilder()
+  .setFirstName("Grace")
+  .setLastName("Hopper")
+.setPhoneNumber("555-123-4567");
+}
+// Tests then call methods on the builder to overwrite only the parameters
+// that they care about, then call build() to get a real value out of the
+// builder.
+@Test
+public void fullNameShouldCombineFirstAndLastNames() {
+  Contact contact = newContact()
+  .setFirstName("Ada")
+  .setLastName("Lovelace")
+  .build();
+assertThat(contact.getFullName()).isEqualTo("Ada Lovelace");
+}
+```
+
+使用帮助器方法来构造这些值允许每个测试创建它需要的确切值，而不必担心指定不相关的信息或与其他测试冲突。
+
+### 共享设置
+测试共享代码的一个相关方法是通过设置/初始化逻辑。许多测试框架允许工程师在运行套件中的每个测试之前定义要执行的方法。
+如果使用得当，这些方法可以使测试更清晰、更简洁，因为它们可以避免重复繁琐和不相关的初始化逻辑。如果使用不当，这些方法会通过在独立速率初始化方法中隐藏重要细节而损害测试的完整性。
+
+设置方法的最佳用例是构建被测对象及其col - laborators。当大多数测试不关心用于构造这些对象的特定参数时，这是有用的，可以让它们保持默认状态。同样的思想也适用于test double的存根返回值，我们将在第13章详细讨论这个概念。
+
+使用设置方法的一个风险是，如果这些测试开始依赖于设置中使用的特定值，它们可能导致不明确的测试。例如，test in 例12-23似乎不完整，因为测试的读者需要去寻找字符串“Donald Knuth”的来源。
+
+示例12日至23日。依赖于设置方法中的值
+
+```java
+private NameService nameService;
+private UserStore userStore;
+@Before
+public void setUp() {
+  nameService = new NameService();
+  nameService.set("user1", "Donald Knuth");
+  userStore = new UserStore(nameService);
+}
+// [... hundreds of lines of tests ...]
+@Test
+public void shouldReturnNameFromService() {
+  UserDetails user = userStore.get("user1");
+  assertThat(user.getName()).isEqualTo("Donald Knuth");
+}
+```
+
+像这样显式关注特定值的测试应该直接声明这些值，如果需要，覆盖setup方法中定义的默认值。结果测试包含更多的重复，如示例12-24所示，但是结果更具描述性和意义。
+
+例12 - 24。覆盖setup mMethods中的值
+
+```java
+private NameService nameService;
+private UserStore userStore;
+@Before
+public void setUp() {
+  nameService = new NameService();
+  nameService.set("user1", "Donald Knuth");
+  userStore = new UserStore(nameService);
+}
+@Test
+public void shouldReturnNameFromService() {
+  nameService.set("user1", "Margaret Hamilton");
+  UserDetails user = userStore.get("user1");
+  assertThat(user.getName()).isEqualTo("Margaret Hamilton");
+}
+```
+    
+### 共享助手和验证
+在测试之间共享代码的最后一种常见方式是通过从测试方法的主体调用“助手方法”。我们已经讨论了帮助方法如何成为简洁构造测试值的有用方法—这种用法是有根据的，但是其他类型的帮助方法可能是危险的。
+
+一种常见的帮助器类型是对被测系统执行一组通用断言的方法。极端的例子是在每个测试方法结束时调用的验证方法，它对被测系统执行一组固定的检查。这种验证策略可能是一种坏习惯，因为使用这种方法的测试较少受到行为驱动。有了这样的测试，就很难确定任何特定测试的意图，也很难推断作者在编写它时想要的确切情况。当错误被引入时，这个策略也可以制造错误
+
+然而，更集中的验证方法仍然是有用的。最好的验证帮助器方法断言关于其输入的单个概念事实，这与覆盖一系列条件的通用验证方法相反。当它们验证的条件在概念上很简单，但需要循环或条件逻辑来实现时，这样的方法会特别有用，如果将其包含在测试方法体中，则会降低清晰度。例如，示例12-25中的helper方法可能在涉及帐户ac的几种不同情况的测试中很有用
+
+目前消费量的例子。一个概念上简单的测试
+
+```java
+private void assertUserHasAccessToAccount(User user, Account account) {
+  for (long userId : account.getUsersWithAccess()) {
+  if (user.getId() == userId) {
+  return;
+}}
+  fail(user.getName() + " cannot access " + account.getName());
+}
+```
+
+### 定义测试基础设施
+
+到目前为止，我们讨论的技术包括在单个测试类或套件中跨方法共享代码。有时，跨多个测试套件共享代码也很有价值。我们将这类代码称为测试基础结构。虽然它通常在集成或端到端测试中更有价值，但在某些情况下，精心设计的测试基础设施可以使单元测试更容易编写。
+
+在处理自定义测试基础结构时，必须比处理单个测试套件中的代码共享更加小心。在许多方面，测试基础架构代码更类似于生产代码，而不是其他测试代码，因为它可以有许多调用者依赖它，并且在不引入中断的情况下很难更改。大多数工程师在测试他们自己的特性时，并不期望对普通的测试基础设施做出改变。测试基础架构需要作为自己独立的产品来对待，相应地，测试基础架构必须始终拥有自己的产品
+
+当然，大多数工程师使用的大多数测试基础设施都是以著名的第三方库(如JUnit)的形式提供的。有大量这样的库可用，组织中应该尽早并尽可能普遍地对它们进行标准化。例如，谷歌多年前就规定Mockito是新Java测试中唯一应该使用的模拟框架，并禁止新测试使用其他模拟框架。这条法令在当时引起了一些对其他框架感到舒服的人的抱怨，但今天，它被普遍视为一个很好的举动，使我们的测试更容易理解和使用。
+
+### 结论
+
+单元测试是最强大的工具之一，作为软件工程师，我们必须确保我们的系统在面对意料之外的变化时能够持续工作。但是，强大的力量带来了巨大的责任，粗心地使用单元测试会导致一个系统，它需要更多的努力来维护，需要更多的努力来改变，而实际上并没有提高我们对该系统的信心。
+谷歌的单元测试远非完美，但我们发现遵循本章中概述的实践的测试比不遵循这些实践的测试更有价值。我们希望它们能帮助您提高您自己的测试质量。
