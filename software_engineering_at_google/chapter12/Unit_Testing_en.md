@@ -124,7 +124,7 @@ Defining an appropriate scope for a unit and hence what should be considered the
 - If a package or class can be accessed only by the people who own it, but it is designed to provide a general piece of functionality useful in a range of contexts (i.e., it is a “support library”), it should also be considered a unit and tested directly. This will usually create some redundancy in testing given that the sup‐ port library’s code will be covered both by its own tests and the tests of its users. However, such redundancy can be valuable: without it, a gap in test coverage could be introduced if one of the library’s users (and its tests) were ever removed.
 
 At Google, we’ve found that engineers sometimes need to be persuaded that testing via public APIs is better than testing against implementation details. The reluctance is understandable because it’s often much easier to write tests focused on the piece of code you just wrote rather than figuring out how that code affects the system as a whole. Nevertheless, we have found it valuable to encourage such practices, as the extra upfront effort pays for itself many times over in reduced maintenance burden. Testing against public APIs won’t completely prevent brittleness, but it’s the most important thing you can do to ensure that your tests fail only in the event of mean‐ ingful changes to your system.
-## Test State, Not Interactions
+### Test State, Not Interactions
 Another way that tests commonly depend on implementation details involves not which methods of the system the test calls, but how the results of those calls are veri‐ fied. In general, there are two ways to verify that a system under test behaves as expected. With state testing, you observe the system itself to see what it looks like after invoking with it. With interaction testing, you instead check that the system took an expected sequence of actions on its collaborators in response to invoking it. Many tests will perform a combination of state and interaction validation.
 Interaction tests tend to be more brittle than state tests for the same reason that it’s more brittle to test a private method than to test a public method: interaction tests check how a system arrived at its result, whereas usually you should care only what the result is. Example 12-4 illustrates a test that uses a test double (explained further in Chapter 13) to verify how a system interacts with a database.
 *Example 12-4. A brittle interaction test*
@@ -164,10 +164,11 @@ Did the test fail because the account was closed, or was the account expected to
 Good libraries can help make it easier to write useful failure messages. Consider the assertions in Example 12-17 in a Java test, the first of which uses classical Junit asserts, and the second of which uses Truth, an assertion library developed by Google:
 
 Example 12-17. An assertion using the Truth library
-
-    Set<String> colors = ImmutableSet.of("red", "green", "blue");
-    assertTrue(colors.contains("orange")); // JUnit
-    assertThat(colors).contains("orange"); // Truth
+```java
+Set<String> colors = ImmutableSet.of("red", "green", "blue");
+assertTrue(colors.contains("orange")); // JUnit
+assertThat(colors).contains("orange"); // Truth
+```
 
 Because the first assertion only receives a Boolean value, it is only able to give a generic error message like “expected <true> but was <false>,” which isn’t very informative in a failing test output. Because the second assertion explicitly receives the subject of the assertion, it is able to give a much more useful error message: AssertionError: <[red, green, blue]> should have contained <orange>.”
 
@@ -175,12 +176,14 @@ Not all languages have such helpers available, but it should always be possible 
 
 Example 12-18. A test assertion in Go
 
-    result := Add(2, 3)
-    	if result != 5 {
-    		t.Errorf("Add(2, 3) = %v, want %v", result, 5)
-    }
+```java
+result := Add(2, 3)
+  if result != 5 {
+    t.Errorf("Add(2, 3) = %v, want %v", result, 5)
+}
+```
 
-##Tests and Code Sharing: DAMP, Not DRY
+### Tests and Code Sharing: DAMP, Not DRY
 One final aspect of writing clear tests and avoiding brittleness has to do with code sharing. Most software attempts to achieve a principle called DRY—“Don’t Repeat Yourself.” DRY states that software is easier to maintain if every concept is canonically represented in one place and code duplication is kept to a minimum. This approach is especially valuable in making changes easier because an engineer needs to update only one piece of code rather than tracking down multiple references. The downside to such consolidation is that it can make code unclear, requiring readers to follow chains of references to understand what the code is doing.
 
 In normal production code, that downside is usually a small price to pay for making
@@ -189,137 +192,145 @@ differently in the context of test code. Good tests are designed to be stable, a
 
 Instead of being completely DRY, test code should often strive to be DAMP—that is, to promote “Descriptive And Meaningful Phrases.” A little bit of duplication is OK in tests so long as that duplication makes the test simpler and clearer. To illustrate, Example 12-19 presents some tests that are far too DRY.
 
-    Example 12-19. A test that is too DRY
-    @Test
-    public void shouldAllowMultipleUsers() {
-    	List<User> users = createUsers(false, false);
-    	Forum forum = createForumAndRegisterUsers(users);
-    	validateForumAndUsers(forum, users);
-    }
-    @Test
-    public void shouldNotAllowBannedUsers() {
-    	List<User> users = createUsers(true);
-    	Forum forum = createForumAndRegisterUsers(users);
-    	validateForumAndUsers(forum, users);
-    }
-    // Lots more tests...
-    private static List<User> createUsers(boolean... banned) {
-    	List<User> users = new ArrayList<>();
-    	for (boolean isBanned : banned) {
-    		users.add(newUser()
-    		.setState(isBanned ? State.BANNED : State.NORMAL)
-    		.build());
-    }
-    return users;
-    }
-    private static Forum createForumAndRegisterUsers(List<User> users) {
-    	Forum forum = new Forum();
-    	for (User user : users) {
-    	try {
-    	forum.register(user);
-    		} catch(BannedUserException ignored) {}
-    	}
-    return forum;
-    }
-    private static void validateForumAndUsers(Forum forum, List<User> users) {
-    assertThat(forum.isReachable()).isTrue();
-    	for (User user : users) {
-    	assertThat(forum.hasRegisteredUser(user))
-    	.isEqualTo(user.getState() == State.BANNED);
-    }}
+```java
+Example 12-19. A test that is too DRY
+@Test
+public void shouldAllowMultipleUsers() {
+  List<User> users = createUsers(false, false);
+  Forum forum = createForumAndRegisterUsers(users);
+  validateForumAndUsers(forum, users);
+}
+@Test
+public void shouldNotAllowBannedUsers() {
+  List<User> users = createUsers(true);
+  Forum forum = createForumAndRegisterUsers(users);
+  validateForumAndUsers(forum, users);
+}
+// Lots more tests...
+private static List<User> createUsers(boolean... banned) {
+  List<User> users = new ArrayList<>();
+  for (boolean isBanned : banned) {
+    users.add(newUser()
+    .setState(isBanned ? State.BANNED : State.NORMAL)
+    .build());
+}
+return users;
+}
+private static Forum createForumAndRegisterUsers(List<User> users) {
+  Forum forum = new Forum();
+  for (User user : users) {
+  try {
+  forum.register(user);
+    } catch(BannedUserException ignored) {}
+  }
+return forum;
+}
+private static void validateForumAndUsers(Forum forum, List<User> users) {
+assertThat(forum.isReachable()).isTrue();
+  for (User user : users) {
+  assertThat(forum.hasRegisteredUser(user))
+  .isEqualTo(user.getState() == State.BANNED);
+}}
+```
 
 The problems in this code should be apparent based on the previous discussion of clarity. For one, although the test bodies are very concise, they are not complete: important details are hidden away in helper methods that the reader can’t see without having to scroll to a completely different part of the file. Those helpers are also full of logic that makes them more difficult to verify at a glance (did you spot the bug?). The test becomes much clearer when it’s rewritten to use DAMP, as shown in
 Example 12-20.
 
 Example 12-20. Tests should be DAMP
 
-    @Test
-    public void shouldAllowMultipleUsers() {
-    	User user1 = newUser().setState(State.NORMAL).build();
-    	User user2 = newUser().setState(State.NORMAL).build();
-    	Forum forum = new Forum();
-    	forum.register(user1);
-    	forum.register(user2);
-    	assertThat(forum.hasRegisteredUser(user1)).isTrue();
-    	assertThat(forum.hasRegisteredUser(user2)).isTrue();
-    }
-    @Test
-    public void shouldNotRegisterBannedUsers() {
-    	User user = newUser().setState(State.BANNED).build();
-    	Forum forum = new Forum();
-    try {
-    	forum.register(user);
-    } catch(BannedUserException ignored) {}
-    	assertThat(forum.hasRegisteredUser(user)).isFalse();
-    }
+```java
+@Test
+public void shouldAllowMultipleUsers() {
+  User user1 = newUser().setState(State.NORMAL).build();
+  User user2 = newUser().setState(State.NORMAL).build();
+  Forum forum = new Forum();
+  forum.register(user1);
+  forum.register(user2);
+  assertThat(forum.hasRegisteredUser(user1)).isTrue();
+  assertThat(forum.hasRegisteredUser(user2)).isTrue();
+}
+@Test
+public void shouldNotRegisterBannedUsers() {
+  User user = newUser().setState(State.BANNED).build();
+  Forum forum = new Forum();
+try {
+  forum.register(user);
+} catch(BannedUserException ignored) {}
+  assertThat(forum.hasRegisteredUser(user)).isFalse();
+}
+```
 
 These tests have more duplication, and the test bodies are a bit longer, but the extra verbosity is worth it. Each individual test is far more meaningful and can be understood entirely without leaving the test body. A reader of these tests can feel confident that the tests do what they claim to do and aren’t hiding any bugs.
 
 DAMP is not a replacement for DRY; it is complementary to it. Helper methods and test infrastructure can still help make tests clearer by making them more concise, factoring out repetitive steps whose details aren’t relevant to the particular behavior being tested. The important point is that such refactoring should be done with an eye toward making tests more descriptive and meaningful, and not solely in the name of reducing repetition. The rest of this section will explore common patterns for sharing code across tests.
 
-Shared Values
+### Shared Values
 
 Many tests are structured by defining a set of shared values to be used by tests and then by defining the tests that cover various cases for how these values interact. Example 12-21 illustrates what such tests look like.
 
 Example 12-21. Shared values with ambiguous names
 
-    private static final Account ACCOUNT_1 = Account.newBuilder()
-    	.setState(AccountState.OPEN).setBalance(50).build();
-    private static final Account ACCOUNT_2 = Account.newBuilder()
-    	.setState(AccountState.CLOSED).setBalance(0).build();
-    private static final Item ITEM = Item.newBuilder()
-    	.setName("Cheeseburger").setPrice(100).build();
-    // Hundreds of lines of other tests...
-    @Test
-    public void canBuyItem_returnsFalseForClosedAccounts() {
-    	assertThat(store.canBuyItem(ITEM, ACCOUNT_1)).isFalse();
-    }
-    @Test
-    public void canBuyItem_returnsFalseWhenBalanceInsufficient() {
-    	assertThat(store.canBuyItem(ITEM, ACCOUNT_2)).isFalse();
-    }
+```java
+private static final Account ACCOUNT_1 = Account.newBuilder()
+  .setState(AccountState.OPEN).setBalance(50).build();
+private static final Account ACCOUNT_2 = Account.newBuilder()
+  .setState(AccountState.CLOSED).setBalance(0).build();
+private static final Item ITEM = Item.newBuilder()
+  .setName("Cheeseburger").setPrice(100).build();
+// Hundreds of lines of other tests...
+@Test
+public void canBuyItem_returnsFalseForClosedAccounts() {
+  assertThat(store.canBuyItem(ITEM, ACCOUNT_1)).isFalse();
+}
+@Test
+public void canBuyItem_returnsFalseWhenBalanceInsufficient() {
+  assertThat(store.canBuyItem(ITEM, ACCOUNT_2)).isFalse();
+}
+```
 
 This strategy can make tests very concise, but it causes problems as the test suite grows. For one, it can be difficult to understand why a particular value was chosen for a test. In Example 12-21, the test names fortunately clarify which scenarios are being tested, but you still need to scroll up to the definitions to confirm that ACCOUNT_1 and ACCOUNT_2 are appropriate for those scenarios. More descriptive constant names (e.g., CLOSED_ACCOUNT and ACCOUNT_WITH_LOW_BALANCE) help a bit, but they still make it more difficult to see the exact details of the value being tested, and the ease of reusing these values can encourage engineers to do so even when the name doesn’t exactly describe what the test needs.
 
 Engineers are usually drawn to using shared constants because constructing individual values in each test can be verbose. A better way to accomplish this goal is to construct data using helper methods (see Example 12-22) that require the test author to specify only values they care about, and setting reasonable defaults7 for all other values. This construction is trivial to do in languages that support named parameters, but languages without named parameters can use constructs such as the Builder pattern to emulate them (often with the assistance of tools such as AutoValue):
 Example 12-22. Shared values using helper methods
 
-    # A helper method wraps a constructor by defining arbitrary defaults for
-    # each of its parameters.
-    def newContact(
-    	firstName="Grace", lastName="Hopper", phoneNumber="555-123-4567"):
-    	return Contact(firstName, lastName, phoneNumber)
-    # Tests call the helper, specifying values for only the parameters that they
-    # care about.
-    def test_fullNameShouldCombineFirstAndLastNames(self):
-    	def contact = newContact(firstName="Ada", lastName="Lovelace")
-    	self.assertEqual(contact.fullName(), "Ada Lovelace")
-    	// Languages like Java that don’t support named parameters can emulate them
-    	// by returning a mutable "builder" object that represents the value under
-    	// construction.
-    private static Contact.Builder newContact() {
-    	return Contact.newBuilder()
-    	.setFirstName("Grace")
-    	.setLastName("Hopper")
-    	.setPhoneNumber("555-123-4567");
-    }
+```java
+# A helper method wraps a constructor by defining arbitrary defaults for
+# each of its parameters.
+def newContact(
+  firstName="Grace", lastName="Hopper", phoneNumber="555-123-4567"):
+  return Contact(firstName, lastName, phoneNumber)
+# Tests call the helper, specifying values for only the parameters that they
+# care about.
+def test_fullNameShouldCombineFirstAndLastNames(self):
+  def contact = newContact(firstName="Ada", lastName="Lovelace")
+  self.assertEqual(contact.fullName(), "Ada Lovelace")
+  // Languages like Java that don’t support named parameters can emulate them
+  // by returning a mutable "builder" object that represents the value under
+  // construction.
+private static Contact.Builder newContact() {
+  return Contact.newBuilder()
+  .setFirstName("Grace")
+  .setLastName("Hopper")
+  .setPhoneNumber("555-123-4567");
+}
 
-    // Tests then call methods on the builder to overwrite only the parameters
-    // that they care about, then call build() to get a real value out of the
-    // builder.
+// Tests then call methods on the builder to overwrite only the parameters
+// that they care about, then call build() to get a real value out of the
+// builder.
 
-    @Test
-    public void fullNameShouldCombineFirstAndLastNames() {
-    	Contact contact = newContact()
-    	.setFirstName("Ada")
-    	.setLastName("Lovelace")
-    	.build();
-    	assertThat(contact.getFullName()).isEqualTo("Ada Lovelace");
-    }
+@Test
+public void fullNameShouldCombineFirstAndLastNames() {
+  Contact contact = newContact()
+  .setFirstName("Ada")
+  .setLastName("Lovelace")
+  .build();
+  assertThat(contact.getFullName()).isEqualTo("Ada Lovelace");
+}
+```
 
 Using helper methods to construct these values allows each test to create the exact values it needs without having to worry about specifying irrelevant information or conflicting with other tests.
 
-##Shared Setup
+### Shared Setup
 A related way that tests shared code is via setup/initialization logic. Many test frame‐ works allow engineers to define methods to execute before each test in a suite is run.
 Used appropriately, these methods can make tests clearer and more concise by obviating the repetition of tedious and irrelevant initialization logic. Used inappropriately,
 these methods can harm a test’s completeness by hiding important details in a separate initialization method.
@@ -329,59 +340,65 @@ One risk in using setup methods is that they can lead to unclear tests if those 
 
 Example 12-23. Dependencies on values in setup methods
 
-    private NameService nameService;
-    private UserStore userStore;
-    @Before
-    public void setUp() {
-    	nameService = new NameService();
-    	nameService.set("user1", "Donald Knuth");
-    	userStore = new UserStore(nameService);
-    }
-    // [... hundreds of lines of tests ...]
-    @Test
-    public void shouldReturnNameFromService() {
-    	UserDetails user = userStore.get("user1");
-    	assertThat(user.getName()).isEqualTo("Donald Knuth");
-    }
+```java
+private NameService nameService;
+private UserStore userStore;
+@Before
+public void setUp() {
+  nameService = new NameService();
+  nameService.set("user1", "Donald Knuth");
+  userStore = new UserStore(nameService);
+}
+// [... hundreds of lines of tests ...]
+@Test
+public void shouldReturnNameFromService() {
+  UserDetails user = userStore.get("user1");
+  assertThat(user.getName()).isEqualTo("Donald Knuth");
+}
+```
 
 Tests like these that explicitly care about particular values should state those values directly, overriding the default defined in the setup method if need be. The resulting test contains slightly more repetition, as shown in Example 12-24, but the result is far more descriptive and meaningful.
 
 Example 12-24. Overriding values in setup mMethods
 
-    private NameService nameService;
-    private UserStore userStore;
-    @Before
-    public void setUp() {
-    	nameService = new NameService();
-    	nameService.set("user1", "Donald Knuth");
-    	userStore = new UserStore(nameService);
-    }
-    @Test
-    public void shouldReturnNameFromService() {
-    	nameService.set("user1", "Margaret Hamilton");
-    	UserDetails user = userStore.get("user1");
-    	assertThat(user.getName()).isEqualTo("Margaret Hamilton");
-    }
+```java
+private NameService nameService;
+private UserStore userStore;
+@Before
+public void setUp() {
+  nameService = new NameService();
+  nameService.set("user1", "Donald Knuth");
+  userStore = new UserStore(nameService);
+}
+@Test
+public void shouldReturnNameFromService() {
+  nameService.set("user1", "Margaret Hamilton");
+  UserDetails user = userStore.get("user1");
+  assertThat(user.getName()).isEqualTo("Margaret Hamilton");
+}
+```
 
-##Shared Helpers and Validation
+### Shared Helpers and Validation
 The last common way that code is shared across tests is via “helper methods” called from the body of the test methods. We already discussed how helper methods can be a useful way for concisely constructing test values—this usage is warranted, but other types of helper methods can be dangerous.
 One common type of helper is a method that performs a common set of assertions against a system under test. The extreme example is a validate method called at the end of every test method, which performs a set of fixed checks against the system under test. Such a validation strategy can be a bad habit to get into because tests using this approach are less behavior driven. With such tests, it is much more difficult to determine the intent of any particular test and to infer what exact case the author had in mind when writing it. When bugs are introduced, this strategy can also make them more difficult to localize because they will frequently cause a large number of tests to start failing.
 
 More focused validation methods can still be useful, however. The best validation helper methods assert a single conceptual fact about their inputs, in contrast to general-purpose validation methods that cover a range of conditions. Such methods can be particularly helpful when the condition that they are validating is conceptually simple but requires looping or conditional logic to implement that would reduce clarity were it included in the body of a test method. For example, the helper method in Example 12-25 might be useful in a test covering several different cases around account access.
 Example 12-25. A conceptually simple test
 
-    private void assertUserHasAccessToAccount(User user, Account account) {
-    	for (long userId : account.getUsersWithAccess()) {
-    		if (user.getId() == userId) {
-    	return;}}
-    	fail(user.getName() + " cannot access " + account.getName());
-    }
+```java
+private void assertUserHasAccessToAccount(User user, Account account) {
+  for (long userId : account.getUsersWithAccess()) {
+    if (user.getId() == userId) {
+  return;}}
+  fail(user.getName() + " cannot access " + account.getName());
+}
+```
 
-##Defining Test Infrastructure
+### Defining Test Infrastructure
 The techniques we’ve discussed so far cover sharing code across methods in a single test class or suite. Sometimes, it can also be valuable to share code across multiple test suites. We refer to this sort of code as test infrastructure. Though it is usually more valuable in integration or end-to-end tests, carefully designed test infrastructure can make unit tests much easier to write in some circumstances. 
 
 Custom test infrastructure must be approached more carefully than the code sharing that happens within a single test suite. In many ways, test infrastructure code is more similar to production code than it is to other test code given that it can have many callers that depend on it and can be difficult to change without introducing break ages. Most engineers aren’t expected to make changes to the common test infrastruc ture while testing their own features. Test infrastructure needs to be treated as its own separate product, and accordingly, test infrastructure must always have its own tests. Of course, most of the test infrastructure that most engineers use comes in the form of well-known third-party libraries like JUnit. A huge number of such libraries are available, and standardizing on them within an organization should happen as early and universally as possible. For example, Google many years ago mandated Mockito as the only mocking framework that should be used in new Java tests and banned new tests from using other mocking frameworks. This edict produced some grum‐bling at the time from people comfortable with other frameworks, but today, it’s universally seen as a good move that made our tests easier to understand and work with.
 
-##Conclusion
+### Conclusion
 Unit tests are one of the most powerful tools that we as software engineers have to make sure that our systems keep working over time in the face of unanticipated changes. But with great power comes great responsibility, and careless use of unit testing can result in a system that requires much more effort to maintain and takes much more effort to change without actually improving our confidence in said system.
 Unit tests at Google are far from perfect, but we’ve found tests that follow the practi‐ ces outlined in this chapter to be orders of magnitude more valuable than those that don’t. We hope they’ll help you to improve the quality of your own tests!
