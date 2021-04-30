@@ -356,4 +356,279 @@ Waivers are not granted lightly. In C++ code, if a macro API is introduced, the 
 Exceptions are allowed for cases in which it is gauged to be more beneficial to permit the rule-breaking than to avoid it. The C++ style guide disallows implicit type conversions, including single-argument constructors. However, for types that are designed to transparently wrap other types, where the underlying data is still accurately and precisely represented, it’s perfectly reasonable to allow implicit conversion. In such cases, waivers to the no-implicit-conversion rule are granted. Having such a clear case for valid exemptions might indicate that the rule in question needs to be clarified or amended. However, for this specific rule, enough waiver requests are received that appear to fit the valid case for exemption but in fact do not—either because the specific type in question is not actually a transparent wrapper type or because the type is a wrapper but is not actually needed—that keeping the rule in place as-is is still worthwhile.
 
 
+versions, including single-argument constructors. However, for types that are
+designed to transparently wrap other types, where the underlying data is still accu‐
+rately and precisely represented, it’s perfectly reasonable to allow implicit conversion.
+    In such cases, waivers to the no-implicit-conversion rule are granted. Having such a
+    clear case for valid exemptions might indicate that the rule in question needs to be
+clarified or amended. However, for this specific rule, enough waiver requests are
+received that appear to fit the valid case for exemption but in fact do not—either
+because the specific type in question is not actually a transparent wrapper type or
+because the type is a wrapper but is not actually needed—that keeping the rule in
+place as-is is still worthwhile.
+
+### Guidance
+In addition to rules, we curate programming guidance in various forms, ranging from
+long, in-depth discussion of complex topics to short, pointed advice on best practices
+that we endorse.
+
+Guidance represents the collected wisdom of our engineering experience, document‐
+ing the best practices that we’ve extracted from the lessons learned along the way.
+    Guidance tends to focus on things that we’ve observed people frequently getting
+wrong or new things that are unfamiliar and therefore subject to confusion. If the
+rules are the “musts,” our guidance is the “shoulds.”
+
+One example of a pool of guidance that we cultivate is a set of primers for some of the
+predominant languages that we use. While our style guides are prescriptive, ruling on
+which language features are allowed and which are disallowed, the primers are
+descriptive, explaining the features that the guides endorse. They are quite broad in
+their coverage, touching on nearly every topic that an engineer new to the language’s
+use at Google would need to reference. They do  not delve into every detail of a given
+topic, but they provide explanations and recommended use. When an engineer needs
+to figure out how to apply a feature that they want to use, the primers aim to serve as
+the go-to guiding reference.
+
+A few years ago, we began publishing a series of C++ tips that offered a mix of gen‐
+eral language advice and Google-specific tips. We cover hard things—object lifetime,
+copy and move semantics, argument-dependent lookup; new things—C++ 11 fea‐
+tures as they were adopted in the codebase, preadopted C++17 types like
+string_view, optional, and variant; and things that needed a gentle nudge of cor‐
+rection—reminders not to use using directives, warnings to remember to look out
+for implicit bool conversions. The tips grow out of actual problems encountered,
+addressing real programming issues that are not covered by the style guides. Their
+advice, unlike the rules in the style guide, are not true canon; they are still in the
+category of advice rather than rule. However, given the way they grow from observed
+patterns rather than abstract ideals, their broad and direct applicability set them apart
+from most other advice as a sort of “canon of the common.” Tips are narrowly
+focused and relatively short, each one no more than a few minutes’ read. This “Tip of
+the Week” series has been extremely successful internally, with frequent citations dur‐
+ing code reviews and technical discussions.<sup>12</sup>
+
+Software engineers come in to a new project or codebase with knowledge of the pro‐
+gramming language they are going to be using, but lacking the knowledge of how the
+programming language is used within Google. To bridge this gap, we maintain a ser‐
+ies of “<Language>@Google 101” courses for each of the primary programming lan‐
+guages in use. These full-day courses focus on what makes development with that
+language different in our codebase. They cover the most frequently used libraries and
+idioms, in-house preferences, and custom tool usage. For a C++ engineer who has
+just become a Google C++ engineer, the course fills in the missing pieces that make
+them not just a good engineer, but a good Google codebase engineer.
+
+In addition to teaching courses that aim to get someone completely unfamiliar with
+our setup up and running quickly, we also cultivate ready references for engineers
+deep in the codebase to find the information that could help them on the go. These
+references vary in form and span the languages that we use. Some of the useful refer‐
+ences that we maintain internally include the following:
++ Language-specific advice for the areas that are generally more difficult to get cor‐
+ rect (such as concurrency and hashing).
++ Detailed breakdowns of new features that are introduced with a language update
+and advice on how to use them within the codebase.
++ Listings of key abstractions and data structures provided by our libraries. This
+keeps us from reinventing structures that already exist and provides a response
+to, “I need a thing, but I don’t know what it’s called in our libraries.”
+### Applying the Rules 
+Rules, by their nature, lend greater value when they are enforceable. Rules can be
+enforced socially, through teaching and training, or technically, with tooling. We have
+various formal training courses at Google that cover many of the best practices that
+our rules require. We also invest resources in keeping our documentation up to date
+to ensure that reference material remains accurate and current. A key part of our
+overall training approach when it comes to awareness and understanding of our rules
+is the role that code reviews play. The readability process that we run here at Google
+—where engineers new to Google’s development environment for a given language
+are mentored through code reviews—is, to a great extent, about cultivating the habits
+>12 https://abseil.io/tips has a selection of some of our most popular tips.
+
+and patterns required by our style guides (see details on the readability process in
+<font color=red>Chapter 3</font>). The process is an important piece of how we ensure that these practices
+are learned and applied across project boundaries.
+
+Although some level of training is always necessary—engineers must, after all, learn
+the rules so that they can write code that follows them—when it comes to checking
+for compliance, rather than exclusively depending on engineer-based verification, we
+strongly prefer to automate enforcement with tooling.
+
+Automated rule enforcement ensures that rules are not dropped or forgotten as time
+passes or as an organization scales up. New people join; they might not yet know all
+the rules. Rules change over time; even with good communication, not everyone will
+remember the current state of everything. Projects grow and add new features; rules
+that had previously not been relevant are suddenly applicable. An engineer checking
+for rule compliance depends on either memory or documentation, both of which can
+fail. As long as our tooling stays up to date, in sync with our rule changes, we know
+that our rules are being applied by all our engineers for all our projects.
+
+Another advantage to automated enforcement is minimization of the variance in how
+a rule is interpreted and applied. When we write a script or use a tool to check for
+compliance, we validate all inputs against a single, unchanging definition of the rule.
+We aren’t leaving interpretation up to each individual engineer. Human engineers
+view everything with a perspective colored by their biases. Unconscious or not,
+potentially subtle, and even possibly harmless, biases still change the way people view
+things. Leaving enforcement up to engineers is likely to see inconsistent interpreta‐
+tion and application of the rules, potentially with inconsistent expectations of
+accountability. The more that we delegate to the tools, the fewer entry points we leave
+for human biases to enter.
+
+Tooling also makes enforcement scalable. As an organization grows, a single team of
+experts can write tools that the rest of the company can use. If the company doubles
+in size, the effort to enforce all rules across the entire organization doesn’t double, it
+costs about the same as it did before.
+
+Even with the advantages we get by incorporating tooling, it might not be possible to
+automate enforcement for all rules. Some technical rules explicitly call for human
+judgment. In the C++ style guide, for example: “Avoid complicated template meta‐
+programming.” “Use auto to avoid type names that are noisy, obvious, or unimpor‐
+tant—cases where the type doesn’t aid in clarity for the reader.” “Composition is often
+more appropriate than inheritance.” In the Java style guide: “There’s no single correct
+recipe for how to [order the members and initializers of your class]; different classes
+may order their contents in different ways.” “It is very rarely correct to do nothing in
+response to a caught exception.” “It is extremely rare to override Object.finalize.”
+For all of these rules, judgment is required and tooling can’t (yet!) take that place.
+
+Other rules are social rather than technical, and it is often unwise to solve social
+problems with a technical solution. For many of the rules that fall under this category,
+the details tend to be a bit less well defined and tooling would become complex and
+expensive. It’s often better to leave enforcement of those rules to humans. For exam‐
+ple, when it comes to the size of a given code change (i.e., the number of files affected
+and lines modified) we recommend that engineers favor smaller changes. Small
+changes are easier for engineers to review, so reviews tend to be faster and more thor‐
+ough. They’re also less likely to introduce bugs because it’s easier to reason about the
+potential impact and effects of a smaller change. The definition of small, however, is
+somewhat nebulous. A change that propagates the identical one-line update across
+hundreds of files might actually be easy to review. By contrast, a smaller, 20-line
+change might introduce complex logic with side effects that are difficult to evaluate.
+We recognize that there are many different measurements of size, some of which may
+be subjective—particularly when taking the complexity of a change into account. This
+is why we do not have any tooling to autoreject a proposed change that exceeds an
+arbitrary line limit. Reviewers can (and do) push back if they judge a change to be too
+large. For this and similar rules, enforcement is up to the discretion of the engineers
+authoring and reviewing the code. When it comes to technical rules, however, when‐
+ever it is feasible, we favor technical enforcement.
+
+### Error Checkers
+Many rules covering language usage can be enforced with static analysis tools. In fact,
+an informal survey of the C++ style guide by some of our C++ librarians in mid-2018
+estimated that roughly 90% of its rules could be automatically verified. Error-
+checking tools take a set of rules or patterns and verify that a given code sample fully
+complies. Automated verification removes the burden of remembering all applicable
+rules from the code author. If an engineer only needs to look for violation warnings—
+many of which come with suggested fixes—surfaced during code review by an ana‐
+lyzer that has been tightly integrated into the development workflow, we minimize
+the effort that it takes to comply with the rules. When we began using tools to flag
+deprecated functions based on source tagging, surfacing both the warning and the
+suggested fix in-place, the problem of having new usages of deprecated APIs disap‐
+peared almost overnight. Keeping the cost of compliance down makes it more likely
+for engineers to happily follow through.
+
+We use tools like <font color=red>clang-tidy</font> (for C++) and <font color=red>Error Prone</font> (for Java) to automate the
+process of enforcing rules. See <font color=red>Chapter 20</font> for an in-depth discussion of our
+approach.
+
+The tools we use are designed and tailored to support the rules that we define. Most
+tools in support of rules are absolutes; everybody must comply with the rules, so
+everybody uses the tools that check them. Sometimes, when tools support best practi‐
+ces where there’s a bit more flexibility in conforming to the conventions, there are
+opt-out mechanisms to allow projects to adjust for their needs.
+### Code Formatters
+At Google, we generally use automated style checkers and formatters to enforce con‐
+sistent formatting within our code. The question of line lengths has stopped being
+interesting.<sup>13</sup> Engineers just run the style checkers and keep moving forward. When
+formatting is done the same way every time, it becomes a non-issue during code
+review, eliminating the review cycles that are otherwise spent finding, flagging, and
+fixing minor style nits.
+
+In managing the largest codebase ever, we’ve had the opportunity to observe the
+results of formatting done by humans versus formatting done by automated tooling.
+The robots are better on average than the humans by a significant amount. There are
+some places where domain expertise matters—formatting a matrix, for example, is
+something a human can usually do better than a general-purpose formatter. Failing
+that, formatting code with an automated style checker rarely goes wrong.
+
+We enforce use of these formatters with presubmit checks: before code can be sub‐
+mitted, a service checks whether running the formatter on the code produces any
+diffs. If it does, the submit is rejected with instructions on how to run the formatter
+to fix the code. Most code at Google is subject to such a presubmit check. For our
+code, we use <font color=red>clang-format</font> for C++; an in-house wrapper around <font color=red>yapf</font> for Python;
+gofmt for Go; dartfmt for Dart; and <font color=red>buildifier</font> for our BUILD files.
+
+### Case Study: gofmt
+##### Sameer Ajmani
+Google released the Go programming language as open source on November 10,
+2009. Since then, Go has grown as a language for developing services, tools, cloud
+infrastructure, and open source software.<sup>14</sup>
+
+We knew that we needed a standard format for Go code from day one. We also knew
+that it would be nearly impossible to retrofit a standard format after the open source
+release. So the initial Go release included gofmt, the standard formatting tool for Go.
+>13 When you consider that it takes at least two engineers to have the discussion and multiply that by the number
+>of times this conversation is likely to happen within a collection of more than 30,000 engineers, it turns out
+>that “how many characters” can become a very expensive question.
+>14 In December 2018, <font color=red>Go was the #4 language on GitHub as measured by pull requests.</font>
+##### Motivations
+Code reviews are a software engineering best practice, yet too much time was spent in
+review arguing over formatting. Although a standard format wouldn’t be everyone’s
+favorite, it would be good enough to eliminate this wasted time.<sup>15</sup>
+
+By standardizing the format, we laid the foundation for tools that could automatically
+update Go code without creating spurious diffs: machine-edited code would be indis‐
+tinguishable from human-edited code.<sup>16</sup>
+
+For example, in the months leading up to Go 1.0 in 2012, the Go team used a tool
+called gofix to automatically update pre-1.0 Go code to the stable version of the lan‐
+guage and libraries. Thanks to gofmt, the diffs gofix produced included only the
+important bits: changes to uses of the language and APIs. This allowed programmers
+to more easily review the changes and learn from the changes the tool made.
+
+##### Impact
+Go programmers expect that all Go code is formatted with gofmt. gofmt has no con‐
+figuration knobs, and its behavior rarely changes. All major editors and IDEs use
+gofmt or emulate its behavior, so nearly all Go code in existence is formatted identi‐
+cally. At first, Go users complained about the enforced standard; now, users often cite
+gofmt as one of the many reasons they like Go. Even when reading unfamiliar Go
+code, the format is familiar.
+
+Thousands of open source packages read and write Go code.<sup>17</sup> Because all editors and
+IDEs agree on the Go format, Go tools are portable and easily integrated into new
+developer environments and workflows via the command line.
+##### Retrofitting
+In 2012, we decided to automatically format all BUILD files at Google using a new
+standard formatter: buildifier. BUILD files contain the rules for building Google’s
+software with Blaze, Google’s build system. A standard BUILD format would enable us
+to create tools that automatically edit BUILD files without disrupting their format, just
+as Go tools do with Go files.
+
+It took six weeks for one engineer to get the reformatting of Google’s 200,000 BUILD
+files accepted by the various code owners, during which more than a thousand new
+>15 <font color=red>Robert Griesemer’s 2015 talk</font>, “The Cultural Evolution of gofmt,” provides details on the motivation, design,
+>and impact of gofmt on Go and other languages.
+>16 <font color=red>Russ Cox explained in 2009</font> that gofmt was about automated changes: “So we have all the hard parts of a pro‐
+>gram manipulation tool just sitting waiting to be used. Agreeing to accept ‘gofmt style’ is the piece that makes
+>it doable in a finite amount of code.”
+>17 The <font color=red>Go AST</font> and <font color=red>format packages</font> each have thousands of importers.
+
+BUILD files were added each week. Google’s nascent infrastructure for making large-
+scale changes greatly accelerated this effort. (See <font color=red>Chapter 22</font>.)
+### Conclusion
+For any organization, but especially for an organization as large as Google’s engineer‐
+ing force, rules help us to manage complexity and build a maintainable codebase. A
+shared set of rules frames the engineering processes so that they can scale up and
+keep growing, keeping both the codebase and the organization sustainable for the
+long term.
+### TL;DRs
++ Rules and guidance should aim to support resilience to time and scaling.
++ Know the data so that rules can be adjusted.
++ Not everything should be a rule.
++ Consistency is key.
++ Automate enforcement when possible.
+
+
+
+
+
+
+
+
+
+ 
+
+
+
 
