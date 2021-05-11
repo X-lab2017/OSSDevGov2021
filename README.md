@@ -60,9 +60,9 @@ Open Source Software Development and Community Governance (开源软件开发与
 - [07《DevOps&Docker》第七讲.pdf](https://github.com/X-lab2017/OSSDevGov2021/files/6459112/07.DevOps.Docker.pdf)
 - https://leofang.cn/post/docker-ci/
 
+**第八次课（4月26日）Kubernetes 与开源**
 
-**第八次课（4月26日）**
-
+- [08《开源软件开发与社区治理》第八讲.pdf](https://github.com/xiaoya-Esther/OSSDevGov2021/files/6459835/08.pdf)
 
 **第九次课（5月10日）：开源项目质量和代码管理**
 
