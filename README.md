@@ -46,14 +46,36 @@ Open Source Software Development and Community Governance (开源软件开发与
 
 - [04《开源软件开发与社区治理》第4讲.pdf](https://github.com/X-lab2017/OSSDevGov2021/files/6262131/04.4.pdf)
 
-
 **第五次课（3月29日）：开源协作与工程全流程**
 
 - [05《开源软件开发与社区治理》第5讲.pdf](https://github.com/X-lab2017/OSSDevGov2021/files/6262134/05.5.pdf)
 
+**第六次课（4月12日）：Git 原理与 GitHub 开放式协作**
+
+- [06《Git原理》.pdf](https://github.com/X-lab2017/OSSDevGov2021/files/6459104/06.Git.pdf)
+- [06《GitHub开放式协作》.pdf](https://github.com/X-lab2017/OSSDevGov2021/files/6459107/06.GitHub.pdf)
+
+**第七次课（4月19日）：DevOps & Docker & CI/CD**
+
+- [07《DevOps&Docker》第七讲.pdf](https://github.com/X-lab2017/OSSDevGov2021/files/6459112/07.DevOps.Docker.pdf)
+- https://leofang.cn/post/docker-ci/
+
+**第八次课（4月26日）Kubernetes 与开源**
+
+- [08《开源软件开发与社区治理》第八讲.pdf](https://github.com/xiaoya-Esther/OSSDevGov2021/files/6459835/08.pdf)
+
+**第九次课（5月10日）：开源项目质量和代码管理**
+
+- [09《开源软件开发与社区治理》第9讲.pdf](https://github.com/X-lab2017/OSSDevGov2021/files/6459046/09.9.pdf)
+
+
+**Part 02：开源治理与运营**
+
+
 
 ## 5、考核方式
 
-待定
+- 期中：《Software Engineering at Google》
+- 期末：开源社区case study
 
 ## 6、参考资料
