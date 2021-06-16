@@ -71,6 +71,21 @@ Open Source Software Development and Community Governance (开源软件开发与
 
 **Part 02：开源治理与运营**
 
+**第十次课（5月17日）：开源社区治理与运营概览**
+
+- [10《开源软件开发与社区治理》第10讲.pdf](https://github.com/X-lab2017/OSSDevGov2021/files/6639514/10.10.pdf)
+
+**第十一次课（5月24日）：开源社区数据分析**
+
+- [11《开源软件开发与社区治理》第11讲.pdf](https://github.com/X-lab2017/OSSDevGov2021/files/6639525/11.11.pdf)
+
+**第十二次课（5月31日）：数据驱动的开源研究**
+
+- [12《开源软件开发与社区治理》第12讲.pdf](https://github.com/X-lab2017/OSSDevGov2021/files/6639528/12.12.pdf)
+
+**第十三次课（6月7日）：开源社区治理与度量指标**
+
+- [13 《开源软件开发与社区治理》13讲.pdf](https://github.com/X-lab2017/OSSDevGov2021/files/6639530/13.13.pdf)
 
 
 ## 5、考核方式
