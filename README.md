@@ -87,6 +87,10 @@ Open Source Software Development and Community Governance (开源软件开发与
 
 - [13 《开源软件开发与社区治理》13讲.pdf](https://github.com/X-lab2017/OSSDevGov2021/files/6639530/13.13.pdf)
 
+**第十四次课（6月21日）：开源合规和许可证艺术**
+
+- [14 《开源软件开发与社区治理》14讲.pdf](https://github.com/X-lab2017/OSSDevGov2021/files/6699388/14.14.pdf)
+
 
 ## 5、考核方式
 
