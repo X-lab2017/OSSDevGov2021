@@ -1,9 +1,5 @@
 # Atom项目2020年深入数据分析
 
-## 目录
-
-[toc]
-
 ## 1、引言
 
 ​		2020注定是个不平凡的数字，开源的2020也是如此。
@@ -30,7 +26,7 @@
 
 ##### 开发者参与项目方式
 
-![img]()
+![图3.1.2.1](https://gitee.com/yyjjtt/picture_bed/raw/master/img/%E5%9B%BE3.1.2.1.png)
 
 图3.1.2.1
 
@@ -38,7 +34,7 @@
 
 ##### 开发者参与项目时间段
 
-![img]()
+![图3.1.2.2](https://gitee.com/yyjjtt/picture_bed/raw/master/img/%E5%9B%BE3.1.2.2.png)
 
 图3.1.2.2
 
@@ -46,7 +42,7 @@
 
 ##### 开发者每日贡献度波动
 
-![img]()
+![图3.1.2.3](https://gitee.com/yyjjtt/picture_bed/raw/master/img/%E5%9B%BE3.1.2.3.png)
 
 图3.1.2.3
 
