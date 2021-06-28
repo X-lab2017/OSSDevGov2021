@@ -39,7 +39,7 @@ but large tests provide more confidence that the overall system works as intende
 And having actual automated tests scales in ways that manual testing does not.
 
 ### Fidelity
-The primary reason larger tests exist is to address delity. Fidelity is the property by
+The primary reason larger tests exist is to address fidelity. Fidelity is the property by
 which a test is reflective of the real behavior of the system under test (SUT).
 
 One way of envisioning fidelity is in terms of the environment. As Figure 14-1 illus‐
@@ -196,7 +196,7 @@ on the AdWords test.
 
 Other “larger” testing patterns also existed circa 2002. The Google search frontend
 relied heavily on manual QA—manual versions of end-to-end test scenarios. And
-Gmail got its version of a “local demo” environment—a script to bring up an end-toend Gmail environment locally with some generated test users and mail data for local
+Gmail got its version of a “local demo” environment—a script to bring up an end-to-end Gmail environment locally with some generated test users and mail data for local
 manual testing.
 
 When C/J Build (our first continuous build framework) launched, it did not distin‐
