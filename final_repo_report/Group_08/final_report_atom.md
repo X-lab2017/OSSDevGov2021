@@ -22,6 +22,30 @@
 
 #### 3.1.1、Atom基础的统计数据分析、可视化
 
+##### 项目2020年每月pull Request的数量
+
+![image-20210628192156155](https://gitee.com/yyjjtt/picture_bed/raw/master/img/image-20210628192156155.png)
+
+图 3.1.1.1
+
+​		上图表示Atom项目在2020年每月pull request的数量，从上图可以看出1-10月份提交pull request的数量呈递增趋势，而从10-12月份提交pull request数量呈减少趋势，提交pull requests 主要集中在9，10，11月份，这可能是Atom项目开发的活跃期。
+
+##### 项目中完成issue的数量
+
+![image-20210628192417425](https://gitee.com/yyjjtt/picture_bed/raw/master/img/image-20210628192417425.png)
+
+图 3.1.1.2
+
+​		上图表示Atom项目在2020年每个月完成的issue的数量，相对较多的月份是5月，9月，以及10月份，但整体来看，除了年末的12月份，其他月份相差不大，相对来说比较平均。可以看出Atom项目的开发相对比较稳定，参与项目的开发者们能够比较稳定的对这个项目做出贡献，保证Atom的活力。
+
+##### 项目不同事件发起数量
+
+![image-20210628192529145](https://gitee.com/yyjjtt/picture_bed/raw/master/img/image-20210628192529145.png)
+
+图 3.1.1.3
+
+​		上图表示2020年关于该项目的不同种类的项目的发起数量。占据主要比重的是WatchEvent，IssueCommentEvent以及ForkEvent，数量分别是5316，3933，1832。说明Atom受到非常大的关注，并且关注这些项目的人也乐于参与到项目的讨论中。
+
 #### 3.1.2、Atom开发者数据统计、可视化
 
 ##### 开发者参与项目方式
@@ -76,7 +100,7 @@
 
 ##### Atom日常协作分类
 
-Atom日常协作主要分为一下4类：
+​		Atom日常协作主要分为一下4类：
 
 1. 修改bug
 2. 性能改进
@@ -92,9 +116,9 @@ Atom日常协作主要分为一下4类：
 
 ##### Atom四种说明文档介绍
 
-线上协作比较重要的一点是如何用文字表达清楚自己做了什么。Atom提供4种不同的贡献文档模板，内容详细，具有较高参考价值，简单介绍下相关内容，对于相同字段不做解释。
+​		线上协作比较重要的一点是如何用文字表达清楚自己做了什么。Atom提供4种不同的贡献文档模板，内容详细，具有较高参考价值，简单介绍下相关内容，对于相同字段不做解释。
 
-修改bug说明模板
+​		修改bug说明模板
 
 1. 识别Bug：此处提供你修改的Bug对应issue链接，如果没有创建相关issue，需要先创建。
 2. 变更说明：描述变更内容，用于PR维护者审查。
@@ -103,7 +127,7 @@ Atom日常协作主要分为一下4类：
 5. 验证过程：详细说明基于什么流程来体现修改的作用
 6. 发行说明：用一句用户易于理解的话描述更改
 
-性能改进说明模板
+​		性能改进说明模板
 
 1. 变更说明
 2. 定量性能优势：描述观察到的确切的性能改价（如完成操作的时间减少、内存使用减少）
@@ -112,7 +136,7 @@ Atom日常协作主要分为一下4类：
 5. 适用问题：该性能改进使用的场景。
 6. 发行说明
 
-文档更新说明模板
+​		文档更新说明模板
 
 1. 变更说明
 2. 发行说明
@@ -163,6 +187,79 @@ Atom日常协作主要分为一下4类：
 ​		虽然在审查拉取请求之前必须满足上述先决条件，但在拉取请求最终被接受之前，审查者可能会要求你完成额外的设计工作、测试或其他更改。
 
 #### 3.2.3、项目CI/CD的流程调研
+
+#### Atom的CI的脚本
+
+##### 不同的系统构建Atom包的模板并运行其规范：
+
+* Windows, macOS 和 Ubuntu Linux：使用https://github.com/features/actions
+* macOS 和 Ubuntu Linux：使用https://travis-ci.org/
+* Windows：使用https://www.appveyor.com/
+* Ubuntu Linux / Docker：使用https://circleci.com/
+
+##### 为你的包设置CI
+
+**GitHub操作**
+
+* 将 [.github/workflows/main.yml](https://raw.githubusercontent.com/atom/ci/master/.github/workflows/main.yml) 复制到包的存储库树中的同一位置
+* 您的包现在就将构建并运行其规范；您可以在这里看到一个配置包的示例：https://github.com/thumperward/auto-create-files/actions
+
+**Travis CI**
+
+* 在Travis CI上注册帐户
+* 将https://raw.githubusercontent.com/atom/ci/master/.travis.yml复制到包存储库的根目录
+* 在包的存储库上设置Travis CI hook：https://docs.travis-ci.com/user/tutorial/
+* 您的包现在将构建并运行其规范；您可以在这里看到一个配置包的示例：https://travis-ci.org/github/atom/wrap-guide
+
+**Appveyor**
+
+* 在Appveyor上注册帐户
+* 添加新项目
+* 保未选中“设置”>“常规”中的“Ignore appveyor.yml”设置
+* 将appveyor.yml复制到包存储库的根目录：https://raw.githubusercontent.com/atom/ci/master/appveyor.yml
+* 您的包现在将构建并运行其规范；您可以在这里看到一个配置包的示例：https://ci.appveyor.com/project/Atom/wrap-guide
+
+**CircleCI**
+
+* 在CircleCI注册帐户
+* 在项目的根目录下创建一个.circleci目录
+* 将config.yml复制到新目录：https://raw.githubusercontent.com/atom/ci/master/.circleci/config.yml
+* 提交更改并将其推送到GitHub
+* 在CircleCI上添加新项目：https://circleci.com/docs/2.0/hello-world/
+* 您的包现在将构建并运行其规范；您可以在这里看到一个配置包的示例：https://circleci.com/vcs-authorize/?return-to=https%3A%2F%2Fapp.circleci.com%2Fpipelines%2Fgithub%2FAtomLinter%2Flinter-stylelint
+
+##### 常见问题
+
+**如何安装包构建所依赖的其他Atom包?**
+
+​		将CI配置文件中的APM_TEST_PACKAGES环境变量设置为在运行包的测试之前要安装的包的以空格分隔的列表。
+
+```
+ env:
+ \- APM_TEST_PACKAGES="autocomplete-plus some-other-package-here
+```
+
+
+
+**哪个版本的Atom用于运行规范？**
+
+​		它将始终下载最新的可用版本。您可以在这里阅读有关最新Atom版本的更多信息：https://atom.io/releases
+
+**它是如何工作的？**
+
+​		apm test命令假定您的包使用Jasmine规范。您可以使用Atom的specrunner UI从View>Developer>runpackagespecs菜单或按cmd-ctrl-alt-p本地运行规范。您可以运行apm help test来了解有关该命令的更多信息。
+
+**GitHub操作**
+
+​		CI模板使用Atom设置操作在运行程序上安装和设置Atom。然后，脚本从包中安装依赖项，并运行apm test命令来运行包的规范。
+
+**Travis CI, CircleCI**
+
+​		CI模板从此存储库下载build-package.sh。然后，这个脚本下载最新的Atom版本，安装包的依赖项，并运行apmtest命令来运行包的规范。
+
+**Appveyor**
+
+​		appveyor.yml模板使用chocooley下载并安装最新版本的Atom。apm安装在包目录中运行，以确保任何节点依赖项都可用。最后，脚本运行apm test命令来运行包的规范。
 
 ## 4、总结
 
@@ -234,5 +331,34 @@ FROM (
 SELECT count( * )
 FROM year2020
 WHERE repo_name = 'atom/atom';
+```
+
+**2020年Atom不同月份提交pull requests的数量**
+
+```sql
+SELECT COUNT(id) AS Count,toMonth(created_at)
+  FROM year2020
+ WHERE repo_name= 'atom/atom'
+   AND type= 'PullRequestEvent'
+ GROUP BY toMonth(created_at)
+
+```
+
+**2020年Atom不同月份完成issue的数量**
+
+```sql
+SELECT COUNT(issue_closed_at) AS countOfclosed,toDate(issue_closed_at)
+  FROM year2020
+ WHERE repo_name= 'atom/atom'
+GROUP BY toDate(issue_closed_at) 
+```
+
+**统计2020年Atom不同事件的数量**
+
+```sql
+SELECT COUNT(*) AS Count, type 
+  FROM year2020
+ WHERE repo_name= 'atom/atom'
+GROUP BY type
 ```
 
