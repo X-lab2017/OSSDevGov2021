@@ -132,6 +132,40 @@ Atom日常协作主要分为一下4类：
 
 #### 3.2.2、开发者参与流程调研
 
+​		开发者参与流程调研主要分为5类：
+
+##### 开发者参与项目的行为准则
+
+​       开发者可以被接受的行为示例：使用受欢迎和包容的语言、尊重不同的观点和经验、优雅地接受建设性的批评、专注于对社区最有利的事情。
+
+​       开发者不被接受的行为示例：使用色情语言或图像以及不受欢迎的性关注或性挑逗、发布侮辱或贬损评论以及个人或政治攻击、公共或私人骚扰、未经明确许可，发布他人私人信息。
+
+##### 开发者提问或讨论的方式
+
+​       不要采用 Issue 的方式提问题，采用官方 Atom 和 Electron 留言板进行讨论或者加入 Atom 和 Electron Slack 团队，Slack 是一种聊天服务，有时社区成员需要需要几个小时才能回复，在其中使用 #atom 频道进行关于Atom的一般问题或讨论，使用 #electron 频道询问有关Electron 的问题，使用 #packages 频道进行编写或贡献 Atom 包的问题的讨论，使用 #ui 频道进行有关 Atom UI 和主题的问题的讨论。
+
+##### 开发者参与项目前的准备
+
+​        开发者在进行贡献前需要了解200多个存储库中哪一个实现想要更改或报告错误的功能，可以在 Atom 中 Settings > Packages 查看核心软件包位置，从 atom/design-decisions 存储库中查看重大决策记录
+
+##### 开发者报告错误的方式
+
+​        在创建错误报告时，包含尽可能多的详细信息，填写所需的模板，有助于更快地解决问题。如果发现一个 Closed 问题与遇到的问题相同，请打开一个新问题并在新问题的正文中包含指向原始问题的链接。
+
+​        在提交错误报告之前：检查调试指南，或许能够找到问题的原因并自行解决问题。最重要的是，检查是否可以在最新版本的 Atom 中重现该问题，是否在安全模式下运行 Atom 时出现问题，以及是否可以通过更改Atom 或包的配置设置来获得所需的行为。查看论坛上的常见问题解答以获取常见问题和问题的列表。确定应该在哪个存储库中报告问题。执行粗略搜索以查看问题是否已报告。如果有并且问题仍然存在，请为现有问题添加评论，而不是打开一个新问题。
+
+​		如何提交（好的）错误报告？错误被跟踪为GitHub 问题。在确定错误与哪个存储库相关后，在该存储库上创建问题并通过填写模板来提供以下信息。解释问题并包含其他详细信息以帮助维护人员重现问题，为问题使用清晰的描述性标题来识别问题。尽可能详细地描述重现问题的确切步骤。例如，首先解释你如何启动 Atom 的，例如在终端中使用了哪个命令，或者如何以其他方式启动 Atom。在列出步骤时，不要只说你做了什么，而是解释你是如何做的。例如，如果你将光标移动到一行的末尾，请说明你是否使用了鼠标、键盘快捷键或 Atom 命令，如果使用了，是哪一个。提供具体的例子来演示这些步骤。包括指向文件或 GitHub 项目的链接，或复制粘贴片段，你在这些示例中使用。如果你在问题中提供片段，请使用Markdown 代码块。描述在遵循这些步骤后观察到的行为，并指出该行为的问题究竟是什么。解释你希望看到的行为以及原因。如果你报告 Atom crashed，请包含一份带有来自操作系统的堆栈跟踪的崩溃报告。在 macOS 上，崩溃报告将 `Console.app` 在 “诊断和使用信息” > “用户诊断报告”下提供。将问题中的崩溃报告包含在代码块、文件附件中，或将其放入要点并提供指向该要点的链接。如果问题与性能或内存有关，请在报告中包含CPU 配置文件捕获。如果 Chrome 的开发人员工具窗格在你未触发的情况下显示，这通常意味着你的主题之一或 `styles.less`。 尝试在安全模式下运行并使用不同的主题或注释掉你的内容 `styles.less` 以查看是否可以解决问题。
+
+​		如果问题不是由特定操作触发的，请描述问题发生前你正在做什么，并使用以下指南分享更多信息。通过回答以下问题提供更多背景信息。你能在安全模式下重现这个问题吗？问题是最近开始发生的（例如，在更新到新版本的 Atom 之后）还是这一直是一个问题？如果问题最近开始发生，能否在旧版本的 Atom 中重现该问题？没有出现问题的最新版本是什么？可以从发布页面下载旧版本的 Atom 。你能可靠地重现这个问题吗？如果没有，请提供有关问题发生的频率以及通常发生的条件的详细信息。如果问题与处理文件有关（例如打开和编辑文件），问题是所有文件和项目都会出现，还是仅部分出现？问题是否仅在处理本地或远程文件（例如在网络驱动器上）、特定类型的文件（例如仅 JavaScript 或 Python 文件）、大文件或行很长的文件或特定文件中的文件时发生？编码？使用的文件还有什么特别之处吗？包括有关你的配置和环境的详细信息，使用的是哪个版本的 Atom? 可以以通过 `atom -v` 在终端中运行或通过启动 Atom 并 `Application: About` 从命令面板运行命令来获取确切版本。你使用的操作系统的名称和版本是什么？你是在虚拟机中运行 Atom 吗？如果是这样，使用的是哪种 VM 软件以及主机和使用哪些操作系统和版本？你安装了哪些软件包，可以通过运行获取该列表 `apm list --installed`。是否使用本地配置文件 `config.cson`，`keymap.cson`，`snippets.cson`，`styles.less` 和 `init.coffee` 定制的Atom？如果是这样，请提供这些文件的内容，最好在代码块中链接。你是否在多台显示器上使用 Atom？如果是这样，当你使用单个显示器时，你能重现该问题吗？你使用的是哪种键盘布局？你使用的是美国布局还是其他布局？
+
+##### 参与者参与项目拉取请求的模式
+
+​		这里描述的过程有几个目标。保持 Atom 的质量、修复对用户很重要的问题、让社区参与到尽可能最好的 Atom 中、为 Atom 的维护者提供一个可持续的系统来审查贡献。
+
+​		请按照以下步骤让维护者考虑你的贡献。遵循模板中的所有说明、遵循风格指南、提交拉取请求后，验证所有状态检查是否通过如果状态检查失败怎么办？
+
+​		虽然在审查拉取请求之前必须满足上述先决条件，但在拉取请求最终被接受之前，审查者可能会要求你完成额外的设计工作、测试或其他更改。
+
 #### 3.2.3、项目CI/CD的流程调研
 
 ## 4、总结
@@ -148,5 +182,59 @@ SELECT repo_name , COUNT(*)from (select  distinct repo_name, actor_id  from year
 
 ```sql
 SELECT org_login , COUNT(*)from (select  distinct org_login, actor_id  from year2020  where actor_id in (select DISTINCT actor_id from year2020 where repo_name = 'atom/atom' ) and repo_name != 'atom/atom') GROUP BY org_login ORDER BY count(*) desc limit 20;
+```
+
+**开发者参与项目的方式**
+
+```sql
+SELECT type, count(*)
+FROM ( 
+SELECT type, actor_id, repo_name, org_id, created_at, issue_number, issue_title, issue_body, issue_author_id, issue_author_type, issue_comments, repo_description, repo_size, 
+repo_stargazers_count, repo_forks_count, repo_language, repo_created_at, repo_updated_at, repo_pushed_at
+FROM year2020
+WHERE repo_name = 'atom/atom'
+)
+GROUP BY type;
+```
+
+**开发者参与项目的时间段**
+
+```sql
+SELECT toDayOfWeek( created_at ) as weekday, count(*)
+FROM ( 
+SELECT type, actor_id, repo_name, org_id, created_at, issue_number, issue_title, issue_body, issue_author_id, issue_author_type, issue_comments, repo_description, repo_size, 
+repo_stargazers_count, repo_forks_count, repo_language, repo_created_at, repo_updated_at, repo_pushed_at
+FROM year2020
+WHERE repo_name = 'atom/atom'
+)
+GROUP BY toDayOfWeek( created_at );
+```
+
+**参与者每日贡献波动**
+
+```sql
+SELECT * 
+FROM daily_activity
+WHERE repo_name = 'atom/atom' and toYear( date_time)=2020
+ORDER BY date_time ; 
+```
+
+**参与者人数**
+
+```sql
+SELECT count( * )
+FROM (
+    SELECT distinct actor_id
+	FROM year2020
+	WHERE repo_name = 'atom/atom'
+) 
+```
+
+**参与者涉及数据数目**
+
+```sql
+SELECT count( * )
+FROM year2020
+WHERE repo_name = 'atom/atom';
 ```
 
