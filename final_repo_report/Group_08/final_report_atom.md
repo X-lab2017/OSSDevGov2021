@@ -76,7 +76,7 @@
 
 ##### 与Atom具有最多共同开发者的项目Top10
 
-​                 ![img](https://gitee.com/yyjjtt/picture_bed/raw/master/img/DDnih5OTotVaYq-kvcr5Jg)        
+​      ![image-20210628204623193](https://gitee.com/yyjjtt/picture_bed/raw/master/img/image-20210628204623193.png)        
 
 图3.1.3.1
 
@@ -86,7 +86,7 @@
 
 ##### 与Atom具有最多共同开发者的组织Top10
 
-​                 ![img](https://gitee.com/yyjjtt/picture_bed/raw/master/img/FQMUiLgvixbXU2uBQ1UpvQ)        
+![image-20210628204723678](https://gitee.com/yyjjtt/picture_bed/raw/master/img/image-20210628204723678.png)        
 
 图3.1.3.2
 
