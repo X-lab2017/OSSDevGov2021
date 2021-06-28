@@ -26,7 +26,7 @@
 
 
 
-#### 2020 commits Top10 开发者
+#### 2020 commits Top10 开发者数据统计
 
 对仓库中2020年Commits数量前十的开发者进行了统计，具体指标有commits、additions、deletions，统计数据如下：
 
@@ -43,7 +43,7 @@
 | Wei Huang (Huang-Wei)              | 81      | 8660      | 7117      |
 | David Eads (deads2k)               | 73      | 8014      | 60147     |
 
-#### 2020 Activity Scores Top10 开发者
+#### 2020 Activity Scores Top10 开发者数据统计
 
 对仓库中各项Activity总分最高的十个开发者进行了各项数据的统计，具体指标包括Open Issue、Issue Comment、Open Pull、Pull Review Comment、Merge Pull，统计数据如下：
 
@@ -59,6 +59,12 @@
 | wojtek-t       | 16         | 1136          | 100       | 666                 | 0          | 65.48  |
 | ahg-g          | 48         | 1291          | 46        | 612                 | 0          | 63.63  |
 | andrewsykim    | 6          | 922           | 70        | 954                 | 0          | 71.07  |
+
+#### 2020 Commits 开发者分布
+
+对仓库中2020年的贡献者进行了commits数量的统计并绘制，共59名贡献者，其中22名贡献者commits数量小于20，4名贡献者commits数量大于100。
+
+![1](./1.png)
 
 ## 流程类分析
 
