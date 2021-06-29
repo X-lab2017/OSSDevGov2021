@@ -30,7 +30,7 @@
 > GROUP BY toMonth( date_time) as month, actor_login 
 > ORDER BY actor_login,  month 
 
-```
+```json
 option = {
     title: {
         text: '折线图堆叠'
@@ -105,10 +105,77 @@ option = {
         },
     ]
 };
-
 ```
 
-
+```json
+option = {
+    title: {
+        text: ''
+    },
+    tooltip: {},
+    legend: {
+        data: ['liggitt', 'neolit123','aojea',
+                'alculquicondor','Huang-Wei','wojtek-t',
+                'ahg-g','andrewsykim']
+    },
+    radar: {
+        // shape: 'circle',
+        name: {
+            textStyle: {
+                color: '#fff',
+                backgroundColor: '#999',
+                borderRadius: 3,
+                padding: [3, 5]
+            }
+        },
+        indicator: [
+            { name: 'Open Issue', max: 66},
+            { name: 'Issue Comment', max: 5062},
+            { name: 'Open Pull', max: 211},
+            { name: 'Pull Review Comment', max: 2664},
+        ]
+    },
+    series: [{
+        name: '预算 vs 开销（Budget vs spending）',
+        type: 'radar',
+        // areaStyle: {normal: {}},
+        data: [
+            {
+                value: [66,5062,211,2664],
+                name: 'liggitt'
+            },
+            {
+                value: [4,2526,70,796],
+                name: 'neolit123'
+            },
+            {
+                value: [29,2038,118,795],
+                name: 'aojea'
+            },
+            {
+                value: [53,1863,92,1213],
+                name: 'alculquicondor'
+            },
+            {
+                value: [24,1327,87,679],
+                name: 'Huang-Wei'
+            },
+            {
+                value: [16,1136,100,666],
+                name: 'wojtek-t'
+            },
+            {
+                value: [48,1291,46,612],
+                name: 'ahg-g'
+            },
+            {
+                value: [6,922,70,954],
+                name: 'andrewsykim'
+            },
+        ]
+    }]
+};
+```
 
 #### 2020 commits Top10 开发者数据统计
 
@@ -144,9 +211,15 @@ option = {
 | ahg-g          | 48         | 1291          | 46        | 612                 | 0          | 63.63  |
 | andrewsykim    | 6          | 922           | 70        | 954                 | 0          | 71.07  |
 
+#### 2020 Activity Scores Top10 用户行为
+
+对项目中各项Activity总分最高的十个开发者（对两个bot剔除）的用户行为进行了统计，如下图所示。可以看出用户liggitt在各项用户行为上都是项目主要的贡献者，每个用户在不同的贡献行为上有不同的倾向。用户alcuquicondor、ahg-g更倾向于open issue，用户ahg-g、andrewsykim更倾向于pull review comment，用户aojea、wojtek-t更倾向于open pull，用户neolit123更倾向于issue commen。
+
+![4](./4.png)
+
 #### 2020 Activity Scores Top10 开发者月度趋势
 
-对中各项Activity总分最高的十个开发者的月度趋势进行了统计（对两个bot进行剔除），如下图所示。可以看出开发者liggitt对项目的贡献最大，在全年都对项目进行着较多的贡献。7月为主力开发者贡献较多的月份，12月是贡献者贡献较少的月份。
+对项目中各项Activity总分最高的十个开发者（对两个bot剔除）的月度趋势进行了统计，如下图所示。可以看出开发者liggitt对项目的贡献最大，在全年都对项目进行着较多的贡献。7月为主力开发者贡献较多的月份，12月是贡献者贡献较少的月份。
 
 ![3](./3.png)
 
