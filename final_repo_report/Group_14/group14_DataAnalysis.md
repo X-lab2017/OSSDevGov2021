@@ -1,6 +1,6 @@
 # Vuejs项目2020年深入数据分析
 
-[TOC]
+
 
 # 摘要：
 
@@ -40,9 +40,9 @@
 
 ## 3.1 Vue社区Github apps日志时间分布立体图
 
-<img src="G:\studyProject\translate\OSSDevGov2021\final_repo_report\Group_14\Vue GitHub apps日志时间分布侧面.png" style="zoom: 67%;" />
+![](/Vue GitHub apps日志时间分布侧面.png)
 
-<img src="G:\studyProject\translate\OSSDevGov2021\final_repo_report\Group_14\Vue GitHub apps日志时间分布正面.png" style="zoom: 67%;" />
+![](/Vue GitHub apps日志时间分布正面.png)
 
 
 
@@ -50,18 +50,18 @@
 
 ## 3.2 Vue相关项目活跃度和merge_pull散点图
 
-<img src="G:\studyProject\translate\OSSDevGov2021\final_repo_report\Group_14\Vue相关项目活跃度和合并数散点图.png" style="zoom: 67%;" />
+![](/Vue相关项目活跃度和合并数散点图.png)
 
 ​		从上图中其实我们可以清晰的看到，仓库活跃度最高的是vuejs项目本身，位于左上方，但是非常有趣的是，它的merge_pull数量不算很多，经常不如那些分支下来的项目。其实我们可以明白，vuejs的下一个版本就是vue-next。开发人员将 Vue.js 描述为“用于构建用户界面的渐进式框架”。它是一个用于构建交互式 Web 界面的库。它提供具有简单灵活的 API 的数据反应组件。另一方面，vue-next 被详细描述为vue的下一个主要版本（WIP）。它是 vue 的下一个主要版本。它是一个用于构建交互式 Web 界面的库。它提供具有简单灵活的 API 的数据反应组件。所以可以很显然的得出结论，当前的vue-next还处于构建时期，merge_pull的量非常的大但是活跃度还远远不够。毕竟人们还是抱有守旧的态度。不过可以看到的趋势是未来应该是向vue-next发展的。
 
 ## 3.3 开启的PR和合并的PR
 
-<img src="G:\studyProject\translate\OSSDevGov2021\final_repo_report\Group_14\pr和合并后的pr比较.png" style="zoom: 67%;" />
+![](/pr和合并后的pr比较.png)
 
 ​		上图是将开启的pr以及合并的pr进行比较，因为数据是增量存储的，已经merge的pull依然会算作open_pull的一部分，因此可以比较直观的看出当前pr的解决情况。从图中可以了解到，先前说的vue-next是比较活跃的，因为它的open的pull有30%左右合并了，这个在开源项目的比例是比较高的，也说明开发者在项目中非常活跃，贡献质量也比较高。但是令人惊讶的是第二个项目是vue-awesome，他的合并率几乎达到了百分之百。但这也跟项目本身有关是个svg图标组件。因此尽可能会同意合并。
 
 ## 3.4 Vue 项目词云
 
-![](G:\studyProject\translate\OSSDevGov2021\final_repo_report\Group_14\Vue相关项目词云.png)
+![](/Vue相关项目词云.png)
 
 ​		从图中可以明显的看到，与vue相关的词汇中，惊人的可以发现，竟然不是vuejs而是ripe-tech/ripe-components-vue。这个是vuejs中的一个重要共享组件库。按照我们的理解就是，当一款软件开发日趋成熟的时候，软件本身可能并不是最频繁出现的，而可能是相关配套的一些组件库，第三方插件显得更加活跃。我想这个应该才是一款软件能够保持经久不息的秘诀之一吧。
