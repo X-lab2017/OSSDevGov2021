@@ -89,7 +89,7 @@ Pandas 可以从各种文件格式比如 CSV、JSON、SQL、Microsoft Excel 导�
 
 如表2-1所示，我们列出了开发这种活跃度前10名的用户名称及他们的活动统计，包括他们创建issue，merge，pull等常规操作的统计。
 
-![image-20210630102916189](D:\MyFiles\ECNU\开源社区大作业\images\image-20210630102916189.png)
+![image-20210630102916189](images\image-20210630102916189.png)
 
 <center>表2-1 pandas Top10用户操作统计</center>
 
@@ -119,11 +119,13 @@ Pandas 可以从各种文件格式比如 CSV、JSON、SQL、Microsoft Excel 导�
 
 我们统计了pandas社区中的top20活跃的开发者，并且查看这些开发者在其他项目上的活跃程度，并且提取出了较为活跃的项目绘制了图2-13的pandas相关项目关系图。
 
-![image-20210629220821729](D:\MyFiles\ECNU\开源社区大作业\images\image-20210629220821729.png)
+![image-20210629220821729](images\image-20210629220821729.png)
 
 <center>图2-13 pandas 关联项目关系图</center>
 
-### 2.4 其他数据分析
+### 2.3关联数据的分析
+
+### 2.4其他数据分析
 
 我们对2020年的日志记录进行分析，有4567人的活动与Pandas仓库相关。我们对这些开发者使用的邮箱进行了统计，其中大部分人使用了“@gmail.com”、 “@users.noreply.github.com”这两类邮箱，分别占总数的57.8%、33.1%，其他用户有使用“@tensortable.com”、“@outlook.com”、“@kth.se”等一些类型的邮箱，但占比都比较低。
 
