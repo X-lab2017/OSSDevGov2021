@@ -28,20 +28,20 @@
 |  排名  |  项目   | 数量  |
 |  ----  |  ----  | ----  |
 | 1 | labuladong/fucking-algorithm |	81980 |
-| 2 | jwasham/coding-interview-university | 	63216 | 
-| 3 | kamranahmedse/developer-roadmap | 	54291 | 
-| 4 | public-apis/public-apis | 	40661 | 
-| 5 | donnemartin/system-design-primer	 | 40404 | 
-| 6 | EbookFoundation/free-programming-books | 	40061 | 
-| 7 | TheAlgorithms/Python	 | 36529 | 
-| 8 | danistefanovic/build-your-own-x | 	36519 | 
-| 9 | CyC2018/CS-Notes	 | 35388 | 
-| 10 | microsoft/PowerToys | 	35338 | 
-| 11 | trekhleb/javascript-algorithms | 	35020 | 
-| 12 | flutter/flutter | 	33132 | 
-| 13 | Snailclimb/JavaGuide	 | 32800 | 
-| 14 | denoland/deno | 	32786 |  
-| 15 | sindresorhus/awesome	 | 30580 | 
+| 2 | jwasham/coding-interview-university | 	63216 |
+| 3 | kamranahmedse/developer-roadmap | 	54291 |
+| 4 | public-apis/public-apis | 	40661 |
+| 5 | donnemartin/system-design-primer	 | 40404 |
+| 6 | EbookFoundation/free-programming-books | 	40061 |
+| 7 | TheAlgorithms/Python	 | 36529 |
+| 8 | danistefanovic/build-your-own-x | 	36519 |
+| 9 | CyC2018/CS-Notes	 | 35388 |
+| 10 | microsoft/PowerToys | 	35338 |
+| 11 | trekhleb/javascript-algorithms | 	35020 |
+| 12 | flutter/flutter | 	33132 |
+| 13 | Snailclimb/JavaGuide	 | 32800 |
+| 14 | denoland/deno | 	32786 |
+| 15 | sindresorhus/awesome	 | 30580 |
 
 统计得到的结果还是比较让人诧异的，上面几个项目好多都不是大家都知道的有名的开源项目。其中一个原因是，这里统计的是2020年，watch数量增长最快的15个项目。
 
@@ -72,9 +72,19 @@
 可以看出来github上的项目，主要还是用js和html的比较多，有可能是因为前端代码比较长，且前端项目较多。
 后端最受欢迎的语言依然是Java~
 
-## 2、总体宏观统计结果
+## 2、pingCap/tidb分析
 
-本次使用2020 年全年 GitHub 日志进行统计，主要对pingcap/tidb这个开源项目进行分析。
+本次使用2020 年全年 GitHub 日志进行统计，主要对pingcap/tidb这个开源项目进行分析。本节主要分析了开发者的统计信息以及和该项目协作度高的其他项目。
+
+这里使用了year2020表, daily_activity表的数据来进行分析，
+
+数据说明:
+
+- year表归档了github各个事件的产生的日志记录
+  - 事件描述参考：https://docs.github.com/cn/developers/webhooks-and-events/events/github-event-types
+  - 字段描述参考：https://github.com/X-lab2017/open-digger/blob/master/docs/assets/data_description.csv
+
+- daily_activity表存储了2015-2020某个开发者参与某个项目产生的日活跃度daily_score，以及其他事件计数issue_comment、open_issue、open_pull、pull_review_comment、merge_pull、star、fork
 
 ### 2.1 TIDB Top 10 开发者账号
 
