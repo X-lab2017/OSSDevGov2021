@@ -271,6 +271,88 @@ Github Apps的日志时间分布情况统计如图所示，x轴是以小时计�
 
 ### 3.3 项目CI/CD的流程调研
 
+​	  开发者提交拉取请求后，pandas 测试套件将在 Travis-CI 和 Azure Pipelines 持续集成服务上自动运行。 但是，如果开发者希望在提交拉取请求之前在分支上运行测试套件，则需要将持续集成服务挂钩到自己的 GitHub 仓库。
 
+#### 3.3.1 基于Travis CI的持续集成
+
+​	Travis CI 提供的是持续集成服务（Continuous Integration，简称 CI）。它绑定 Github 上面的项目，只要有新的代码，就会自动抓取。然后，提供一个运行环境，执行测试，完成构建，还能部署到服务器。
+
+​	持续集成指的是只要代码有变更，就自动运行构建和测试，反馈运行结果。确保符合预期以后，再将新代码"集成"到主干。
+
+##### 使用准备：
+
+- 拥有 GitHub 帐号
+- 该帐号下面有一个项目
+- 该项目里面有可运行的代码
+- 该项目还包含构建或测试脚本
+
+##### 监听仓库：
+
+​	首先，访问官方网站 [travis-ci.org](https://travis-ci.org/)，点击右上角的个人头像，使用 Github 账户登入 Travis CI。             Travis 会列出 Github 上面你的所有仓库，以及你所属于的组织。此时，选择你需要 Travis 帮你构建的仓库，打开仓库旁边的开关。一旦激活了一个仓库，Travis 会监听这个仓库的所有变化。
+
+##### 准备.travis.yml文件：
+
+Travis 要求项目的根目录下面，必须有一个`.travis.yml`文件。这是配置文件，指定了 Travis 的行为。该文件必须保存在 Github 仓库里面，一旦代码仓库有新的 Commit，Travis 就会去找这个文件，执行里面的命令。
+
+这个文件采用 [YAML](https://www.ruanyifeng.com/blog/2016/07/yaml.html) 格式。下面是一个最简单的 Python 项目的`.travis.yml`文件：
+
+```
+language: python
+sudo: required
+before_install: sudo pip install foo
+script: py.test
+```
+
+##### install阶段：
+
+install字段用来指定安装脚本。
+
+```
+install: ./install-dependencies.sh
+```
+
+##### script阶段：
+
+script字段用来指定构建或者测试脚本
+
+```javascript
+script: bundle exec thor build
+```
+
+如果有多个脚本可以写成下面的形式
+
+```javascript
+script:
+  - command1
+  - command2
+```
+
+注意，`script`与`install`不一样，如果`command1`失败，`command2`会继续执行。但是，整个构建阶段的状态是失败。
+
+如果`command2`只有在`command1`成功后才能执行，就要写成下面这样。
+
+```javascript
+script: command1 && command2
+```
+
+#### 3.3.2 基于Azure Pipelines实现持续交付
+
+##### 1、为应用代码创建存储库
+
+如果已有一个应用可以使用，请确保已将其提交到 GitHub 存储库
+
+##### 2、预配目标Azure 应用服务
+
+创建应用服务实例的最快方法是通过交互式 (CLI) Azure 命令行Azure Cloud Shell。
+
+##### 3、创建Azure DevOps项目并连接到 Azure
+
+若要从 Azure 应用服务部署Azure Pipelines，需要在两个 *服务之间* 建立服务连接。
+
+##### 4、创建特定于该应用程序的管道以部署到应用服务
+
+##### 5、运行管道及部署脚本并且清理资源
 
 ## 4 总结
+
+​	通过上述的关于Pandas社区的基本数据分析以及社区开发者行为等各方面的分析，我们可以知道Pandas目前已经进入了一个稳定的发展期并且持续火热，多年来一直受到开发者的关注。目前仍有相当多的issue产生，主要是关于bug的修复以及文档的更新，且大部分的issue都是最近两年由开发者提出的。近10年的热门搜索区域可以看到Pandas在全球的使用比较广泛，足以说明它作为一个数据处理库的卓越性，也一定程度上反映了近几年内人工智能的快速发展热潮。
