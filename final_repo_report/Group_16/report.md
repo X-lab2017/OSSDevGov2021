@@ -1,4 +1,55 @@
-## 开发者分析
+# 2020年Flutter项目数据分析及社区分析
+
+## 1. 引言
+Flutter是谷歌的移动UI框架，可以快速在iOS和Android上构建高质量的原生用户界面。
+Flutter可以与现有的代码一起工作，其拥有丰富的工具和库，可以帮助开发者轻松地同时在iOS和Android系统中实现自己的想法和创意。
+在全世界，Flutter正在被越来越多的开发者和组织使用，
+本报告将分析2020年Flutter项目数据和社区动态。
+
+## 2. 数据分析
+
+### 2.1基础数据统计
+
+- 2020最活跃的前十个项目
+
+|  序号  | 项目 | 
+| :---: | :--: |
+|   1   | pddemo/demo |  
+|   2   | google-test/signcla-probe-repo |  
+|   3   | test-organization-kkjeer/app-test |  
+|   4   | elastic/kibana |  
+|   5   | test-organization-kkjeer/bot-validation |  
+|   6   | ouyanxia2/hgmgmg |   
+|   7   | imamandrews/imamandrews.github.io |  
+|   8   | kubernetes/kubernetes |  
+|   9   | flutter/flutter |  
+|   10  | NixOS/nixpkgs |  
+
+flutter/flutter是2020年最活跃的十个项目之一，全年共打开了issus数**17538**，新增star数**33130**，fork数**6714**。2020年flutter日志总数为**243853**，下图展示flutter项目近五年日志数的趋势图，可以看出，该项目自2018年以来活跃度显著增加。
+![image](image/5.png)
+
+<!-- 243853 196270 124601 53908 39683 -->
+<!-- 活跃开发者账号数 -->
+
+- issue数和PR数
+
+我们统计了Flutter项目在2020年每月提出的issue数和PR数，
+如下图所示，月均提出issue数为**2165**，月均提出PR数为**1214**，总体趋势较稳定，整体表现为非常活跃。
+![image](image/1.png)
+
+- start数和fork数
+
+下图展示了Flutter项目每月新增的start数和fork数，
+每月新增start数在1800以上，每月fork数在400~600之间。
+![image](image/2.png)
+
+- 各事件的贡献度
+
+我们统计了2020年所有参与Flutter项目的开发者在周维度内对各事件的贡献度。我们可以明显看出，开发者在工作日的活跃度较高。其中，红色（IssuesEvent）和黄色部分(WatchEvent)占比最高，在工作日时，绿色部分（PullRequestReviewCommentEvent）占比也比较高。
+![image](image/4.png)
+
+
+### 2.2开发者分析
 
 - flutter开发者人数和活跃度发展情况
 
@@ -43,8 +94,13 @@
 
 ![scatter-single-axis](image/scatter-single-axis.png)
 
-# 相关项目分析
+### 2.3相关项目分析
 
 此部分统计了flutter贡献度Top20的开发者参与较为活跃度项目，形成了flutter开发者关联仓库关系图。下图中黄色节点代表flutter项目，绿色节点代表开发者，蓝色节点代表其他项目。可以看到flutter开发者贡献力较高的项目angular/angular等也是前端框架，而也有flutter_map、flutter/plugins等flutter相关项目。
 
 ![d253e5b48b29dccb57d0c70a4c90a24](image/def0b0140d560999b0d06e8314e49b9.png)
+
+## 3. 流程分析
+
+## 4. 总结
+
