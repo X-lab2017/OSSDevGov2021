@@ -18,6 +18,12 @@ Github事件数是一个项目活跃程度的重要参照指标，因此在基�
 
 为了进一步分析Github事件数的变化趋势，上图绘制了三种重要的事件（PR数量、Fork数量、关闭Issue数量）在2015/9~2021/6间按月的变化趋势。可以看到PR数量和Issue数量稳步下降，这同样反映了Kubernetes已经日趋成熟的趋势。但Fork数量在2015/9~2021/6不存在很大变化，这反映了参与Kubernetes的热度丝毫未减。
 
+另一个考察开发热度的方法是统计解决Issue的平均时间，该事件越短，说明社区开发热度越高，解决问题越积极。
+
+<img src="./images/issue_close_time.png" alt="Star数量按月变化趋势" width="500"/>
+
+上图反映了2015~2021每年度Issue的平均解决事件，可以看到今年来Issue的平均解决事件有了一定的增长，结合之前Issue数量逐年下降的趋势，也能够得到Kubernetes现已趋于成熟，开发热度略有下降的结论。
+
 <img src="./images/star_by_month.png" alt="Star数量按月变化趋势" width="500"/>
 
 上图是Kubernetes仓库Star数量按月的变化趋势。可以看到从2015/9~2021/6，Star数量稳步从1万增长到8万，反映了Kubernetes在开发者中极高的热度。
@@ -32,5 +38,9 @@ Kubernetes的社区活动被组织成若干个SIG（Special Interest Group）。
 为了评估Kubernetes SIGs组织下项目的热度，下图绘制了各项目的Star数量。可以看到，约一半的SIG项目的Star数量都不超过100，但也存在如kubespary等项目Star数量到达10000。
 
 <img src="./images/sig_star.png" alt="Kubernetes SIGs组织下项目的Star数量" width="500"/>
+
+下图从另一个角度--Github事件数比较了Kubernetes SIG组织下项目的热度。可以看到Github事件数呈现与Star数量相同的幂律分布。不过，Github事件数量反映的最活跃项目与Star数量反映的最热项目并不完全一致。具有最多Star的项目kubespray在Github事件数量排行榜中名列第3，具有最多Github事件数量的项目cluster-api在Star排行榜中名列第12。
+
+<img src="./images/sig_event.png" alt="Kubernetes SIGs组织下项目的Star数量" width="500"/>
 
 ## 2. 协作流程调研
