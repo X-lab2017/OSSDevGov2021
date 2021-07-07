@@ -290,4 +290,3 @@ Apache Spark 存储库提供了一种在 GitHub Actions 中运行基准测试的
 
 ![image-20210706211434721](img/image-20210706211434721.png)
 
-1. 
