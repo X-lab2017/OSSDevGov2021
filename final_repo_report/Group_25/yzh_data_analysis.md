@@ -54,7 +54,46 @@ Zoom会议、会议议程/笔记，这些内容可以在对应社区小组/SIGs�
 下面简要介绍社区小组的交流和协作的方式：
 
 #### 邮件列表
-#### 
+邮件列表是大部分SIG和子项目的最主要的异步协作方式，邮件列表中的人分为四种角色：管理员、邮件列表拥有者、协调员、订阅者。管理员是Kubernetes项目统一组织的一类人员，专门负责对各个邮件列表的日常管理。邮件列表拥有者通常是邮件列表的创建者，即SIG的管理者。协调员负责对新用户发送的邮件进行审核，并组织年度邮件列表的Review。订阅者即为普通的开发者，可以接收邮件列表中的邮件并向邮件列表发送新的邮件。
+
+具体邮件列表相关事项可以参见[mailing-list-guidelines](https://github.com/kubernetes/community/blob/master/communication/mailing-list-guidelines.md)
+
+#### Slack Channel
+Kubernetes通过Slack进行实时交流。开发人员和Kubernetes爱好者分布在近250个Channel，这些Channel由sig-contributor-experience拥有和统一运营。
+
+Kubernetes Slack Channel开放申请，任何有关Kubernetes话题的讨论都可以申请新的Channel。
+
+具体Slack相关事项可以参考[slack-guidelines](https://github.com/kubernetes/community/blob/master/communication/slack-guidelines.md)
+
+#### 论坛
+Kubernetes的论坛称为[Discuss Kubernetes](https://discuss.kubernetes.io/)，用户可以在这里讨论各种Kubernetes生态相关的内容。此外，每个SIG还对应专门的Google Group，用户可以从[SIG列表](https://github.com/kubernetes/community/blob/master/sig-list.md)中的链接选择加入。
+
+#### 日历和Zoom会议
+Kubernetes的所有小组会议通过Zoom进行，Zoom会议的日程被放在个共享的日历上。需要发布新的会议需要联系Slack上的sig-contribex Channel。
+
+日历相关事项可以参考[calendar-guidelines](https://github.com/kubernetes/community/blob/master/communication/calendar-guidelines.md)，Zoom会议相关事项可以参考[zoom-guidelines](https://github.com/kubernetes/community/blob/master/communication/zoom-guidelines.md)。
+
+#### 网站
+Kubernetes的官方文件发布在 https://kubernets.io。
+
+网站相关事项可以参考[website-guidelines](https://github.com/kubernetes/community/blob/master/communication/website-guidelines.md)。
+
+#### Twitter
+Kubernetes的Twitter账号由CNCF拥有和运营，相关事项可以联系 social@cncf.io。
+
+#### Youtube
+Kubernetes的Youtube账号由sig-contribex社区管理子项目拥有和运营，其中存放了社区小组的会议录像。
+
+Youtube相关事项可以参考[youtube-guidelines](https://github.com/kubernetes/community/blob/master/communication/website-guidelines.md)。
+
+#### Kubernetes周报
+Kubernetes周报（LWKD）由Josh Berkus拥有和运营。
+
+详情可以参见 https://lwkd.info。
+
+#### Kubernetes博客
+[Kubernetes博客](https://kubernetes.io/blog/)由sig-docs所有，由博客团队运营。
+
 ### 2.2 开发者参与流程调研
 
 ### 2.3 项目CI/CD的流程调研
