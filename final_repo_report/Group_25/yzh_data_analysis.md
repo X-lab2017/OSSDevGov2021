@@ -44,3 +44,17 @@ Kubernetes的社区活动被组织成若干个SIG（Special Interest Group）。
 <img src="./images/sig_event.png" alt="Kubernetes SIGs组织下项目的Star数量" width="500"/>
 
 ## 2. 协作流程调研
+
+### 2.1 项目的日常协作流程调研
+Kubernetes包含了许多项目，这些项目被组织成若干社区小组，所有的协作通过这些社区小组进行。小组中负责管理文档和代码库的一类被称为SIG（Special Interest Group）。社区小区的协作渠道包括邮件列表、Slack频道、
+Zoom会议、会议议程/笔记，这些内容可以在对应社区小组/SIGs页面上的README中找到。
+
+除此之外，每月Kubernetes社区还会通过Zoom组织社区会议，可以在[Google Doc](https://docs.google.com/document/d/1VQDIAB0OqiSjIHI8AWMvSdceWhnz56jNpZrLs6o7NJY/edit)上找到对应会议的议程。每年Kubernetes社区会举办若干次的KubeCon/CloudNativeCon，开发者也可以现场参会进行交流或观看[Youtube上的录播](https://www.youtube.com/channel/UCvqbFHwN-nwalWPjPUKpvTA)。
+
+下面简要介绍社区小组的交流和协作的方式：
+
+#### 邮件列表
+#### 
+### 2.2 开发者参与流程调研
+
+### 2.3 项目CI/CD的流程调研
