@@ -63,15 +63,15 @@ Pandas 可以从各种文件格式比如 CSV、JSON、SQL、Microsoft Excel 导�
 
 <center>表2-1：关联issue最多的十个开发者</center>
 
-此外，我们还统计了Pandas仓库每月的活跃度，如图6所示。从图中可以看到Pandas月活跃度呈现波浪上升的态势，说明Pandas仓库越来越受到开发者的喜爱。图中2018年3月活跃度明显偏高，结合前面的分析可以发现fork数也在这个月明显偏高，这一定是Pandas发展里程碑中的重要时刻。从图7中可以发现活跃度与仓库活动参与人数呈正相关性。
+此外，我们还统计了Pandas仓库每月的活跃度，如图2-6所示。从图中可以看到Pandas月活跃度呈现波浪上升的态势，说明Pandas仓库越来越受到开发者的喜爱。图中2018年3月活跃度明显偏高，结合前面的分析可以发现fork数也在这个月明显偏高，这一定是Pandas发展里程碑中的重要时刻。从图7中可以发现活跃度与仓库活动参与人数呈正相关性。
 
 ![image-20210629163742131](images/active-1625186946383.png)
 
-<center>图2-6：Pandas活跃度</center>
+<center>图2-6a：Pandas活跃度</center>
 
 ![image-20210629163839411](images/activeVsPeople-1625186946384.png)
 
-<center>图2-7：Pandas中活跃度和参与人数的关系</center>
+<center>图2-6b：Pandas中活跃度和参与人数的关系</center>
 
 ### 2.2开发者数据统计、可视化
 
@@ -117,13 +117,15 @@ Pandas 可以从各种文件格式比如 CSV、JSON、SQL、Microsoft Excel 导�
 
 <center>图2-12 pandas 用户每周每天提交代码次数统计</center>
 
+### 2.3关联数据的分析
+
 我们统计了pandas社区中的top20活跃的开发者，并且查看这些开发者在其他项目上的活跃程度，并且提取出了较为活跃的项目绘制了图2-13的pandas相关项目关系图。
 
 ![image-20210629220821729](images\image-20210629220821729.png)
 
 <center>图2-13 pandas 关联项目关系图</center>
 
-### 2.3关联数据的分析
+
 
 ### 2.4其他数据分析
 
@@ -131,29 +133,29 @@ Pandas 可以从各种文件格式比如 CSV、JSON、SQL、Microsoft Excel 导�
 
 ![image-20210629164938944](images/email-1625187031722.png)
 
-<center>图：Pandas参与者邮箱使用情况</center>
+<center>图2-14：Pandas参与者邮箱使用情况</center>
 
 如图所示，使用google搜索指数工具对关键词“pandas”进行分析可以发现，近十年来，pandas的搜索热度总体呈现上升趋势，2020年4月以来也有一个短暂的下滑，分析可能和疫情有一定相关性。
 
 ![image-20210629165545711](images/searchHot-1625187031722.png)
 
-<center>图：Pandas搜索热度</center>
+<center>图2-15：Pandas搜索热度</center>
 
 近10年的热门搜索区域如图所示，可以看到Pandas在全球的使用比较广泛，足以说明其作为一个数据处理库的卓越性。对比近5年与近10年的热门热门区域可以发现，中国从第五位上升到第一位，足以见得国人对Pandas库的喜爱，当然也一定程度上反映了近几年国内人工智能的快速发展热潮。
 
 ![image-20210629170106528](images/region10-1625187031722.png)
 
-<center>图：Pandas近10年热门搜索区域</center>
+<center>图2-16：Pandas近10年热门搜索区域</center>
 
 ![image-20210629170453824](images/region5-1625187031722.png)
 
-<center>图：Pandas近5年热门搜索区域</center>
+<center>图2-17：Pandas近5年热门搜索区域</center>
 
 Github Apps的日志时间分布情况统计如图所示，x轴是以小时计数的时间，y轴是以日期计数的星期数。通过观察可以发现开发者的主要工作时间为上午8点到晚上9点，周末尤其是周六开发者的工作明显减少。
 
 ![image-20210629171004688](images/logTime-1625187031722.png)
 
-<center>图：Github Apps的日志时间分布情况</center>
+<center>图2-18：Github Apps的日志时间分布情况</center>
 
 2020年与仓库名称与pandas有关联的活跃仓库为16108个，有1931个名称是“%/pandas”，为fork仓库。查阅其中部分仓库发现其余仓库主要是一些使用了pandas的项目仓库，其中也有很大一部分仓库是与pandas使用教学相关联的。
 
