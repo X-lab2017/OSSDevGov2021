@@ -45,7 +45,7 @@ Elasticsearch 是一个分布式的免费开源搜索和分析引擎，适用于
 
 1. Elasticsearch 2020 年开发者账号活跃度统计 Top 10
 
-   <img src="D:\Download\开源课\OSSDevGov2021\final_repo_report\Group06\assets\工作表 1.png" alt="工作表 1" style="zoom:60%;" />
+   <img src="./assets/工作表 1.png" alt="工作表 1" style="zoom:60%;" />
 
    ​                                            **图3  Elasticsearch 2020 年开发者账号活跃度统计 Top 10**
 
@@ -53,7 +53,7 @@ Elasticsearch 是一个分布式的免费开源搜索和分析引擎，适用于
 
 2. Elasticsearch 2020 年开发者工作时间分布
 
-   <img src="D:\Download\开源课\OSSDevGov2021\final_repo_report\Group06\assets\工作表 2.png" alt="工作表 2" style="zoom: 50%;" />
+   <img src="./assets/工作表 2.png" alt="工作表 2" style="zoom: 50%;" />
 
    ​                                             **图4  Elasticsearch 2020 年开发者工作时间分布**
 
@@ -61,7 +61,7 @@ Elasticsearch 是一个分布式的免费开源搜索和分析引擎，适用于
 
 3. 与 Elasticsearch 2020 年协作关联度高的 10 个项目
 
-   <img src="D:\Download\开源课\OSSDevGov2021\final_repo_report\Group06\assets\工作表 3.png" alt="工作表 3" style="zoom: 50%;" />
+   <img src="./assets/工作表 3.png" alt="工作表 3" style="zoom: 50%;" />
 
    ​                                            **图5  与 Elasticsearch 2020 年协作关联度高的 10 个项目**
 
