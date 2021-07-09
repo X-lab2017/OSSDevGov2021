@@ -43,6 +43,30 @@ Elasticsearch 是一个分布式的免费开源搜索和分析引擎，适用于
 
 ### 2.2 开发者数据分析
 
+1. Elasticsearch 2020 年开发者账号活跃度统计 Top 10
+
+   <img src="D:\Download\开源课\OSSDevGov2021\final_repo_report\Group06\assets\工作表 1.png" alt="工作表 1" style="zoom:60%;" />
+
+   ​                                            **图3  Elasticsearch 2020 年开发者账号活跃度统计 Top 10**
+
+   图 3 是 Elasticsearch 2020 年开发者账号活跃度统计 Top 10 的可视化，图中黄色代表的是 Elasticsearch 项目在 2020 年里最活跃、做出共享最大的十个开发者的活跃度，青色代表的是这个十个开发者的 Issue Comment 的数量。其中，排名第一的是 Elasticsearch 的 bot。剩下的九人中，除了 nik9000 和 danhermann 以外，剩下的七个开发者均来自 Elastic 公司。这说明 Elasticsearch 项目主要还是由 Elastic 公司里相关项目组的人在负责开发和维护。
+
+2. Elasticsearch 2020 年开发者工作时间分布
+
+   <img src="D:\Download\开源课\OSSDevGov2021\final_repo_report\Group06\assets\工作表 2.png" alt="工作表 2" style="zoom: 50%;" />
+
+   ​                                             **图4  Elasticsearch 2020 年开发者工作时间分布**
+
+   图 4 是 Elasticsearch 2020 年开发者工作时间分布的可视化，图的横向是一天中的时段，纵向是一周中的时段，中间点的大小和深浅代表了项目的活跃度。从图中可以看出，在周一到周五的正常工作时间，是开发者工作时间最集中的部分。结合图3可以说明，Elastic 公司属于不加班的公司。
+
+3. 与 Elasticsearch 2020 年协作关联度高的 10 个项目
+
+   <img src="D:\Download\开源课\OSSDevGov2021\final_repo_report\Group06\assets\工作表 3.png" alt="工作表 3" style="zoom: 50%;" />
+
+   ​                                            **图5  与 Elasticsearch 2020 年协作关联度高的 10 个项目**
+
+   图 5 是与 Elasticsearch 2020 年协作关联度高的 10 个项目 的词云图。可以看到 elastic/kibana 和其它项目的关联度拉开了极大的差距，这可以说明 elastic/kibana 和 elasticsearch 项目有着部分的开发者重合。
+
 ### 2.3 关联数据分析
 
 ## 3、流程类分析
@@ -108,6 +132,74 @@ Elasticsearch 代码库中的 Java 文件是使用 Spotless Gradle 插件自动�
 9. 项目布局构建
 
 ### 3.2 开发者参与流程调研
+
+Elasticsearch 是一个免费且开源的项目，我们乐意收到来自社区的你的贡献。贡献方式的有很多，从编写教程或博客文章、改进文档、提交错误报告和功能请求以及编写可以合并到 Elasticsearch 本身的代码。
+
+1. 提交 Bug 
+
+   首先，当发现了 bug，开发者要确保自己是针对最新的 Elasticsearch 进行测试。如果 bug 还是未得到修复，再去 issues list 中搜索是否已经有类似的问题，以防 issue 的重复提交。
+
+   当以上都确保了以后，需要提供 bug 的测试用例，以方便 Elasticsearch 团队来运行和确认这个 bug，并修复。测试用例应该用`curl`命令提供，以方便复制粘贴至终端中运行。比如：
+
+   ``` 
+   # delete the index
+   curl -XDELETE localhost:9200/test
+   
+   # insert a document
+   curl -XPUT localhost:9200/test/test/1 -d '{
+    "title": "test document"
+   }'
+   
+   # this should return XXXX but instead returns YYY
+   curl ....
+   ```
+
+   
+
+2. 提交新功能
+
+   首先，和 bug reports 一样，当想要在 Elasticsearch 中添加不存在的新功能时，应该先考虑下是否可能已经有人提出过类似的想法了。打开 issues list 搜索一下是否有类似的 issue，若没有则可以新开一个 issue 描述希望新添加的功能、为什么需要添加以及新功能运行的机制原理。
+
+   
+
+3. 贡献代码和修改文档
+
+   如果想为 Elasticsearch 贡献新功能或错误修复，需要先在 Github 问题上讨论想法。如想法没有类似的 issue，则需要新开一个。通常有多种方法可以解决问题，在将时间花在无法合并的 PR 上之前，找到正确的方法很重要。
+
+   `help wanted` 标签添加到特别欢迎社区贡献的现有 Github 问题中，`good first issue`标签则标记适合新贡献者的问题。
+
+   1. 分叉并克隆仓库
+
+      首先需要 fork 主 Elasticsearch 代码或文档仓库并将其克隆到自己的本地。
+
+   2. 修改代码的一些提示
+
+      在提出拉取请求之前遵循这些提示将加快审查周期：
+
+      - 添加适当的单元测试。
+      - 添加集成测试。
+      - 确保您添加的代码遵循[格式指南](https://github.com/elastic/elasticsearch/blob/master/CONTRIBUTING.md#java-language-formatting-guidelines)。
+      - 不应编辑不属于更改的行。
+
+   3. 提交更改
+
+      ​	提交以供审核前的需要的准备：
+
+      - 测试修改
+
+        运行测试套件以确保没有损坏。有关运行测试的帮助，请参阅 [TESTING](https://github.com/elastic/elasticsearch/blob/master/TESTING.asciidoc) 文件。
+
+      - 签署贡献者许可协议
+
+        请确保已经签署[贡献者许可协议](https://www.elastic.co/contributor-agreement/)。
+
+      - 更新调整
+
+        使用来自主 Elasticsearch 仓库的最新代码来更新本地仓库，并将分支重新建立在最新的主分支之上。
+
+      - 提交拉取请求
+
+        将本地更改推送到存储库的分叉副本并[提交拉取请求](https://help.github.com/articles/using-pull-requests)。在拉取请求中，选择一个总结您所做更改的标题，并在正文中提供有关您所做更改的更多详细信息。
 
 ### 3.3 项目 CI/CD 的流程调研
 
