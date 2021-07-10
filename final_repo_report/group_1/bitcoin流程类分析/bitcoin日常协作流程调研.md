@@ -232,4 +232,4 @@ Rebased-From: <commit hash of the original commit>
 
 ## 版权
 
-通过向此存储库做出贡献需同意在 MIT 许可下许可您的工作，除非`contrib/debian/copyright`在文件本身中或顶部另有说明。在您不是原作者的情况下贡献的任何作品都必须包含其原始作者和来源的许可标头。
+通过向此存储库做出贡献需同意在 MIT 下许可工作，除非`contrib/debian/copyright`在文件本身中或顶部另有说明。在不是原作者的情况下贡献的任何作品都必须包含其原始作者和来源的许可标头。
