@@ -152,7 +152,7 @@ rvm install 2.7.1
 
 ### 3.3项目CI/CD的流程调研
 
-主要用 Jenkins 构建 CI/CD 流水线
+主要使用 Jenkins 构建 CI/CD 流水线
 
 打开一个终端窗口，并使用 `cd <your path>` 进入下载 Jenkins 的目录。（在继续之前，请确保已安装 JDK 并将其添加到环境路径。）执行以下命令，该命令将 WAR 文件作为可执行二进制文件运行：
 
