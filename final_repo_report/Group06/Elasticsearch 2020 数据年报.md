@@ -69,6 +69,20 @@ Elasticsearch 是一个分布式的免费开源搜索和分析引擎，适用于
 
 ### 2.3 关联数据分析
 
+​		开发者关联分析：Elasticsearch 2020 年开发者账号活跃度统计 Top 10中第一名是elasticmachine，名字听起来像是一个机器人的名字，事实上其2020年在github上共有1840项contributions，并没有公开任何库, contribution图如下：
+
+<img src="./assets/elasticmachine'Contribution.png" alt="工作表 3" style="zoom: 50%;" />而elasticmachine在2020年所贡献的开源项目如下图所示。可以看出其所参与项目都是与elasticsearch相关的项目，contribution第一名的Kibna和第三名的beats都是可以在官网中可以查到的项目。
+
+​		其中Kibana 是一个免费且开放的用户界面，能够让您对 Elasticsearch 数据进行可视化，并让您在 Elastic Stack 中进行导航。您可以进行各种操作，从跟踪查询负载，到理解请求如何流经您的整个应用，都能轻松完成。而轻量型数据采集器Beats 是一个免费且开放的平台，集合了多种单一用途数据采集器。它们从成百上千或成千上万台机器和系统向 Logstash 或 Elasticsearch 发送数据。
+
+<img src="./assets/ContributionsofElasticMachine.png" alt="工作表 3" style="zoom: 50%;" />
+
+​		贡献榜第二名的jrodewig是elasticsearch的主要开发者，负责很多elasticsearch的开发项目，2020年其所参与的在github上开源的项目前10如下:
+
+<img src="./assets/Jrodewig.png" alt="工作表 3" style="zoom: 50%;" />
+
+​		可以看的Jrodewig所参与的项目几乎都是与elasticsearch的项目，Kibana是其主要负责项目，我们并未看到其参与elastic/beats项目中。
+
 ## 3、流程类分析
 
 ### 3.1 项目日常协作流程调研
@@ -202,6 +216,22 @@ Elasticsearch 是一个免费且开源的项目，我们乐意收到来自社区
         将本地更改推送到存储库的分叉副本并[提交拉取请求](https://help.github.com/articles/using-pull-requests)。在拉取请求中，选择一个总结您所做更改的标题，并在正文中提供有关您所做更改的更多详细信息。
 
 ### 3.3 项目 CI/CD 的流程调研
+
+​		CI/CD 是一种通过在应用开发阶段引入[自动化](https://www.redhat.com/zh/topics/automation/whats-it-automation)来频繁向客户交付应用的方法。CI/CD 的核心概念是持续集成、[持续交付](https://www.redhat.com/zh/topics/devops/what-is-continuous-delivery)和持续部署。作为一个面向开发和运营团队的解决方案，CI/CD 主要针对在集成新代码时所引发的问题（亦称：“[集成地狱](https://www.solutionsiq.com/agile-glossary/integration-hell/)”）。
+
+​		具体而言，CI/CD 可让持续自动化和持续监控贯穿于应用的整个生命周期（从集成和测试阶段，到交付和部署）。这些关联的事务通常被统称为“CI/CD 管道”，由[开发和运维团队](https://www.redhat.com/zh/topics/devops)以敏捷方式协同支持。
+
+​		Elasticsearch是一个很好的工具。 随着时间的推移，拉动大量数据以及统计分析中的烘焙卓越是卓越的。 我们捕获的所有度量标准都来自推出我们的CI / CD管道的消息。 这些消息在Elasticsearch API中触发并进入其自己的索引。AWS ElasticSearch 提供服务，他预装在Elastic Kibana里.
+
+#### Elasticsearch 的 CI 配置
+
+​		ELasticsearch定期通过相当多的测试周期，包括在每次新提交之后并连续触发。登记后，Elasticsearch代码库通过一组自动化测试（在很大程度上灵感来自Apache Lucene本身的内容）。 在每个提交时，烟雾测试验证了系统可以内置的，以及是否可以构建基本功能（连接到生成的搜索服务器，安装插件等）。通过此初始理智检查的构建进一步审查。 执行Java单元和集成测试套件，验证后兼容兼容性（适用）之后。 最后，检查其余测试。
+
+​		除了这些检查外，还在几个硬件配置和操作系统上连续运行所有Java级别检查。 所有工作都是Jenkins管理。 减少我们设置中手动配置开销的关键是一个积极的自动化策略。 对于云尤其，它需要快速支付专用脚本，用于初始化测试所需的所有实例类型。 在我们的情况下，这包括能够旋转任何拓扑的集群来测试各种摄入方案。CI由Jenkins运行Elasticsearch-CI。 Jobs Live在作业中的目录中，这些都是使用语法Simmill到JJB的yml中定义的。 不允许宏，并且必须在其自己的文件中定义每个作业。 默认配置的合并是自定义的，因此与标准JJB不同，它会返回到YML对象中。 进一步（内部）设置的文档可用。	
+
+#### Elasticsearch 的 CD 配置
+
+​	我们从elasticsearch和官网搜索CD配置，未找到比较准确的持续部署信息。
 
 ## 4、总结
 
