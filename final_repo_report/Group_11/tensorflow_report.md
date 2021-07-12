@@ -121,7 +121,7 @@ b. tensorflow更像是生产者消费者模式，在open_pull, pull_review_comme
 
 分析以上20位用户的行为，得到2020年度tensorflow项目中actor_activity Top20 开发者雷达图，如图3所示。可以看出相当多的人的issue_comment与repo_activity相关性很高，这表明issue_comment这种问答形式在tensorflow社区比较常见。
 
-![2020年度tensorflow项目中actor_activity Top20 开发者雷达图](./2020年度tensorflow项目中actor_activity Top20 开发者雷达图.png)
+<img src="./2020年度tensorflow项目中actor_activity Top20 开发者雷达图.png" alt="2020年度tensorflow项目中actor_activity Top20 开发者雷达图" style="zoom:80%;" />
 
 <center>图3 2020年度tensorflow项目中actor_activity Top20 开发者雷达图</center>
 
