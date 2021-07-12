@@ -30,7 +30,7 @@ bitcoin/bitcoin的issue、pull、merge、fork等各种行为随年份的变化�
 <center>图2 2020年每日活动数</center>
 
 #### 贡献者比例分析
-bitcoin/bitcoin的前8名贡献者在项目贡献中占很大比例，图3可视化了比特币前8名贡献者分别所占的比值。贡献最多的MarcoFalke在前8名贡献者中占有37.7%。
+bitcoin/bitcoin的前8名贡献者在项目贡献中占很大比例，图3可视化了比特币前8名贡献者分别所占的比值。贡献最多的MarcoFalke在前8名贡献者中占有37.7%，他有862名followers。
 
 ![前8名贡献者在2020年的活跃度比例](top8_workers.png)
 <center>图3 前8名贡献者在2020年的活跃度比例</center>
