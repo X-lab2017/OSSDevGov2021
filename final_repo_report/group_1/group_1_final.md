@@ -54,7 +54,7 @@ bitcoin/bitcoin的前8名贡献者在项目贡献中占很大比例，图3可视
 ![变点数量5](detect_5.png)
 <center>图5 变点数量为5的6段开发阶段划分</center>
 
-![以太坊变点数量5](以太坊_5.png)
+![以太坊变点数量5](ethereum_5.png)
 <center>图6 以太坊项目（ethereum/go-ethereum）变点数量为5的6段开发阶段划分</center>
 
  
