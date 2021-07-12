@@ -11,11 +11,19 @@
 Code Search is a tool for browsing and searching code at Google that consists of a
 frontend UI and various backend elements. Like many of the development tools at
 Google, it arose directly out of a need to scale to the size of the codebase. Code Search
+<<<<<<< HEAD
+began as a combination of a grep-type tool1
+for internal code with the ranking and UI
+of external Code Search.2
+ Its place as a key tool for Google developers was cemented
+by the integration of Kythe/Grok,3
+=======
 began as a combination of a grep-type tool
 for internal code with the ranking and UI
 of external Code Search.
  Its place as a key tool for Google developers was cemented
 by the integration of Kythe/Grok,
+>>>>>>> 1babfa28f2a155a574ab68769c9958db122dca7b
  which added cross-references and the ability to
 jump to symbol definitions. 
 
@@ -33,6 +41,23 @@ resolving cross-references.
 
 
 
+<<<<<<< HEAD
+------
+
+1 GSearch originally ran on Jeff Dean’s personal computer, which once caused company-wide distress when he
+went on vacation and it was shut down!
+
+2 Shut down in 2013; see https://en.wikipedia.org/wiki/Google_Code_Search. 
+
+3 Now known as Kythe, a service that provides cross-references (among other things): the uses of a particular
+code symbol—for example, a function—using the full build information to disambiguate it from other ones
+with the same name.
+
+----
+
+351
+=======
+>>>>>>> 1babfa28f2a155a574ab68769c9958db122dca7b
 
 
 In this chapter, we’ll look at Code Search in more detail, including how Googlers use
@@ -62,7 +87,12 @@ an imported filename to the actual source file, or a bug ID in a comment to the 
 sponding bug report. This is powered by compiler-based indexing tools like Kythe.
 Clicking the symbol name opens a panel with all the places the symbol is used. Simi‐
 
+<<<<<<< HEAD
+---
+352 | Chapter 17: Code Search
+=======
 
+>>>>>>> 1babfa28f2a155a574ab68769c9958db122dca7b
 
 larly, hovering over local variables in a function will highlight all occurrences of that
 variable in the implementation.
@@ -74,8 +104,13 @@ directory view.
 ### How Do Googlers Use Code Search?
 Although similar functionality is available in other tools, Googlers still make heavy
 use of the Code Search UI for searching and file viewing and ultimately for under‐
+<<<<<<< HEAD
+standing code.4 The tasks engineers try to complete with Code Search can be thought
+of answering questions about code, and recurring intents become visible.5
+=======
 standing code. The tasks engineers try to complete with Code Search can be thought
 of answering questions about code, and recurring intents become visible.
+>>>>>>> 1babfa28f2a155a574ab68769c9958db122dca7b
 
 #### Where?
 About 16% of Code Searches try to answer the question of where a specific piece of
@@ -95,7 +130,22 @@ reviews, you can simply include the link—for example, “Have you considered u
 this specialized hash map: cool_hash.h?” This is also very useful for documentation,
 in bug reports, and in postmortems and is the canonical way of referring to code
 
+<<<<<<< HEAD
+----
+4 There is an interesting virtuous cycle that a ubiquitous code browser encourages: writing code that is easy to
+browse. This can mean things like not nesting hierarchies too deep, which requires many clicks to move from
+call sites to actual implementation, and using named types rather than generic things like strings or integers,
+because it’s then easy to find all usages.
 
+5 Sadowski, Caitlin, Kathryn T. Stolee, and Sebastian Elbaum. “How Developers Search for Code: A Case
+Study” In Proceedings of the 2015 10th Joint Meeting on Foundations of Software Engineering (ESEC/FSE 2015).
+https://doi.org/10.1145/2786805.2786855.
+
+---
+How Do Googlers Use Code Search? | 353
+=======
+
+>>>>>>> 1babfa28f2a155a574ab68769c9958db122dca7b
 
 within Google. Even older versions of the code can be referenced, so links can stay
 valid as the codebase evolves.
@@ -131,14 +181,23 @@ mean working with a state of the codebase that is weeks or months old, while deb
 ging test failures for new code usually means working with changes that are only
 minutes old. Both are possible with Code Search.
 
+<<<<<<< HEAD
+----
+354 | Chapter 17: Code Search
+=======
 
+>>>>>>> 1babfa28f2a155a574ab68769c9958db122dca7b
 
 #### Who and When?
 About 8% of Code Searches try to answer questions around who or when someone
 introduced a certain piece of code, interacting with the version control system. For
 example, it’s possible to see when a particular line was introduced (like Git’s “blame”)
 and jump to the relevant code review. This history panel can also be very useful in
+<<<<<<< HEAD
+finding the best person to ask about the code, or to review a change to it.6
+=======
 finding the best person to ask about the code, or to review a change to it.
+>>>>>>> 1babfa28f2a155a574ab68769c9958db122dca7b
 ### Why a Separate Web Tool?
 Outside Google, most of the aforementioned investigations are done within a local
 IDE. So, why yet another tool?
@@ -164,6 +223,20 @@ Unfortunately, the cross-reference index cannot be instantly updated in the same
 Incrementality isn’t possible for it, as any code change can potentially influence the
 entire codebase, and in practice often does affect thousands of files. Many (nearly all
 
+<<<<<<< HEAD
+---
+6 That said, given the rate of commits for machine-generated changes, naive “blame” tracking has less value
+than it does in more change-averse ecosystems.
+
+7 For comparison, the model of “every developer has their own IDE on their own workspace do the indexing
+calculation” scales roughly quadratically: developers produce a roughly constant amount of code per unit
+time, so the codebase scales linearly (even with a fixed number of developers). A linear number of IDEs do
+linearly more work each time—this is not a recipe for good scaling.
+
+---
+Why a Separate Web Tool? | 355
+=======
+>>>>>>> 1babfa28f2a155a574ab68769c9958db122dca7b
 
 
 of Google’s) full binaries need to be built8
@@ -198,7 +271,23 @@ create a UI for their results and ensures the entire developer audience will kno
 their work without needing to advertise it. Many analyses run regularly over the
 entire Google codebase, and their results are usually surfaced in Code Search. For
 
+<<<<<<< HEAD
+----
+8 Kythe instruments the build workflow to extract semantic nodes and edges from source code. This extraction
+process collects partial cross-reference graphs for each individual build rule. In a subsequent phase, these par‐
+tial graphs are merged into one global graph and its representation is optimized for the most common queries
+(go-to-definition, find all usages, fetch all decorations for a file). Each phase—extraction and post processing
+—is roughly as expensive as a full build; for example, in case of Chromium, the construction of the Kythe
+index is done in about six hours in a distributed setup and therefore too costly to be constructed by every
+developer on their own workstation. This computational cost is the why the Kythe index is computed only
+once per day
 
+----
+
+356 | Chapter 17: Code Search
+=======
+
+>>>>>>> 1babfa28f2a155a574ab68769c9958db122dca7b
 
 example, for many languages, we can detect “dead” (uncalled) code and mark it as
 such when the file is browsed.
@@ -224,6 +313,11 @@ snapshot of the repository at which the crashing binary was built is known, the 
 can actually be restricted to exactly this version. That way, links remain valid for a
 long time period, even if the corresponding code is later refactored or deleted.
 
+<<<<<<< HEAD
+----
+Why a Separate Web Tool? | 357
+=======
+>>>>>>> 1babfa28f2a155a574ab68769c9958db122dca7b
 
 ![](./images/17-3.png)
 Figure 17-3. Code Search integration in stack frames
