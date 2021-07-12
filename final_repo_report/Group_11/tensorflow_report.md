@@ -80,7 +80,7 @@ a. tensorflow的中心性相对pytorch较强，更偏重于由核心开发团队
 
 b. tensorflow更像是生产者消费者模式，在open_pull, pull_review_comment等方面显著地弱于pytorch，在merge_pull, star, fork等方面强于pytorch，说明该项目相比于pytorch，更偏向于用户反馈issue，团队解决issue，交由用户使用的模式，存在着贡献者与用户相对分化的现象。
 
-![tensorflow vs pytorch雷达图](./tensorflow vs pytorch雷达图.png)
+<img src="./tensorflow vs pytorch雷达图.png" alt="tensorflow vs pytorch雷达图" style="zoom:80%;" />
 <center>图2 tensorflow vs pytorch雷达图</center>
 
 ### 1.2 开发者数据统计、可视化
