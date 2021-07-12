@@ -6,25 +6,25 @@
 
 ####  基础数据分析
 
-<img src="E:\graduate\00_courses\研一_下学期\开源软件开发与社区治理 王伟\OSSDevGov2021\final_repo_report\group07\img\排名前十的项目.png">
+<img src="img\排名前十的项目.png">
 
 图一为仓库活跃度排名前十的项目。排名第一的是kubernetes，score达到了100K。
 
-<img src="E:\graduate\00_courses\研一_下学期\开源软件开发与社区治理 王伟\OSSDevGov2021\final_repo_report\group07\img\mergePRIssue.png">
+<img src="img\mergePRIssue.png">
 
-图2 为Paddle项目在2020年1月到2020年12月之间开发人员提交的PR数目、issue comment和merge的数目，从图中我们可以看出提交的PR数目和issue comment的数目在2月到5月和6月到8月有明显的上升趋势，在8月达到顶峰，从这里可以看出开发的趋势是间歇性的。
+图二 为Paddle项目在2020年1月到2020年12月之间开发人员提交的PR数目、issue comment和merge的数目，从图中我们可以看出提交的PR数目和issue comment的数目在2月到5月和6月到8月有明显的上升趋势，在8月达到顶峰，从这里可以看出开发的趋势是间歇性的。
 
 
 
 ####  开发者数据分析
 
-<img src="E:\graduate\00_courses\研一_下学期\开源软件开发与社区治理 王伟\OSSDevGov2021\final_repo_report\group07\img\merge前十的开发者.png">
+<img src="img\merge前十的开发者.png">
 
 图三是merge数目排名前十的开发者名单，其中，merge最多的开发者是luotao1，接近项目merge数目的一半；其次是chenwhql，merge的数目也是接近1k。可以看出对项目做出主要贡献的人肯定离不开luotao1。
 
 
 
-<img src="E:\graduate\00_courses\研一_下学期\开源软件开发与社区治理 王伟\OSSDevGov2021\final_repo_report\group07\img\活跃度前十的开发者.png">
+<img src="img\活跃度前十的开发者.png">
 
 图四是Paddle项目活跃度排名前十的开发者，其中，活跃度最高的开发者是luotao1，达到了1.1K；其次是 chenwhql ，merge的数目也是接近1k。可以看出对项目做出主要贡献的人肯定离不开luotao1。
 
@@ -39,7 +39,7 @@
 - 节点：一个节点表示一个项目，节点大小与颜色的深浅表示项目活跃度的大小。
 - 边：表示项目与项目之间存在联结关系，值的大小表示项目间联系的紧密程度。
 
-<img src="E:/graduate/00_courses/研一_下学期/开源软件开发与社区治理 王伟/OSSDevGov2021/final_repo_report/group07/img/项目关系网络图.png">
+<img src="img/项目关系网络图.png">
 
 项目关系网络图中间的节点是当前项目，我们可以看到 PaddlePaddle/Paddle 的项目活跃度是 3426.28，与其关联度最大的项目是 pytorch/pytorch，该项目的活跃度是 9723.67。
 
@@ -66,7 +66,7 @@ $$
 - 节点：一个节点表示一个开发者，节点大小与颜色的深浅表示开发者对项目活跃度的贡献值。
 - 边：开发者与开发者之间的连接关系，值的大小表示开发者间联系的紧密程度。
 
-<img src="E:/graduate/00_courses/研一_下学期/开源软件开发与社区治理 王伟/OSSDevGov2021/final_repo_report/group07/img/项目活跃开发者协作网络图.png">
+<img src="img/项目活跃开发者协作网络图.png">
 
 在上面这张图中，我们可以发现 PaddlePaddle/Paddle 项目有很多活跃的开发者，其中 zhiqu、chenwhql 是最活跃的两个开发者,活跃度分别为 40.64 和 40.22。
 
@@ -79,11 +79,11 @@ $$
 
 由提交次数图可以看出，每周一的提交记录最多的，周二——周五提交次数次数基本持平，周六和周日没有提交记录，这是因为周一要处理周末两天的问题，所以对程序的改动较大，不过这也侧面反映了该公司不是996工作模式。
 
-<img src="E:\graduate\00_courses\研一_下学期\开源软件开发与社区治理 王伟\OSSDevGov2021\final_repo_report\group07\img\程序每日提交次数图.png">
+<img src="img\程序每日提交次数图.png">
 
 由程序提交频率可以看出，每隔3个月，项目会有一次大的更新。
 
-<img src="E:\graduate\00_courses\研一_下学期\开源软件开发与社区治理 王伟\OSSDevGov2021\final_repo_report\group07\img\程序提交频率.png">
+<img src="img\程序提交频率.png">
 
 #### PaddlePaddle发行规范
 
