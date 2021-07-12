@@ -353,7 +353,7 @@ TensorFlow 内核和 TensorFlow 的依赖项仍然没有使用调试信息构建
 
 从GitHub仓库里的Pull Requests一栏可以看到tensorflow开源项目的所有拉取请求，而每个拉取请求所要合并的代码都会经过自动化测试流程的考验，比如在这个PR中，通过了所有共13轮的各个方面的代码检查，那么它就可以受到开发者的review并进行进一步merge。
 
-![image-20210711221902637](C:\Users\qqf\Desktop\kaiyuan\OSSDevGov2021\final_repo_report\Group_11\image-20210711221902637.png)
+![image-20210711221902637](./image-20210711221902637.png)
 
 那么在tensorflow项目中，这13轮checks可以归类为以下几种
 
@@ -368,7 +368,7 @@ TensorFlow 内核和 TensorFlow 的依赖项仍然没有使用调试信息构建
 
 采用了Jenkins这款自动集成工具搭建流水线任务，主要用于构建工作区和对PR状态的反馈
 
-![image-20210711233257537](C:\Users\qqf\Desktop\kaiyuan\OSSDevGov2021\final_repo_report\Group_11\image-20210711233257537.png)
+![image-20210711233257537](./image-20210711233257537.png)
 
 #### 测试用例
 
@@ -378,7 +378,7 @@ TensorFlow 内核和 TensorFlow 的依赖项仍然没有使用调试信息构建
 
 包含大量（2000+）的测试用例，针对库中所有涉及到的接口函数。
 
-![image-20210711230405662](C:\Users\qqf\Desktop\kaiyuan\OSSDevGov2021\final_repo_report\Group_11\image-20210711230405662.png)
+![image-20210711230405662](./image-20210711230405662.png)
 
 #### Android/Linux/MacOS/TFLite环境适配
 
@@ -389,7 +389,7 @@ TensorFlow 内核和 TensorFlow 的依赖项仍然没有使用调试信息构建
 - `Windows Bazel`
 - `Windows Bazel GPU`
 
-![image-20210711232124874](C:\Users\qqf\Desktop\kaiyuan\OSSDevGov2021\final_repo_report\Group_11\image-20210711232124874.png)
+![image-20210711232124874](./image-20210711232124874.png)
 
 测试的目标很少（个位数），主要是对不同平台下应用的兼容性进行测试。
 
