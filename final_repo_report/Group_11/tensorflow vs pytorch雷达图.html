@@ -1,0 +1,90 @@
+<!--
+    THIS EXAMPLE WAS DOWNLOADED FROM https://echarts.apache.org/examples/zh/editor.html?c=radar
+-->
+<!DOCTYPE html>
+<html style="height: 100%">
+    <head>
+        <meta charset="utf-8">
+    </head>
+    <body style="height: 100%; margin: 0">
+        <div id="container" style="height: 100%"></div>
+
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+        <!-- Uncomment this line if you want to dataTool extension
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5/dist/extension/dataTool.min.js"></script>
+        -->
+        <!-- Uncomment this line if you want to use gl extension
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-gl@2/dist/echarts-gl.min.js"></script>
+        -->
+        <!-- Uncomment this line if you want to echarts-stat extension
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-stat@latest/dist/ecStat.min.js"></script>
+        -->
+        <!-- Uncomment this line if you want to use map
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5/map/js/china.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5/map/js/world.js"></script>
+        -->
+        <!-- Uncomment these two lines if you want to use bmap extension
+        <script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=<Your Key Here>"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts@5/dist/extension/bmap.min.js"></script>
+        -->
+
+        <script type="text/javascript">
+var dom = document.getElementById("container");
+var myChart = echarts.init(dom);
+var app = {};
+
+var option;
+
+
+
+option = {
+    title: {
+        text: 'tensorflow vs pytorch雷达图',
+		top: 'top',
+        left: 'center'
+    },
+    legend: {
+        data: ['tensorflow', 'pytorch'],
+		orient: 'vertical',
+		x:'right',      //可设定图例在左、右、居中
+		y:'top',     //可设定图例在上、下、居中
+		padding:[50,50,0,0],   //可设定图例[距上方距离，距右方距离，距下方距离，距左方距离]
+		// selectedMode: 'single',
+    },
+    radar: {
+        // shape: 'circle',
+        indicator: [
+            { name: 'issue_comment', max: 235006},
+            { name: 'open_issue', max: 251354},
+            { name: 'open_pull', max: 104135},
+            { name: 'pull_review_comment', max: 45224},
+            { name: 'merge_pull', max: 18371.827000000045},
+            { name: 'star', max: 81970},
+            { name: 'fork', max: 16247},
+            { name: 'repo_activity', max: 971.2251566383508}
+        ]
+    },
+    series: [{
+        name: 'tensorflow vs pytorch',
+        type: 'radar',
+        data: [
+            {
+                value: [62952,7277,3126,7960,1909.5470000000003,17321,8392,308.7942968292844],
+                name: 'tensorflow'
+            },
+            {
+                value: [67923,5805,12165,38319,283.2180000000001,11781,4313,413.4156619682168],
+                name: 'pytorch'
+            }
+        ]
+    }]
+};
+
+if (option && typeof option === 'object') {
+    myChart.setOption(option);
+}
+
+        </script>
+    </body>
+</html>
+    

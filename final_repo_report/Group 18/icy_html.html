@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>ECharts</title>
+    <!-- 引入 echarts.js -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.1.2/dist/echarts.min.js"></script>
+</head>
+
+<body>
+    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+    <div id="main" style="width: 1200px;height:1200px;"></div>
+    <script type="text/javascript">
+        var chartDom = document.getElementById('main');
+        var myChart = echarts.init(chartDom);
+        var option;
+
+        var nodes = [{'id': '0', 'name': 'Huang-Wei', 'category': 0, 'value': 3419, 'x': -205.45318145144154, 'y': -174.04123525355664, 'symbolSize': 34.18},
+{'id': '1', 'name': 'Huang-Wei/kubernetes', 'category': 1, 'value': 609, 'x': 21.948144322391727, 'y': 460.44316668270767, 'symbolSize': 6.08}, 
+{'id': '2', 'name': 'matthyx', 'category': 0, 'value': 875, 'x': -260.183480024637, 'y': -244.30014710088432, 'symbolSize': 8.74},
+{'id': '3', 'name': 'kubernetes/test-infra', 'category': 1, 'value': 5474, 'x': -183.09943248414316, 'y': 291.1480356694401, 'symbolSize': 54.73},
+{'id': '4', 'name': 'RainbowMango', 'category': 0, 'value': 800, 'x': -228.15426155190653, 'y': 493.4669044528091, 'symbolSize': 7.99},
+{'id': '5', 'name': 'kubernetes/kubernetes', 'category': 1, 'value': 87745, 'x': 337.937976982064, 'y': -258.0455005894371, 'symbolSize': 177.44},
+{'id': '6', 'name': 'saschagrunert', 'category': 0, 'value': 13393, 'x': 291.91896283548965, 'y': 312.4519439867114, 'symbolSize': 133.92},     
+{'id': '7', 'name': 'saschagrunert/release', 'category': 1, 'value': 1723, 'x': -152.56788260016873, 'y': -327.6901283467987, 'symbolSize': 17.22},
+{'id': '8', 'name': 'RainbowMango/cloud-provider-huaweicloud', 'category': 1, 'value': 267, 'x': 443.2680357783546, 'y': 475.6262470558013, 'symbolSize': 2.66},
+{'id': '9', 'name': 'ingvagabund', 'category': 0, 'value': 824, 'x': -441.68737484036734, 'y': -367.626390337056, 'symbolSize': 8.23},
+{'id': '10', 'name': 'kubernetes-sigs/descheduler', 'category': 1, 'value': 955, 'x': -1.5252149190076807, 'y': 482.64913112190754, 'symbolSize': 9.54},
+{'id': '11', 'name': 'damemi', 'category': 0, 'value': 1528, 'x': -335.6441811707041, 'y': 61.07197764262344, 'symbolSize': 15.27},
+{'id': '12', 'name': 'soltysh', 'category': 0, 'value': 6841, 'x': -360.2997318040467, 'y': -19.309633685898348, 'symbolSize': 68.4},
+{'id': '13', 'name': 'soltysh/org', 'category': 1, 'value': 213, 'x': 9.268233566937624, 'y': 202.72526572380752, 'symbolSize': 2.12},
+{'id': '14', 'name': 'mtaufen', 'category': 0, 'value': 245, 'x': 276.1051028705526, 'y': -345.01569381237096, 'symbolSize': 2.44},
+{'id': '15', 'name': 'cpanato', 'category': 0, 'value': 4943, 'x': -78.2474891315872, 'y': -114.12074283375154, 'symbolSize': 49.42},
+{'id': '16', 'name': 'kubernetes/release', 'category': 1, 'value': 3120, 'x': 281.0980255347466, 'y': -185.4423962554933, 'symbolSize': 31.19}, 
+{'id': '17', 'name': 'soltysh/oc', 'category': 1, 'value': 467, 'x': 186.38998549367068, 'y': -146.81442304883285, 'symbolSize': 4.66},
+{'id': '18', 'name': 'droslean', 'category': 0, 'value': 2222, 'x': 158.03807503933535, 'y': -460.422971486126, 'symbolSize': 22.21},
+{'id': '19', 'name': 'openshift/release', 'category': 1, 'value': 1295, 'x': -64.38658069056248, 'y': -42.221636893295056, 'symbolSize': 12.94},{'id': '20', 'name': 'BenTheElder', 'category': 0, 'value': 7812, 'x': 7.007094234432714, 'y': -204.28922052681054, 'symbolSize': 78.11},       
+{'id': '21', 'name': 'xing-yang', 'category': 0, 'value': 2750, 'x': 157.44687776483863, 'y': 228.65638847687842, 'symbolSize': 27.49},
+{'id': '22', 'name': 'adtac', 'category': 0, 'value': 713, 'x': -387.9503605906197, 'y': -239.19539884680773, 'symbolSize': 7.12},
+{'id': '23', 'name': 'Jefftree', 'category': 0, 'value': 1010, 'x': -427.82825464476196, 'y': 180.88464877839692, 'symbolSize': 10.09},
+{'id': '24', 'name': 'Jefftree/kubernetes', 'category': 1, 'value': 284, 'x': 165.69499504852615, 'y': -236.53733138289823, 'symbolSize': 2.83},{'id': '25', 'name': 'deads2k', 'category': 0, 'value': 4039, 'x': 44.06529872245437, 'y': -15.618980373068439, 'symbolSize': 40.38},
+{'id': '26', 'name': 'deads2k/cluster-etcd-operator', 'category': 1, 'value': 226, 'x': -172.96562418213824, 'y': -132.79730151062984, 'symbolSize': 2.25},
+{'id': '27', 'name': 'k8s-release-robot', 'category': 0, 'value': 365, 'x': 314.3746591081972, 'y': -100.24572139492483, 'symbolSize': 3.64},   
+{'id': '28', 'name': 'liggitt', 'category': 0, 'value': 10096, 'x': -222.1548930154231, 'y': -145.14470136045122, 'symbolSize': 100.95},        
+{'id': '29', 'name': 'andyzhangx', 'category': 0, 'value': 7300, 'x': -234.27318533945208, 'y': 69.82678932423892, 'symbolSize': 72.99},        
+{'id': '30', 'name': 'kubernetes-sigs/azuredisk-csi-driver', 'category': 1, 'value': 1534, 'x': 218.60465230566945, 'y': -98.45256904268064, 'symbolSize': 15.33},
+{'id': '31', 'name': 'hasheddan', 'category': 0, 'value': 3635, 'x': -74.232310737977, 'y': 242.61852877722265, 'symbolSize': 36.34},
+{'id': '32', 'name': 'crdsdev/doc', 'category': 1, 'value': 237, 'x': 111.63159881064621, 'y': 346.16803954012084, 'symbolSize': 2.36},
+{'id': '33', 'name': 'robscott', 'category': 0, 'value': 2958, 'x': -48.385866346426496, 'y': -272.18150576832886, 'symbolSize': 29.57},        
+{'id': '34', 'name': 'robscott/service-apis', 'category': 1, 'value': 278, 'x': 487.10050301070055, 'y': -238.31897130040278, 'symbolSize': 2.77},
+{'id': '35', 'name': 'openshift/oc', 'category': 1, 'value': 603, 'x': -119.88808498742833, 'y': 102.15814152535563, 'symbolSize': 6.02},       
+{'id': '36', 'name': 'sttts', 'category': 0, 'value': 3734, 'x': -369.63284551215037, 'y': -303.9412266771973, 'symbolSize': 37.33},
+{'id': '37', 'name': 'mfojtik/bugzilla-operator', 'category': 1, 'value': 224, 'x': -392.5139012534197, 'y': -236.98056277054178, 'symbolSize': 
+2.23},
+{'id': '38', 'name': 'pohly', 'category': 0, 'value': 3124, 'x': 241.7975521250048, 'y': 111.67333415431483, 'symbolSize': 31.23},
+{'id': '39', 'name': 'intel/pmem-csi', 'category': 1, 'value': 1893, 'x': 167.80892744251514, 'y': -352.2630872797771, 'symbolSize': 18.92},    
+{'id': '40', 'name': 'soltysh/kubectl', 'category': 1, 'value': 203, 'x': -455.3183397638153, 'y': 279.97035549210113, 'symbolSize': 2.02},     
+{'id': '41', 'name': 'nikhita', 'category': 0, 'value': 1440, 'x': -429.8950085113822, 'y': -164.6318952484013, 'symbolSize': 14.39},
+{'id': '42', 'name': 'nikhita/org', 'category': 1, 'value': 204, 'x': 53.700304990144446, 'y': -229.1699162891111, 'symbolSize': 2.03},
+{'id': '43', 'name': 'wojtek-t', 'category': 0, 'value': 4504, 'x': -155.55059948681304, 'y': -163.7808236273288, 'symbolSize': 45.03},
+{'id': '44', 'name': 'wojtek-t/kubernetes', 'category': 1, 'value': 446, 'x': 180.31540394051035, 'y': -285.79689692386256, 'symbolSize': 4.45},{'id': '45', 'name': 'soltysh/test-infra', 'category': 1, 'value': 409, 'x': 295.9395536270714, 'y': -429.4015029137346, 'symbolSize': 4.08},   
+{'id': '46', 'name': 'mattermost/mattermost-cloud-monitoring', 'category': 1, 'value': 242, 'x': -246.06376297986887, 'y': -452.87312384368437, 
+'symbolSize': 2.41},
+{'id': '47', 'name': 'kubernetes/website', 'category': 1, 'value': 1492, 'x': 413.7625094641395, 'y': -459.4599328156964, 'symbolSize': 14.91}, 
+{'id': '48', 'name': 'saschagrunert/kubernetes', 'category': 1, 'value': 282, 'x': 325.2915162752803, 'y': 442.3295289348938, 'symbolSize': 2.81},
+{'id': '49', 'name': 'MikeSpreitzer', 'category': 0, 'value': 2204, 'x': -361.19990904392716, 'y': -77.7121111334913, 'symbolSize': 22.03},     
+{'id': '50', 'name': 'tkashem', 'category': 0, 'value': 832, 'x': -494.41416174081496, 'y': -232.41473962620216, 'symbolSize': 8.31},
+{'id': '51', 'name': 'tkashem/kubernetes', 'category': 1, 'value': 290, 'x': -35.49704733911784, 'y': -372.34533747748833, 'symbolSize': 2.89}, 
+{'id': '52', 'name': 'mattjmcnaughton', 'category': 0, 'value': 536, 'x': 408.8502894695803, 'y': -126.60089813484274, 'symbolSize': 5.35},     
+{'id': '53', 'name': 'openSUSE/libpod', 'category': 1, 'value': 221, 'x': -452.8383319166505, 'y': 148.1901558089561, 'symbolSize': 2.2},       
+{'id': '54', 'name': 'serathius', 'category': 0, 'value': 2321, 'x': 196.22125212265234, 'y': -377.24201352250145, 'symbolSize': 23.2},
+{'id': '55', 'name': 'alculquicondor', 'category': 0, 'value': 3938, 'x': -180.64140692187715, 'y': -286.9370332398555, 'symbolSize': 39.37},   
+{'id': '56', 'name': 'adtac/kubernetes', 'category': 1, 'value': 205, 'x': 478.2269867720538, 'y': -25.933639723777617, 'symbolSize': 2.04},    
+{'id': '57', 'name': 'justaugustus', 'category': 0, 'value': 5445, 'x': 418.06582998715385, 'y': -433.02775346407054, 'symbolSize': 54.44},     
+{'id': '58', 'name': 'kubernetes/k8s.io', 'category': 1, 'value': 1914, 'x': -350.30082367357574, 'y': -320.08067917467275, 'symbolSize': 19.13},
+{'id': '59', 'name': 'joakimr-axis', 'category': 0, 'value': 642, 'x': 479.19105089203765, 'y': 311.671634250445, 'symbolSize': 6.41},
+{'id': '60', 'name': 'neolit123', 'category': 0, 'value': 5945, 'x': -353.87793362270133, 'y': 453.35710962948735, 'symbolSize': 59.44},        
+{'id': '61', 'name': 'kubernetes/enhancements', 'category': 1, 'value': 6167, 'x': -442.2119819833779, 'y': 436.1295111582034, 'symbolSize': 61.66},
+{'id': '62', 'name': 'tanjunchen', 'category': 0, 'value': 1884, 'x': 205.135078946627, 'y': 310.8166242692347, 'symbolSize': 18.83},
+{'id': '63', 'name': 'tanjunchen/kubernetes', 'category': 1, 'value': 372, 'x': -200.01680826263356, 'y': -493.1088328906262, 'symbolSize': 3.71},
+{'id': '64', 'name': 'jpbetz', 'category': 0, 'value': 683, 'x': -162.9242338396728, 'y': -27.37595786275392, 'symbolSize': 6.82},
+{'id': '65', 'name': 'khenidak', 'category': 0, 'value': 334, 'x': -391.96147095214815, 'y': -93.1425859872952, 'symbolSize': 3.33},
+{'id': '66', 'name': 'soltysh/community', 'category': 1, 'value': 266, 'x': -270.9264771713616, 'y': -283.62171993353235, 'symbolSize': 2.65},  
+{'id': '67', 'name': 'k8s-publishing-bot', 'category': 0, 'value': 2925, 'x': 20.015627505942916, 'y': 427.11524959679286, 'symbolSize': 29.24},{'id': '68', 'name': 'kubernetes/client-go', 'category': 1, 'value': 311, 'x': 367.44815925793716, 'y': 252.66189416703185, 'symbolSize': 3.1}, 
+{'id': '69', 'name': 'openshift/cluster-kube-apiserver-operator', 'category': 1, 'value': 1082, 'x': -241.80421541920282, 'y': 134.4202661761392, 'symbolSize': 10.81},
+{'id': '70', 'name': 'aojea', 'category': 0, 'value': 6969, 'x': -144.18256319661418, 'y': -333.3539385893348, 'symbolSize': 69.68},
+{'id': '71', 'name': 'ovn-org/ovn-kubernetes', 'category': 1, 'value': 2054, 'x': -234.04065592489695, 'y': -16.36434182296341, 'symbolSize': 20.53},
+{'id': '72', 'name': 'cpanato/test-infra', 'category': 1, 'value': 235, 'x': -366.3305268460417, 'y': 330.11682345198665, 'symbolSize': 2.34},  
+{'id': '73', 'name': 'tpepper', 'category': 0, 'value': 287, 'x': 329.54510620319957, 'y': 327.5932701963311, 'symbolSize': 2.86},
+{'id': '74', 'name': 'rikatz', 'category': 0, 'value': 1189, 'x': 191.05217468984802, 'y': -142.20022628700877, 'symbolSize': 11.88},
+{'id': '75', 'name': 'rikatz/kubepug', 'category': 1, 'value': 417, 'x': 288.85090520115966, 'y': -404.3982525539529, 'symbolSize': 4.16},      
+{'id': '76', 'name': 'uablrek', 'category': 0, 'value': 816, 'x': -180.02921708342666, 'y': -460.65846549731157, 'symbolSize': 8.15},
+{'id': '77', 'name': 'Nordix/xcluster', 'category': 1, 'value': 364, 'x': -298.8362716365105, 'y': -290.79017980054846, 'symbolSize': 3.63},    
+{'id': '78', 'name': 'hh', 'category': 0, 'value': 679, 'x': -348.73617118314235, 'y': 147.30705802294085, 'symbolSize': 6.78},
+{'id': '79', 'name': 'cncf/apisnoop', 'category': 1, 'value': 659, 'x': 17.781069812098053, 'y': 461.29560526086857, 'symbolSize': 6.58},       
+{'id': '80', 'name': 'knabben', 'category': 0, 'value': 520, 'x': 274.532660699148, 'y': 412.40165624803046, 'symbolSize': 5.19},
+{'id': '81', 'name': 'knabben/kubernetes', 'category': 1, 'value': 228, 'x': -187.67935968127324, 'y': 147.72457780377874, 'symbolSize': 2.27}, 
+{'id': '82', 'name': 'dims', 'category': 0, 'value': 4645, 'x': 134.07053662091175, 'y': 137.94531177932186, 'symbolSize': 46.44},
+{'id': '83', 'name': 'alculquicondor/kubernetes', 'category': 1, 'value': 381, 'x': 14.719245034922778, 'y': -434.261188811285, 'symbolSize': 3.8},
+{'id': '84', 'name': 'SataQiu', 'category': 0, 'value': 1235, 'x': 286.0097012753515, 'y': 150.87792396348402, 'symbolSize': 12.34},
+{'id': '85', 'name': 'servicemesher/istio-official-translation', 'category': 1, 'value': 359, 'x': -259.2584273978166, 'y': -97.07120270869927, 
+'symbolSize': 3.58},
+{'id': '86', 'name': 'openshift/cluster-etcd-operator', 'category': 1, 'value': 636, 'x': 270.0080584204502, 'y': 345.43111245278567, 'symbolSize': 6.35},
+{'id': '87', 'name': 'fromanirh', 'category': 0, 'value': 1245, 'x': -94.28992802059008, 'y': 57.657590016747235, 'symbolSize': 12.44},
+{'id': '88', 'name': 'saschagrunert/kubernix', 'category': 1, 'value': 326, 'x': 195.38086228863654, 'y': -388.68058198155876, 'symbolSize': 3.25},
+{'id': '89', 'name': 'justaugustus/kubernetes', 'category': 1, 'value': 269, 'x': 328.09660101058046, 'y': -197.94763410149642, 'symbolSize': 2.68},
+{'id': '90', 'name': 'danwinship', 'category': 0, 'value': 3320, 'x': 354.06974391156405, 'y': -44.530542304682115, 'symbolSize': 33.19},       
+{'id': '91', 'name': 'openshift/sdn', 'category': 1, 'value': 298, 'x': -37.81164849663298, 'y': -331.0755694624279, 'symbolSize': 2.97},       
+{'id': '92', 'name': 'jpbetz/kubernetes', 'category': 1, 'value': 212, 'x': 458.4060859166276, 'y': 396.87297665991537, 'symbolSize': 2.11},    
+{'id': '93', 'name': 'openshift/cluster-openshift-apiserver-operator', 'category': 1, 'value': 250, 'x': -121.71644266402183, 'y': 377.3498759879926, 'symbolSize': 2.49},
+{'id': '94', 'name': 'SergeyKanzhelev', 'category': 0, 'value': 2718, 'x': 325.73832669925844, 'y': -105.01517435052654, 'symbolSize': 27.17},  
+{'id': '95', 'name': 'open-telemetry/opentelemetry-specification', 'category': 1, 'value': 410, 'x': 18.987304313664367, 'y': 414.5617314237529, 'symbolSize': 4.09},
+{'id': '96', 'name': 'openshift/library-go', 'category': 1, 'value': 813, 'x': 148.56652092666184, 'y': 0.5463914568423434, 'symbolSize': 8.12},{'id': '97', 'name': 'kubernetes-sigs/kind', 'category': 1, 'value': 4557, 'x': 34.21485690523241, 'y': 356.5809079982969, 'symbolSize': 45.56},{'id': '98', 'name': 'enj', 'category': 0, 'value': 437, 'x': 341.35430913451853, 'y': 219.64191488013535, 'symbolSize': 4.36},
+{'id': '99', 'name': 'tallclair', 'category': 0, 'value': 624, 'x': -118.92307821335345, 'y': 463.9331346708566, 'symbolSize': 6.23},
+{'id': '100', 'name': 'logicalhan', 'category': 0, 'value': 349, 'x': 278.9130178270958, 'y': -409.5964295583484, 'symbolSize': 3.48},
+{'id': '101', 'name': 'spiffxp', 'category': 0, 'value': 4108, 'x': 7.1213118589156466, 'y': -375.15843244158975, 'symbolSize': 41.07},
+{'id': '102', 'name': 'jingxu97', 'category': 0, 'value': 1710, 'x': 311.39661299821773, 'y': 22.540158255637266, 'symbolSize': 17.09},
+{'id': '103', 'name': 'mikedanese', 'category': 0, 'value': 676, 'x': -169.9530258458646, 'y': 93.11157756359148, 'symbolSize': 6.75},
+{'id': '104', 'name': 'soltysh/kubernetes', 'category': 1, 'value': 672, 'x': 101.55545757156767, 'y': -301.17782327540687, 'symbolSize': 6.71},{'id': '105', 'name': 'kubernetes/component-base', 'category': 1, 'value': 204, 'x': -79.1739339572103, 'y': 83.63060473512087, 'symbolSize': 2.03},
+{'id': '106', 'name': 'jayunit100', 'category': 0, 'value': 1682, 'x': 25.662574673602762, 'y': -435.76219752331946, 'symbolSize': 16.81},      
+{'id': '107', 'name': 'brianpursley', 'category': 0, 'value': 1094, 'x': -335.97948690883004, 'y': 475.58882531874576, 'symbolSize': 10.93},    
+{'id': '108', 'name': 'brianpursley/kubernetes', 'category': 1, 'value': 412, 'x': -334.7541809232614, 'y': -320.8720356041616, 'symbolSize': 4.11},
+{'id': '109', 'name': 'kubernetes-sigs/gcp-compute-persistent-disk-csi-driver', 'category': 1, 'value': 1063, 'x': -93.93318706283895, 'y': -328.7713538237449, 'symbolSize': 10.62},
+{'id': '110', 'name': 'lavalamp', 'category': 0, 'value': 2036, 'x': -275.86279172224783, 'y': 26.729013930367955, 'symbolSize': 20.35},        
+{'id': '111', 'name': 'cpanato/release', 'category': 1, 'value': 349, 'x': 240.82743291495422, 'y': -293.710876867014, 'symbolSize': 3.48},     
+{'id': '112', 'name': 'kubernetes/kubectl', 'category': 1, 'value': 337, 'x': 30.39396789467071, 'y': -253.4037992841277, 'symbolSize': 3.36},  
+{'id': '113', 'name': 'immutableT', 'category': 0, 'value': 210, 'x': 94.7198958371547, 'y': -31.438577658269082, 'symbolSize': 2.09},
+{'id': '114', 'name': 'soltysh/openshift-docs', 'category': 1, 'value': 369, 'x': -65.29923178122942, 'y': -76.05113317385803, 'symbolSize': 3.68},
+{'id': '115', 'name': 'saschagrunert/cri', 'category': 1, 'value': 540, 'x': -356.6290804228905, 'y': 249.00331769703723, 'symbolSize': 5.39},  
+{'id': '116', 'name': 'oomichi', 'category': 0, 'value': 1617, 'x': 63.2153047230903, 'y': 350.44663907953895, 'symbolSize': 16.16},
+{'id': '117', 'name': 'kubernetes/apimachinery', 'category': 1, 'value': 232, 'x': 167.09443135408867, 'y': 413.4119810275755, 'symbolSize': 2.31},
+{'id': '118', 'name': 'cmluciano', 'category': 0, 'value': 340, 'x': -18.619626938338627, 'y': -113.73660495447047, 'symbolSize': 3.39},        
+{'id': '119', 'name': 'soltysh/k8s-enhancements', 'category': 1, 'value': 208, 'x': -167.71767310424343, 'y': 462.5430454317486, 'symbolSize': 2.07},
+{'id': '120', 'name': 'yliaog', 'category': 0, 'value': 267, 'x': -72.88875206687982, 'y': -384.8941988336153, 'symbolSize': 2.66},
+{'id': '121', 'name': 'spiffxp/test-infra', 'category': 1, 'value': 447, 'x': -441.8591054980052, 'y': -388.12015777753595, 'symbolSize': 4.46},{'id': '122', 'name': 'deads2k/sippy', 'category': 1, 'value': 203, 'x': -304.8324331817805, 'y': -118.65547833753465, 'symbolSize': 2.02},     
+{'id': '123', 'name': 'hasheddan/crossplane', 'category': 1, 'value': 528, 'x': 391.6302441352286, 'y': -86.13153801856612, 'symbolSize': 5.27},{'id': '124', 'name': 'caesarxuchao', 'category': 0, 'value': 825, 'x': 183.17262848507528, 'y': 231.41722657083335, 'symbolSize': 8.24},       
+{'id': '125', 'name': 'openshift/ci-tools', 'category': 1, 'value': 486, 'x': -130.4429939261288, 'y': -466.34866107127345, 'symbolSize': 4.85},{'id': '126', 'name': 'kubernetes/legacy-cloud-providers', 'category': 1, 'value': 445, 'x': -163.9867677901152, 'y': -271.896158992809, 'symbolSize': 4.44},
+{'id': '127', 'name': 'pacoxu', 'category': 0, 'value': 389, 'x': 477.107981344662, 'y': 293.45408174549675, 'symbolSize': 3.88},
+{'id': '128', 'name': 'andyzhangx/blobfuse-csi-driver', 'category': 1, 'value': 205, 'x': 176.22665337374258, 'y': 67.32340327601605, 'symbolSize': 2.04},
+{'id': '129', 'name': 'kubernetes/apiextensions-apiserver', 'category': 1, 'value': 239, 'x': -211.15468167369409, 'y': -429.4633906388584, 'symbolSize': 2.38},
+{'id': '130', 'name': 'SataQiu/kubernetes', 'category': 1, 'value': 233, 'x': 192.84468389468725, 'y': -481.38543590936854, 'symbolSize': 2.32},{'id': '131', 'name': 'gongguan', 'category': 0, 'value': 907, 'x': -201.6034410897052, 'y': 203.73591827278904, 'symbolSize': 9.06},
+{'id': '132', 'name': 'gongguan/kubernetes', 'category': 1, 'value': 321, 'x': -393.4364811358969, 'y': -16.09679122423921, 'symbolSize': 3.2}, 
+{'id': '133', 'name': 'gavinfish', 'category': 0, 'value': 761, 'x': 255.353920228927, 'y': -281.05387825926897, 'symbolSize': 7.6},
+{'id': '134', 'name': 'cici37', 'category': 0, 'value': 593, 'x': 208.98037495197593, 'y': -405.1610767519539, 'symbolSize': 5.92},
+{'id': '135', 'name': 'cici37/kubernetes', 'category': 1, 'value': 233, 'x': 409.84581257021546, 'y': 291.6467056812079, 'symbolSize': 2.32},   
+{'id': '136', 'name': 'fedebongio', 'category': 0, 'value': 1215, 'x': 170.655040279153, 'y': -294.0518223841574, 'symbolSize': 12.14},
+{'id': '137', 'name': 'ialidzhikov', 'category': 0, 'value': 2364, 'x': 73.35541510897644, 'y': 419.1375888228954, 'symbolSize': 23.63},        
+{'id': '138', 'name': 'gardener/gardener', 'category': 1, 'value': 1099, 'x': 351.60693613813146, 'y': 137.80146355902423, 'symbolSize': 10.98},{'id': '139', 'name': 'jsafrane', 'category': 0, 'value': 1587, 'x': -58.13646861640564, 'y': -385.4090457835635, 'symbolSize': 15.86},
+{'id': '140', 'name': 'openshift/origin', 'category': 1, 'value': 2366, 'x': -137.65716856799457, 'y': 19.509548541661502, 'symbolSize': 23.65},{'id': '141', 'name': 'soltysh/release', 'category': 1, 'value': 579, 'x': 7.4539062683449515, 'y': 399.23504239827787, 'symbolSize': 5.78},    
+{'id': '142', 'name': 'yue9944882', 'category': 0, 'value': 1516, 'x': -86.305298722582, 'y': -477.4366054792207, 'symbolSize': 15.15},
+{'id': '143', 'name': 'yue9944882/java', 'category': 1, 'value': 366, 'x': -19.81190164545501, 'y': 322.04718297700583, 'symbolSize': 3.65},    
+{'id': '144', 'name': 'kubernetes-sigs/blob-csi-driver', 'category': 1, 'value': 324, 'x': 126.92757988923256, 'y': 498.31715180198614, 'symbolSize': 3.23},
+{'id': '145', 'name': 'deads2k/kubernetes', 'category': 1, 'value': 324, 'x': -64.3026875801965, 'y': 44.78334693120178, 'symbolSize': 3.23},   
+{'id': '146', 'name': 'cpanato/testing-ghactions', 'category': 1, 'value': 222, 'x': 8.24328107835828, 'y': -310.6509976925232, 'symbolSize': 2.21},
+{'id': '147', 'name': 'dashpole', 'category': 0, 'value': 1994, 'x': 243.00653849207322, 'y': -375.1011975936892, 'symbolSize': 19.93},
+{'id': '148', 'name': 'google/cadvisor', 'category': 1, 'value': 1057, 'x': 446.79944305268157, 'y': -83.53556142475173, 'symbolSize': 10.56},  
+{'id': '149', 'name': 'droslean/release', 'category': 1, 'value': 468, 'x': 234.67752925997377, 'y': -366.7963625847585, 'symbolSize': 4.67},   
+{'id': '150', 'name': 'kubernetes/sig-release', 'category': 1, 'value': 990, 'x': -163.08997395267255, 'y': -301.4434293914071, 'symbolSize': 9.89},
+{'id': '151', 'name': 'msau42', 'category': 0, 'value': 3099, 'x': 328.97338650684856, 'y': 416.9605674266247, 'symbolSize': 30.98},
+{'id': '152', 'name': 'kubernetes-csi/external-provisioner', 'category': 1, 'value': 605, 'x': -136.53334178890765, 'y': 34.76839612690026, 'symbolSize': 6.04},
+{'id': '153', 'name': 'saschagrunert/seccomp-operator', 'category': 1, 'value': 559, 'x': -475.16277305325616, 'y': 53.84771384835972, 'symbolSize': 5.58},
+{'id': '154', 'name': 'mattermost/mattermost-helm', 'category': 1, 'value': 214, 'x': -225.05109787688093, 'y': 100.31632913559713, 'symbolSize': 2.13},
+{'id': '155', 'name': 'kubernetes-sigs/apiserver-network-proxy', 'category': 1, 'value': 902, 'x': -421.0646689569235, 'y': -349.07193218835755, 'symbolSize': 9.01},
+{'id': '156', 'name': 'danwinship/ovn-kubernetes', 'category': 1, 'value': 208, 'x': -273.556155938493, 'y': 235.75737433026416, 'symbolSize': 2.07},
+{'id': '157', 'name': 'smarterclayton', 'category': 0, 'value': 2603, 'x': 100.25902712984748, 'y': 250.9871466373636, 'symbolSize': 26.02},    
+{'id': '158', 'name': 'openshift/image-registry', 'category': 1, 'value': 205, 'x': 404.95346052283537, 'y': -283.3638759043341, 'symbolSize': 2.04},
+{'id': '159', 'name': 'alejandrox1', 'category': 0, 'value': 363, 'x': -32.75918516521449, 'y': 426.85980927234164, 'symbolSize': 3.62},        
+{'id': '160', 'name': 'mborsz', 'category': 0, 'value': 482, 'x': -140.8042718154935, 'y': 102.72994619430324, 'symbolSize': 4.81},
+{'id': '161', 'name': 'kubernetes/perf-tests', 'category': 1, 'value': 2304, 'x': -421.6657800931003, 'y': 168.08422692116335, 'symbolSize': 23.03},
+{'id': '162', 'name': 'kubernetes-sigs/service-apis', 'category': 1, 'value': 1783, 'x': 415.9163142805522, 'y': 36.94608724138391, 'symbolSize': 17.82},
+{'id': '163', 'name': 'kubernetes-csi/external-snapshotter', 'category': 1, 'value': 1338, 'x': -59.5190693705826, 'y': -80.58452461654463, 'symbolSize': 13.37},
+{'id': '164', 'name': 'gavinfish/kubernetes', 'category': 1, 'value': 354, 'x': -299.4053450003683, 'y': 220.22421479796867, 'symbolSize': 3.53},
+{'id': '165', 'name': 'cofyc', 'category': 0, 'value': 4418, 'x': -170.47625575377424, 'y': -368.5840925585509, 'symbolSize': 44.17},
+{'id': '166', 'name': 'aojea/ovn-kubernetes', 'category': 1, 'value': 559, 'x': -33.51857295718884, 'y': -268.4547237578174, 'symbolSize': 5.58},
+{'id': '167', 'name': 'prameshj', 'category': 0, 'value': 460, 'x': -250.37984111932633, 'y': -400.74126831769485, 'symbolSize': 4.59},
+{'id': '168', 'name': 'wawa0210', 'category': 0, 'value': 816, 'x': 309.48014812272936, 'y': -247.9934992951268, 'symbolSize': 8.15},
+{'id': '169', 'name': 'roycaihw', 'category': 0, 'value': 1185, 'x': -479.2961663699422, 'y': -107.84650625801618, 'symbolSize': 11.84},        
+{'id': '170', 'name': 'yue9944882/apiserver-builder-alpha', 'category': 1, 'value': 276, 'x': -400.78212677201486, 'y': -271.7795626860606, 'symbolSize': 2.75},
+{'id': '171', 'name': 'andyzhangx/demo', 'category': 1, 'value': 243, 'x': 185.86397206719118, 'y': -235.27026241486146, 'symbolSize': 2.42},   
+{'id': '172', 'name': 'dims/kubernetes', 'category': 1, 'value': 887, 'x': -434.0744751980154, 'y': -8.96017237865999, 'symbolSize': 8.86},     
+{'id': '173', 'name': 'saschagrunert/cri-o', 'category': 1, 'value': 356, 'x': 247.36805492536132, 'y': -132.43451691155127, 'symbolSize': 3.55},
+{'id': '174', 'name': 'tedyu', 'category': 0, 'value': 3874, 'x': -296.3024323814084, 'y': -409.4107183029712, 'symbolSize': 38.73},
+{'id': '175', 'name': 'cri-o/cri-o', 'category': 1, 'value': 4165, 'x': 422.3569399069976, 'y': 347.7462192897216, 'symbolSize': 41.64},        
+{'id': '176', 'name': 'apelisse', 'category': 0, 'value': 1447, 'x': -53.694021384039445, 'y': 181.4910245209619, 'symbolSize': 14.46},
+{'id': '177', 'name': 'johnbelamaric', 'category': 0, 'value': 503, 'x': -276.10668428094743, 'y': -200.52626104882944, 'symbolSize': 5.02},    
+{'id': '178', 'name': 'serathius/kubernetes', 'category': 1, 'value': 260, 'x': -458.526103932139, 'y': 371.6567609001836, 'symbolSize': 2.59}, 
+{'id': '179', 'name': 'kubernetes/kubeadm', 'category': 1, 'value': 1321, 'x': 42.87185988282977, 'y': -135.37173691083512, 'symbolSize': 13.2},{'id': '180', 'name': 'kubernetes-client/python', 'category': 1, 'value': 373, 'x': -481.904260240251, 'y': -0.2345673753802089, 'symbolSize': 3.72},
+{'id': '181', 'name': 'jingxu97/gcp-compute-persistent-disk-csi-driver', 'category': 1, 'value': 261, 'x': -62.51421468717757, 'y': 240.91727018994936, 'symbolSize': 2.6},
+{'id': '182', 'name': 'ahg-g', 'category': 0, 'value': 2293, 'x': -480.0545541092167, 'y': -64.24203147830144, 'symbolSize': 22.92},
+{'id': '183', 'name': 'ahg-g/kubernetes', 'category': 1, 'value': 272, 'x': 146.9677684742495, 'y': -141.70330668329854, 'symbolSize': 2.71},   
+{'id': '184', 'name': 'mm4tt', 'category': 0, 'value': 1559, 'x': 361.16061889442835, 'y': -436.93458554753306, 'symbolSize': 15.58},
+{'id': '185', 'name': 'marosset', 'category': 0, 'value': 1453, 'x': 18.09964997020336, 'y': 443.9218025122534, 'symbolSize': 14.52},
+{'id': '186', 'name': 'Azure/aks-engine', 'category': 1, 'value': 694, 'x': 352.5555084721151, 'y': -186.2024794256181, 'symbolSize': 6.93},    
+{'id': '187', 'name': 'nilo19', 'category': 0, 'value': 1259, 'x': -476.15588081249996, 'y': -400.26769684292475, 'symbolSize': 12.58},
+{'id': '188', 'name': 'kubernetes-sigs/cloud-provider-azure', 'category': 1, 'value': 504, 'x': -436.55657916490634, 'y': -334.6637144285699, 'symbolSize': 5.03},
+{'id': '189', 'name': 'joakimr-axis/kubernetes', 'category': 1, 'value': 287, 'x': -203.73963536328142, 'y': -36.77603337792368, 'symbolSize': 2.86},
+{'id': '190', 'name': 'pjh', 'category': 0, 'value': 283, 'x': 240.52553976461923, 'y': -145.52444465568482, 'symbolSize': 2.82},
+{'id': '191', 'name': 'soltysh/perf-tests', 'category': 1, 'value': 203, 'x': -297.6418915095046, 'y': 465.15471908970335, 'symbolSize': 2.02}, 
+{'id': '192', 'name': 'MHBauer', 'category': 0, 'value': 260, 'x': 58.5668745894958, 'y': -28.48887892280493, 'symbolSize': 2.59},
+{'id': '193', 'name': 'BenTheElder/test-infra', 'category': 1, 'value': 360, 'x': 480.1594589981719, 'y': -179.95127935755795, 'symbolSize': 3.59},
+{'id': '194', 'name': 'zshihang', 'category': 0, 'value': 345, 'x': -421.13972287713386, 'y': 215.9349577798274, 'symbolSize': 3.44},
+{'id': '195', 'name': 'kubernetes/community', 'category': 1, 'value': 413, 'x': -286.51975878400845, 'y': 393.4315270211596, 'symbolSize': 4.12},
+{'id': '196', 'name': 'BenTheElder/kind', 'category': 1, 'value': 761, 'x': -130.52972137164, 'y': 352.1624190215482, 'symbolSize': 7.6},       
+{'id': '197', 'name': 'tedyu/kubernetes', 'category': 1, 'value': 640, 'x': 150.1237230608075, 'y': 138.16995537788773, 'symbolSize': 6.39},    
+{'id': '198', 'name': 'openshift/aws-ebs-csi-driver-operator', 'category': 1, 'value': 213, 'x': 432.2003766864585, 'y': -466.74514878593607, 'symbolSize': 2.12},
+{'id': '199', 'name': 'saschagrunert/nixpkgs', 'category': 1, 'value': 268, 'x': -184.86206566508775, 'y': 251.17417476707226, 'symbolSize': 2.67},
+{'id': '200', 'name': 'droslean/ci-tools', 'category': 1, 'value': 391, 'x': 38.341135683893185, 'y': -274.57162505235254, 'symbolSize': 3.9},  
+{'id': '201', 'name': 'smarterclayton/release', 'category': 1, 'value': 205, 'x': 389.95976322029276, 'y': 192.43195831818537, 'symbolSize': 2.04},
+{'id': '202', 'name': 'kubernetes-sigs/kubespray', 'category': 1, 'value': 331, 'x': -429.0295722181871, 'y': 497.237296304335, 'symbolSize': 3.3},
+{'id': '203', 'name': 'kubernetes/org', 'category': 1, 'value': 731, 'x': 207.53245950706867, 'y': -439.2941594157499, 'symbolSize': 7.3},      
+{'id': '204', 'name': 'oomichi/kubernetes', 'category': 1, 'value': 232, 'x': -486.96637976251554, 'y': 4.839278620899165, 'symbolSize': 2.31}, 
+{'id': '205', 'name': 'RainbowMango/GoExpertProgramming', 'category': 1, 'value': 269, 'x': 375.21766800855664, 'y': 302.768010539329, 'symbolSize': 2.68},
+{'id': '206', 'name': 'NixOS/nixpkgs', 'category': 1, 'value': 231, 'x': -350.88327497526063, 'y': 335.9402664458571, 'symbolSize': 2.3},       
+{'id': '207', 'name': 'fromanirh/performance-addon-operators', 'category': 1, 'value': 222, 'x': 38.296501976316335, 'y': -64.70242306886695, 'symbolSize': 2.21},
+{'id': '208', 'name': 'gnufied', 'category': 0, 'value': 1298, 'x': 470.6532091756502, 'y': -279.585549654062, 'symbolSize': 12.97},
+{'id': '209', 'name': 'gnufied/kubernetes', 'category': 1, 'value': 280, 'x': 271.92453632428624, 'y': -312.7058115409692, 'symbolSize': 2.79}, 
+{'id': '210', 'name': 'zhouya0', 'category': 0, 'value': 587, 'x': -355.8717427143273, 'y': -394.4499822657259, 'symbolSize': 5.86},
+{'id': '211', 'name': 'BobyMCbobs', 'category': 0, 'value': 947, 'x': 410.5681232413317, 'y': 318.41642741099383, 'symbolSize': 9.46},
+{'id': '212', 'name': 'sharingio/pair', 'category': 1, 'value': 269, 'x': 222.8218826039341, 'y': 37.661016931096924, 'symbolSize': 2.68},      
+{'id': '213', 'name': 'andrewsykim', 'category': 0, 'value': 3207, 'x': 427.248042270591, 'y': -497.7103765304665, 'symbolSize': 32.06},        
+{'id': '214', 'name': 'kubernetes-sigs/blobfuse-csi-driver', 'category': 1, 'value': 355, 'x': -182.2314841707746, 'y': -232.79303823930906, 'symbolSize': 3.54},
+{'id': '215', 'name': 'kubernetes/api', 'category': 1, 'value': 239, 'x': -107.52538074928117, 'y': -87.18264757796368, 'symbolSize': 2.38},    
+{'id': '216', 'name': 'soltysh/origin', 'category': 1, 'value': 449, 'x': 74.00842906866478, 'y': -159.84700657547734, 'symbolSize': 4.48},     
+{'id': '217', 'name': 'kubernetes-client/java', 'category': 1, 'value': 562, 'x': 495.69205968751544, 'y': 235.26410858250222, 'symbolSize': 5.61},
+{'id': '218', 'name': 'kubernetes-sigs/structured-merge-diff', 'category': 1, 'value': 263, 'x': 96.69209847850686, 'y': -391.59803713836493, 'symbolSize': 2.62},
+{'id': '219', 'name': 'openshift-kni/performance-addon-operators', 'category': 1, 'value': 760, 'x': 115.94863995830156, 'y': 485.75430279883926, 'symbolSize': 7.59},
+{'id': '220', 'name': 'chendave', 'category': 0, 'value': 693, 'x': 129.9867753539677, 'y': 99.10016106124863, 'symbolSize': 6.92},
+{'id': '221', 'name': 'jayunit100/k8sprototypes', 'category': 1, 'value': 265, 'x': 429.2115193204164, 'y': -385.19499712430024, 'symbolSize': 2.64},
+{'id': '222', 'name': 'knight42', 'category': 0, 'value': 1237, 'x': 163.99915118611568, 'y': 226.2573450129563, 'symbolSize': 12.36},
+{'id': '223', 'name': 'kubernetes/kube-aggregator', 'category': 1, 'value': 202, 'x': -264.73646411572213, 'y': 114.83396621208101, 'symbolSize': 2.01},
+{'id': '224', 'name': 'Riaankl', 'category': 0, 'value': 798, 'x': 122.78674869248175, 'y': -38.28054434331142, 'symbolSize': 7.97},
+{'id': '225', 'name': 'kubernetes-sigs/azurefile-csi-driver', 'category': 1, 'value': 1690, 'x': -314.7656877567372, 'y': -8.05314145156234, 'symbolSize': 16.89},
+{'id': '226', 'name': 'kubernetes-sigs/cluster-api-provider-azure', 'category': 1, 'value': 429, 'x': 332.28548008624216, 'y': 32.7053803413678, 'symbolSize': 4.28},
+{'id': '227', 'name': 'marosset/aks-engine', 'category': 1, 'value': 393, 'x': 101.47134742864682, 'y': 467.45571067121386, 'symbolSize': 3.92},{'id': '228', 'name': 'andyzhangx/kubernetes', 'category': 1, 'value': 291, 'x': 471.44307818119603, 'y': -365.8567606380456, 'symbolSize': 2.9},
+{'id': '229', 'name': 'pjbgf', 'category': 0, 'value': 241, 'x': -80.77762629080053, 'y': 55.99355969430269, 'symbolSize': 2.4},
+{'id': '230', 'name': 'jayunit100/kubernetes', 'category': 1, 'value': 342, 'x': -82.47246984527266, 'y': 277.4162456202315, 'symbolSize': 3.41},
+{'id': '231', 'name': 'cheftako', 'category': 0, 'value': 1066, 'x': 492.5639780073859, 'y': 352.34497846017007, 'symbolSize': 10.65},
+{'id': '232', 'name': 'yugabyte/yugabyte-db', 'category': 1, 'value': 374, 'x': -409.0185980842892, 'y': -490.62917067771394, 'symbolSize': 3.73},
+{'id': '233', 'name': 'dims/test-infra', 'category': 1, 'value': 339, 'x': -225.429488314715, 'y': 417.88997005670046, 'symbolSize': 3.38},     
+{'id': '234', 'name': 'klueska', 'category': 0, 'value': 880, 'x': 171.21380243897022, 'y': -228.87176330698378, 'symbolSize': 8.79},
+{'id': '235', 'name': 'thockin', 'category': 0, 'value': 2771, 'x': 20.55849142416298, 'y': -10.133695847719707, 'symbolSize': 27.7},
+{'id': '236', 'name': 'MikeSpreitzer/kubernetes', 'category': 1, 'value': 512, 'x': -311.1987566043819, 'y': 288.5667152252702, 'symbolSize': 5.11},
+{'id': '237', 'name': 'openshift/kubernetes', 'category': 1, 'value': 360, 'x': -362.06386118157343, 'y': -450.08159509176727, 'symbolSize': 3.59},
+{'id': '238', 'name': 'soltysh/website', 'category': 1, 'value': 428, 'x': -405.4844399079346, 'y': 245.26201702987714, 'symbolSize': 4.27},    
+{'id': '239', 'name': 'neolit123/kubeadm-test', 'category': 1, 'value': 205, 'x': -95.36136788198547, 'y': 379.68920950599454, 'symbolSize': 2.04},
+{'id': '240', 'name': 'NVIDIA/k8s-device-plugin', 'category': 1, 'value': 283, 'x': 169.0509031992991, 'y': -300.594373040625, 'symbolSize': 2.82},
+{'id': '241', 'name': 'cofyc/tidb-operator', 'category': 1, 'value': 1050, 'x': -444.61003766443565, 'y': -313.15743004021334, 'symbolSize': 10.49},
+{'id': '242', 'name': 'justaugustus/release', 'category': 1, 'value': 460, 'x': -9.622519629159854, 'y': 282.41560571989396, 'symbolSize': 4.59},
+{'id': '243', 'name': 'openshift/enhancements', 'category': 1, 'value': 734, 'x': 221.71987991217406, 'y': -65.81195626340161, 'symbolSize': 7.33},
+{'id': '244', 'name': 'openshift/local-storage-operator', 'category': 1, 'value': 291, 'x': 189.93179873467693, 'y': -451.1562903989581, 'symbolSize': 2.9},
+{'id': '245', 'name': 'soltysh/cpython', 'category': 1, 'value': 366, 'x': -70.40342962693455, 'y': 107.84734795236045, 'symbolSize': 3.65},    
+{'id': '246', 'name': 'bart0sh', 'category': 0, 'value': 649, 'x': 63.039676902216115, 'y': 196.0325857966052, 'symbolSize': 6.48},
+{'id': '247', 'name': 'intel/intel-device-plugins-for-kubernetes', 'category': 1, 'value': 443, 'x': 3.7953343962571466, 'y': -44.32065773783489, 'symbolSize': 4.42},
+{'id': '248', 'name': 'bowei', 'category': 0, 'value': 949, 'x': -372.519623802403, 'y': 153.7601985610661, 'symbolSize': 9.48},
+{'id': '249', 'name': 'kubernetes/ingress-gce', 'category': 1, 'value': 231, 'x': -0.7421389700575673, 'y': 166.3377500668414, 'symbolSize': 2.3},
+{'id': '250', 'name': 'kubernetes-sigs/cluster-api-provider-digitalocean', 'category': 1, 'value': 224, 'x': 459.00441112967064, 'y': -33.24508494548195, 'symbolSize': 2.23},
+{'id': '251', 'name': 'liggitt/kubernetes', 'category': 1, 'value': 983, 'x': -318.1492433895286, 'y': 323.6660590315413, 'symbolSize': 9.82},  
+{'id': '252', 'name': 'aojea/kind', 'category': 1, 'value': 367, 'x': 326.5005659310506, 'y': 260.1793582555996, 'symbolSize': 3.66},
+{'id': '253', 'name': 'openshift/ovn-kubernetes', 'category': 1, 'value': 204, 'x': 443.6079409105232, 'y': 368.35060019594425, 'symbolSize': 2.03},
+{'id': '254', 'name': 'openshift/api', 'category': 1, 'value': 541, 'x': 112.67092518031438, 'y': -285.5262791556452, 'symbolSize': 5.4},
+{'id': '255', 'name': 'open-telemetry/community', 'category': 1, 'value': 760, 'x': 492.0918735767816, 'y': 92.79364546049533, 'symbolSize': 7.59},
+{'id': '256', 'name': 'nilo19/kubernetes', 'category': 1, 'value': 354, 'x': 385.9684653598473, 'y': -283.5843438910406, 'symbolSize': 3.53},   
+{'id': '257', 'name': 'NVIDIA/nvidia-docker', 'category': 1, 'value': 233, 'x': 121.40594876606633, 'y': -461.7153779672728, 'symbolSize': 2.32},
+{'id': '258', 'name': 'open-telemetry/opentelemetry-dotnet', 'category': 1, 'value': 634, 'x': -336.97765748493947, 'y': -35.40054908251312, 'symbolSize': 6.33},
+{'id': '259', 'name': 'kubernetes-sigs/scheduler-plugins', 'category': 1, 'value': 674, 'x': 110.95478963398648, 'y': -234.0349112678669, 'symbolSize': 6.73},
+{'id': '260', 'name': 'roycaihw/kubernetes', 'category': 1, 'value': 290, 'x': -54.45483137072324, 'y': 488.7021424223194, 'symbolSize': 2.89}, 
+{'id': '261', 'name': 'soltysh/kustomize', 'category': 1, 'value': 313, 'x': -72.22320138635416, 'y': 394.9049162907927, 'symbolSize': 3.12},   
+{'id': '262', 'name': 'kubernetes-analysis/kubernetes-analysis', 'category': 1, 'value': 369, 'x': -349.1905953961092, 'y': 260.16790483611476, 
+'symbolSize': 3.68},
+{'id': '263', 'name': 'kubernetes/git-sync', 'category': 1, 'value': 272, 'x': 371.51492014277346, 'y': -360.37555717246414, 'symbolSize': 2.71},
+{'id': '264', 'name': 'skilxn-go', 'category': 0, 'value': 268, 'x': -372.70359520485596, 'y': -401.5676719312626, 'symbolSize': 2.67},
+{'id': '265', 'name': 'kubernetes/cloud-provider-aws', 'category': 1, 'value': 214, 'x': -455.31947589525134, 'y': -165.14585202247565, 'symbolSize': 2.13},
+{'id': '266', 'name': 'kubernetes-sigs/metrics-server', 'category': 1, 'value': 998, 'x': 335.5945629388117, 'y': 227.15885041909144, 'symbolSize': 9.97},
+{'id': '267', 'name': 'openSUSE/cri-o', 'category': 1, 'value': 1261, 'x': -47.120707308748536, 'y': 495.0295636510035, 'symbolSize': 12.6},    
+{'id': '268', 'name': 'nilo19/cloud-provider-azure', 'category': 1, 'value': 347, 'x': -164.9863247244, 'y': -214.3344599838847, 'symbolSize': 3.46},
+{'id': '269', 'name': 'Azure/AKS', 'category': 1, 'value': 210, 'x': -55.20802613768137, 'y': -195.04107265677197, 'symbolSize': 2.09},
+{'id': '270', 'name': 'mattfenwick', 'category': 0, 'value': 454, 'x': 315.5040370045318, 'y': 360.0139572957652, 'symbolSize': 4.53},
+{'id': '271', 'name': 'blackducksoftware/cerebros', 'category': 1, 'value': 237, 'x': -420.5494007549635, 'y': 370.9086805459099, 'symbolSize': 
+2.36},
+{'id': '272', 'name': 'pohly/pmem-CSI', 'category': 1, 'value': 534, 'x': 300.19205840496545, 'y': -289.4909451173404, 'symbolSize': 5.33},     
+{'id': '273', 'name': 'kubernetes/dns', 'category': 1, 'value': 227, 'x': 81.58889303559795, 'y': 277.06805710382855, 'symbolSize': 2.26},      
+{'id': '274', 'name': 'mm4tt/perf-tests', 'category': 1, 'value': 208, 'x': 320.94292491646513, 'y': 312.17255475547995, 'symbolSize': 2.07},   
+{'id': '275', 'name': 'julianvmodesto', 'category': 0, 'value': 699, 'x': 348.3502245261458, 'y': 490.3789248984683, 'symbolSize': 6.98},       
+{'id': '276', 'name': 'julianvmodesto/kubernetes', 'category': 1, 'value': 313, 'x': -56.65321027597838, 'y': -334.48035550468836, 'symbolSize': 3.12},
+{'id': '277', 'name': 'claudiubelu', 'category': 0, 'value': 1034, 'x': 201.61073322620177, 'y': 396.67490054825475, 'symbolSize': 10.33},      
+{'id': '278', 'name': 'robscott/kubernetes', 'category': 1, 'value': 306, 'x': -478.74357286293844, 'y': 22.341553839079324, 'symbolSize': 3.05},
+{'id': '279', 'name': 'derekwaynecarr', 'category': 0, 'value': 804, 'x': 59.03121402563215, 'y': -201.65930303171353, 'symbolSize': 8.03},
+{'id': '280', 'name': 'kubernetes-sigs/sig-storage-local-static-provisioner', 'category': 1, 'value': 204, 'x': -388.1832173151709, 'y': 58.02146610764396, 'symbolSize': 2.03},
+{'id': '281', 'name': 'pingcap/tidb-operator', 'category': 1, 'value': 2722, 'x': -264.2049630348952, 'y': 376.88456681989396, 'symbolSize': 27.21},
+{'id': '282', 'name': 'kubernetes-csi/docs', 'category': 1, 'value': 247, 'x': -223.66061393701517, 'y': 442.38230187817976, 'symbolSize': 2.46},
+{'id': '283', 'name': 'tedyu/yugabyte-db', 'category': 1, 'value': 371, 'x': 361.539507364388, 'y': 90.12515247057559, 'symbolSize': 3.7},      
+{'id': '284', 'name': 'ii/kubernetes', 'category': 1, 'value': 228, 'x': -20.091983922349698, 'y': -22.225850214079856, 'symbolSize': 2.27},    
+{'id': '285', 'name': 'jingxu97/kubernetes', 'category': 1, 'value': 224, 'x': 430.24154349097637, 'y': -229.54309852345943, 'symbolSize': 2.23},
+{'id': '286', 'name': 'kubernetes-csi/csi-driver-smb', 'category': 1, 'value': 658, 'x': 410.7380736506856, 'y': -461.29906941391744, 'symbolSize': 6.57},
+{'id': '287', 'name': 'claudiubelu/kubernetes', 'category': 1, 'value': 423, 'x': 282.28313842442185, 'y': 453.21273868285937, 'symbolSize': 4.22},
+{'id': '288', 'name': 'athenabot', 'category': 0, 'value': 795, 'x': 57.81089142762903, 'y': -208.9797348823468, 'symbolSize': 7.94},
+{'id': '289', 'name': 'damemi/kubernetes', 'category': 1, 'value': 247, 'x': 278.35756908731605, 'y': -477.0688582017093, 'symbolSize': 2.46},  
+{'id': '290', 'name': 'aojea/kubernetes', 'category': 1, 'value': 665, 'x': 381.83389427356417, 'y': 182.36844608714614, 'symbolSize': 6.64},   
+{'id': '291', 'name': 'matthyx/test-infra', 'category': 1, 'value': 228, 'x': 187.1967031613102, 'y': -151.14390256447484, 'symbolSize': 2.27}, 
+{'id': '292', 'name': 'smarterclayton/origin', 'category': 1, 'value': 373, 'x': 478.2119737045042, 'y': 169.99383901254578, 'symbolSize': 3.72},
+{'id': '293', 'name': 'wawa0210/kubernetes', 'category': 1, 'value': 316, 'x': -373.9046977495599, 'y': -189.27184488174566, 'symbolSize': 3.15},
+{'id': '294', 'name': 'gaurav1086', 'category': 0, 'value': 406, 'x': -478.2626415960587, 'y': 53.23013804312484, 'symbolSize': 4.05},
+{'id': '295', 'name': 'andrewsykim/kubernetes', 'category': 1, 'value': 493, 'x': 338.88861556766494, 'y': 56.106557300098075, 'symbolSize': 4.92},
+{'id': '296', 'name': 'openshift/cluster-storage-operator', 'category': 1, 'value': 246, 'x': -297.70151440391965, 'y': 274.3049402431079, 'symbolSize': 2.45},
+{'id': '297', 'name': 'vmware-tanzu/velero-plugin-for-vsphere', 'category': 1, 'value': 342, 'x': 5.499442838444509, 'y': 316.2973479963216, 'symbolSize': 3.41},
+{'id': '298', 'name': 'kubernetes-sigs/seccomp-operator', 'category': 1, 'value': 247, 'x': -254.1034931372007, 'y': -459.4484002909537, 'symbolSize': 2.46},
+{'id': '299', 'name': 'spiffxp/k8s.io', 'category': 1, 'value': 236, 'x': -207.42553087712224, 'y': 444.79730316800453, 'symbolSize': 2.35},    
+{'id': '300', 'name': 'serathius/metrics-server', 'category': 1, 'value': 283, 'x': -64.4097968850794, 'y': 294.4452135173733, 'symbolSize': 2.82},
+{'id': '301', 'name': 'knight42/kubernetes', 'category': 1, 'value': 454, 'x': 326.45418622270506, 'y': 34.10036052817259, 'symbolSize': 4.53}, 
+{'id': '302', 'name': 'mattermost/mattermost-cloud', 'category': 1, 'value': 684, 'x': -361.9391303816152, 'y': -36.230197933572185, 'symbolSize': 6.83},
+{'id': '303', 'name': 'andyzhangx/azuredisk-csi-driver', 'category': 1, 'value': 311, 'x': 213.831791854995, 'y': -80.57018147226194, 'symbolSize': 3.1},
+{'id': '304', 'name': 'crossplane/provider-aws', 'category': 1, 'value': 489, 'x': 96.96966629263386, 'y': -191.26134340653357, 'symbolSize': 4.88},
+{'id': '305', 'name': 'kubernetes/cloud-provider-vsphere', 'category': 1, 'value': 267, 'x': 89.79527703979102, 'y': -175.56700188835572, 'symbolSize': 2.66},
+{'id': '306', 'name': 'mattermost/mattermost-server', 'category': 1, 'value': 355, 'x': 131.97150991416697, 'y': 334.24338677358696, 'symbolSize': 3.54},
+{'id': '307', 'name': 'gardener/gardener-extension-provider-gcp', 'category': 1, 'value': 213, 'x': -375.88177400663267, 'y': -364.9400328232882, 'symbolSize': 2.12},
+{'id': '308', 'name': 'kubernetes/apiserver', 'category': 1, 'value': 399, 'x': 8.365275962381475, 'y': -79.32853669360685, 'symbolSize': 3.98},{'id': '309', 'name': 'kubernetes-sigs/cri-tools', 'category': 1, 'value': 211, 'x': -495.6894906152969, 'y': -219.54637328430584, 'symbolSize': 2.1},
+{'id': '310', 'name': 'cri-o/cri', 'category': 1, 'value': 371, 'x': 421.18245304037885, 'y': -201.2315268999232, 'symbolSize': 3.7},
+{'id': '311', 'name': 'damemi/descheduler', 'category': 1, 'value': 313, 'x': -269.02460477967225, 'y': -107.13129777731922, 'symbolSize': 3.12},
+{'id': '312', 'name': 'gardener/gardener-extension-provider-aws', 'category': 1, 'value': 235, 'x': -341.62559368810065, 'y': -140.72115915938275, 'symbolSize': 2.34},
+{'id': '313', 'name': 'saschagrunert/webapp.rs', 'category': 1, 'value': 451, 'x': -389.96149455907357, 'y': -52.43086952120626, 'symbolSize': 4.5},
+{'id': '314', 'name': 'ialidzhikov/gardener', 'category': 1, 'value': 445, 'x': 436.79655327325406, 'y': -219.43976412682088, 'symbolSize': 4.44},
+{'id': '315', 'name': 'heyste', 'category': 0, 'value': 220, 'x': 397.531396650907, 'y': 345.02037513350604, 'symbolSize': 2.19},
+{'id': '316', 'name': 'openshift/cluster-network-operator', 'category': 1, 'value': 583, 'x': -430.4443860993552, 'y': 286.0540611040143, 'symbolSize': 5.82},
+{'id': '317', 'name': 'feiskyer', 'category': 0, 'value': 924, 'x': 464.9006524208562, 'y': 21.885374923943914, 'symbolSize': 9.23},
+{'id': '318', 'name': 'mattermost/mattermost-operator', 'category': 1, 'value': 333, 'x': -402.18007124494926, 'y': 68.57795579920003, 'symbolSize': 3.32},
+{'id': '319', 'name': 'haosdent', 'category': 0, 'value': 240, 'x': -450.23722630435145, 'y': -38.64216243742692, 'symbolSize': 2.39},
+{'id': '320', 'name': 'kubernetes-csi/external-health-monitor', 'category': 1, 'value': 234, 'x': -476.6502922510019, 'y': -404.6630008420768, 'symbolSize': 2.33},
+{'id': '321', 'name': 'cpanato/cluster-api-provider-azure', 'category': 1, 'value': 501, 'x': 341.01984457010747, 'y': 475.66985691429977, 'symbolSize': 5.0},
+{'id': '322', 'name': 'crossplane/crossplane', 'category': 1, 'value': 1483, 'x': 401.5172615770514, 'y': 205.65526961287242, 'symbolSize': 14.82},
+{'id': '323', 'name': 'Azure/kubernetes-volume-drivers', 'category': 1, 'value': 234, 'x': -404.9474990750783, 'y': -246.29137509815857, 'symbolSize': 2.33},
+{'id': '324', 'name': 'MikeSpreitzer/kube-examples', 'category': 1, 'value': 256, 'x': 221.12844190886358, 'y': -142.0972770218092, 'symbolSize': 2.55},]
+var cates = [{
+                "name": "开发者"
+            },
+            {
+                "name": "仓库名"
+            }
+        ]
+        // 指定图表的配置项和数据
+        nodes.forEach(function (node) {
+            node.label = {
+                show: node.symbolSize > 30
+            };
+        });
+        option = {
+            title: {
+                text: 'Les Miserables',
+                subtext: 'Default layout',
+                top: 'bottom',
+                left: 'right'
+            },
+            tooltip: {},
+            legend: [{
+                // selectedMode: 'single',
+                data: cates.map(function (a) {
+                    return a.name;
+                })
+            }],
+            animationDuration: 1500,
+            animationEasingUpdate: 'quinticInOut',
+            series: [{
+                name: 'Les Miserables',
+                type: 'graph',
+                layout: 'none',
+                data: nodes,
+                links: [{
+                        'source': '0',
+                        'target': '1'
+                    },
+                    {
+                        'source': '2',
+                        'target': '3'
+                    },
+                    {
+                        'source': '4',
+                        'target': '3'
+                    },
+                    {
+                        'source': '5',
+                        'target': '3'
+                    },
+                    {
+                        'source': '6',
+                        'target': '7'
+                    },
+                    {
+                        'source': '8',
+                        'target': '9'
+                    },
+                    {
+                        'source': '10',
+                        'target': '3'
+                    },
+                    {
+                        'source': '11',
+                        'target': '3'
+                    },
+                    {
+                        'source': '12',
+                        'target': '3'
+                    },
+                    {
+                        'source': '13',
+                        'target': '3'
+                    },
+                    {
+                        'source': '14',
+                        'target': '15'
+                    },
+                    {
+                        'source': '16',
+                        'target': '17'
+                    },
+                    {
+                        'source': '18',
+                        'target': '19'
+                    },
+                    {
+                        'source': '20',
+                        'target': '3'
+                    },
+                    {
+                        'source': '21',
+                        'target': '3'
+                    },
+                    {
+                        'source': '16',
+                        'target': '22'
+                    },
+                    {
+                        'source': '23',
+                        'target': '3'
+                    },
+                    {
+                        'source': '24',
+                        'target': '3'
+                    },
+                    {
+                        'source': '25',
+                        'target': '3'
+                    },
+                    {
+                        'source': '26',
+                        'target': '3'
+                    },
+                    {
+                        'source': '27',
+                        'target': '3'
+                    },
+                    {
+                        'source': '8',
+                        'target': '28'
+                    },
+                    {
+                        'source': '29',
+                        'target': '3'
+                    },
+                    {
+                        'source': '30',
+                        'target': '3'
+                    },
+                    {
+                        'source': '25',
+                        'target': '31'
+                    },
+                    {
+                        'source': '32',
+                        'target': '33'
+                    },
+                    {
+                        'source': '34',
+                        'target': '3'
+                    },
+                    {
+                        'source': '5',
+                        'target': '35'
+                    },
+                    {
+                        'source': '16',
+                        'target': '3'
+                    },
+                    {
+                        'source': '36',
+                        'target': '3'
+                    },
+                    {
+                        'source': '37',
+                        'target': '17'
+                    },
+                    {
+                        'source': '8',
+                        'target': '38'
+                    },
+                    {
+                        'source': '23',
+                        'target': '39'
+                    },
+                    {
+                        'source': '40',
+                        'target': '41'
+                    },
+                    {
+                        'source': '42',
+                        'target': '43'
+                    },
+                    {
+                        'source': '44',
+                        'target': '45'
+                    },
+                    {
+                        'source': '16',
+                        'target': '46'
+                    },
+                    {
+                        'source': '47',
+                        'target': '3'
+                    },
+                    {
+                        'source': '48',
+                        'target': '49'
+                    },
+                    {
+                        'source': '23',
+                        'target': '50'
+                    },
+                    {
+                        'source': '51',
+                        'target': '3'
+                    },
+                    {
+                        'source': '32',
+                        'target': '3'
+                    },
+                    {
+                        'source': '25',
+                        'target': '52'
+                    },
+                    {
+                        'source': '37',
+                        'target': '3'
+                    },
+                    {
+                        'source': '27',
+                        'target': '31'
+                    },
+                    {
+                        'source': '53',
+                        'target': '3'
+                    },
+                    {
+                        'source': '2',
+                        'target': '54'
+                    },
+                    {
+                        'source': '55',
+                        'target': '56'
+                    },
+                    {
+                        'source': '57',
+                        'target': '58'
+                    },
+                    {
+                        'source': '59',
+                        'target': '3'
+                    },
+                    {
+                        'source': '6',
+                        'target': '3'
+                    },
+                    {
+                        'source': '60',
+                        'target': '3'
+                    },
+                    {
+                        'source': '61',
+                        'target': '3'
+                    },
+                    {
+                        'source': '2',
+                        'target': '39'
+                    },
+                    {
+                        'source': '62',
+                        'target': '3'
+                    },
+                    {
+                        'source': '63',
+                        'target': '3'
+                    },
+                    {
+                        'source': '6',
+                        'target': '64'
+                    },
+                    {
+                        'source': '14',
+                        'target': '65'
+                    },
+                    {
+                        'source': '66',
+                        'target': '3'
+                    },
+                    {
+                        'source': '10',
+                        'target': '67'
+                    },
+                    {
+                        'source': '14',
+                        'target': '3'
+                    },
+                    {
+                        'source': '68',
+                        'target': '3'
+                    },
+                    {
+                        'source': '69',
+                        'target': '3'
+                    },
+                    {
+                        'source': '70',
+                        'target': '35'
+                    },
+                    {
+                        'source': '71',
+                        'target': '3'
+                    },
+                    {
+                        'source': '72',
+                        'target': '3'
+                    },
+                    {
+                        'source': '5',
+                        'target': '73'
+                    },
+                    {
+                        'source': '74',
+                        'target': '75'
+                    },
+                    {
+                        'source': '76',
+                        'target': '3'
+                    },
+                    {
+                        'source': '21',
+                        'target': '35'
+                    },
+                    {
+                        'source': '74',
+                        'target': '77'
+                    },
+                    {
+                        'source': '0',
+                        'target': '78'
+                    },
+                    {
+                        'source': '57',
+                        'target': '3'
+                    },
+                    {
+                        'source': '12',
+                        'target': '79'
+                    },
+                    {
+                        'source': '42',
+                        'target': '3'
+                    },
+                    {
+                        'source': '80',
+                        'target': '3'
+                    },
+                    {
+                        'source': '40',
+                        'target': '3'
+                    },
+                    {
+                        'source': '81',
+                        'target': '3'
+                    },
+                    {
+                        'source': '18',
+                        'target': '3'
+                    },
+                    {
+                        'source': '74',
+                        'target': '3'
+                    },
+                    {
+                        'source': '6',
+                        'target': '82'
+                    },
+                    {
+                        'source': '0',
+                        'target': '3'
+                    },
+                    {
+                        'source': '83',
+                        'target': '3'
+                    },
+                    {
+                        'source': '16',
+                        'target': '84'
+                    },
+                    {
+                        'source': '44',
+                        'target': '3'
+                    },
+                    {
+                        'source': '61',
+                        'target': '65'
+                    },
+                    {
+                        'source': '14',
+                        'target': '85'
+                    },
+                    {
+                        'source': '86',
+                        'target': '3'
+                    },
+                    {
+                        'source': '48',
+                        'target': '3'
+                    },
+                    {
+                        'source': '2',
+                        'target': '22'
+                    },
+                    {
+                        'source': '42',
+                        'target': '39'
+                    },
+                    {
+                        'source': '70',
+                        'target': '3'
+                    },
+                    {
+                        'source': '37',
+                        'target': '87'
+                    },
+                    {
+                        'source': '88',
+                        'target': '3'
+                    },
+                    {
+                        'source': '8',
+                        'target': '3'
+                    },
+                    {
+                        'source': '89',
+                        'target': '3'
+                    },
+                    {
+                        'source': '55',
+                        'target': '3'
+                    },
+                    {
+                        'source': '32',
+                        'target': '90'
+                    },
+                    {
+                        'source': '21',
+                        'target': '91'
+                    }
+                ],
+                categories: cates,
+                roam: true,
+                label: {
+                    show:true,
+                    formatter: '{b}'
+                },
+                lineStyle: {
+                    color: 'source',
+                    curveness: 0.3
+                },
+                emphasis: {
+                    focus: 'adjacency',
+                    lineStyle: {
+                        width: 10
+                    }
+                }
+            }]
+        };
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+    </script>
+</body>
+
+</html>
