@@ -292,7 +292,6 @@ consist of a workflow with the following phases:
 • Seed necessary test data
 • Perform actions using the system under test
 • Verify behaviors
-
 ## The System Under Test 
 
 One key component of large tests is the aforementioned SUT (see Figure 14-5). A typical unit test focuses its attention on one class or module. Moreover, the test code runs in the same process (or Java Virtual Machine [JVM], in the Java case) as the code being tested. For larger tests, the SUT is often very different; one or more separate processes with test code often (but not always) in its own process.
